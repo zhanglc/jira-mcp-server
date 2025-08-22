@@ -330,12 +330,11 @@ See [Project Structure](./PROJECT_STRUCTURE.md) for detailed directory layout.
 
 #### AI Engineer 1 (Foundation & API Specialist)
 - **Primary Tools**: Claude Code
-- **Git Branch**: `feature/foundation-api`
 - **Task Domains**: ARCH-* + API-* tasks (9 tasks total)
 - **Responsibilities**:
   - **ARCH-CORE-001**: ✅ Project Skeleton Setup
   - **ARCH-CORE-002**: ✅ Type System Foundation  
-  - **ARCH-CORE-003**: ⏸️ Configuration System
+  - **ARCH-CORE-003**: ✅ Configuration System
   - **ARCH-UTIL-001**: ⏸️ HTTP Client Infrastructure
   - **ARCH-UTIL-002**: ⏸️ Logging and Utilities
   - **API-CORE-001**: ⏸️ Data Models
@@ -349,7 +348,7 @@ See [Project Structure](./PROJECT_STRUCTURE.md) for detailed directory layout.
 - **Git Branch**: `feature/mcp-integration`
 - **Task Domains**: MCP-* + TEST-* + INTG-* tasks (11 tasks total)
 - **Responsibilities**:
-  - **MCP-CORE-001**: ⏸️ Tools Framework
+  - **MCP-CORE-001**: ✅ Tools Framework
   - **MCP-TOOL-001**: ⏸️ Issue Management Tools  
   - **MCP-TOOL-002**: ⏸️ Search Tools
   - **MCP-TOOL-003**: ⏸️ Project and User Tools
@@ -382,7 +381,7 @@ See [Project Structure](./PROJECT_STRUCTURE.md) for detailed directory layout.
 2. **Tests Passing**: Unit tests written and passing (where applicable)
 3. **TypeScript Compilation**: No TypeScript errors
 4. **Linting**: ESLint rules passing
-5. **Status Update**: Mark task as ✅ DONE in Implementation Plan
+5. **Status Update**: Mark task as ✅ DONE in Implementation Plan and Development Guide
 
 #### Integration Ready Checklist
 - All tasks in parallel group completed
@@ -648,8 +647,8 @@ Before marking this task complete, please:
 ### 🔀 Parallel Development Coordination
 
 #### Branch Strategy (2-Engineer Team)
-- **AI Engineer 1**: `feature/foundation-api` branch
-- **AI Engineer 2**: `feature/mcp-integration` branch  
+- **AI Engineer 1**: `feature/[TASK-ID]` branch
+- **AI Engineer 2**: `feature/[TASK-ID]` branch  
 - Regular merges to `develop` branch when major milestones complete
 - Final integration on `main` branch
 
