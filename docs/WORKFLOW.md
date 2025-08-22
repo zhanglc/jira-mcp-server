@@ -17,29 +17,15 @@ All development must follow these core principles:
 
 1.  **任务分解 (Task Breakdown)**: If a task is large, break it down into smaller, logical sub-tasks. Create a clear plan for these sub-tasks and present it for review before implementation.
 2.  **分支管理 (Branch Management)**: Before starting a task, create and switch to a dedicated feature branch from `develop`. The branch must follow the naming convention: `feature/ai-[TASK-ID]`.
-3.  **文档同步 (Documentation Sync)**: Upon starting a task, immediately update its status to `🔄 IN_PROGRESS` in the `IMPLEMENTATION_PLAN.md`. When finished and the PR is created, update it to `🔎 IN_REVIEW`. After the PR is merged, update it to `✅ DONE`.
+3.  **文档同步 (Documentation Sync)**: Upon starting a task, immediately update its status to `🔄 IN_PROGRESS` in the `IMPLEMENTATION_PLAN.md`. 
 4.  **测试驱动 (Test-Driven)**: Unit tests must be written alongside the implementation. All new code requires corresponding tests. **Important: Any modification to existing test cases, unless fixing a syntax error, requires prior approval.**
 5.  **代码规范 (Code Conventions)**: Adhere strictly to the project's existing code style, formatting (`.prettierrc`), and architectural patterns.
 6.  **小步快提 (Commit Frequently)**: Commit your changes frequently with clear, descriptive messages.
-
-## 🔎 Code Review Workflow
-
-A rigorous code review process is mandatory to ensure code quality and prevent integration issues.
-
-1.  **Create Pull Request**: Once a task is complete, the engineer must create a Pull Request (PR) from their feature branch (`feature/ai-[TASK-ID]`) to the `develop` branch. This should be done using the GitHub CLI:
+7.  **Create Pull Request**: Once a task is complete, the engineer must create a Pull Request (PR) from their feature branch (`feature/ai-[TASK-ID]`) to the `develop` branch. This should be done using the GitHub CLI:
     ```bash
-    gh pr create --title "[TASK-ID] - Task Description" --body "Detailed description of changes."
+    gh pr create --title "[TASK-ID] - Task Description" --body "Detailed description of changes." --base develop
     ```
 
-2.  **Update Task Status**: After creating the PR, the task status in `IMPLEMENTATION_PLAN.md` must be updated from `🔄 IN_PROGRESS` to `🔎 IN_REVIEW`.
-
-3.  **Peer Review**: The other engineer is responsible for reviewing the PR in a timely manner. The review should focus on correctness, code style, test coverage, and adherence to architectural principles.
-
-4.  **Merge and Cleanup**: Once the PR is approved and passes all automated checks, it can be merged into the `develop` branch. The feature branch should be deleted after the merge.
-
-5.  **Start Next Task**: Only after the PR is merged can the engineer proceed to their next assigned task.
-
-6.  **Verify Merge**: Before starting a new task, the engineer should verify that their previous PR has been merged using the command `gh pr status` or by checking the PR status in our conversation.
 
 ## 🔀 Parallel Development Coordination
 
