@@ -686,15 +686,15 @@ Before marking this task complete, please:
 1.  **为 AI Engineer 1 创建 Worktree**:
     在主项目录 (`jira-mcp-server`) 的终端中运行：
     ```bash
-    # 这会创建一个名为 `feature/ai-1` 的新分支，并检出到 `../jira-mcp-server-ai1` 目录
-    git worktree add -b feature/ai-1 ../jira-mcp-server-ai1
+    # 这会创建一个名为 `feature/ai-[TASK-ID]` 的新分支，并检出到 `../jira-mcp-server-ai1` 目录
+    git worktree add -b feature/ai-[TASK-ID] ../jira-mcp-server-ai1
     ```
     AI Engineer 1 现在应该只在 `../jira-mcp-server-ai1` 目录中工作。
 
 2.  **为 AI Engineer 2 创建 Worktree**:
     同样，在主项目录中运行：
     ```bash
-    git worktree add -b feature/ai-2 ../jira-mcp-server-ai2
+    git worktree add -b feature/ai-[TASK-ID] ../jira-mcp-server-ai2
     ```
     AI Engineer 2 现在应该只在 `../jira-mcp-server-ai2` 目录中工作。
 
