@@ -29,8 +29,8 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 
 | Task ID | Status | Task Description | Dependencies | Parallel Group | Key Deliverables |
 |---------|--------|-----------------|--------------|----------------|------------------|
-| API-CORE-001 | ⏳ | **Data Models**: Define comprehensive Jira Server data models for all entities | ARCH-CORE-002 | Group-3 | lib/models/ with Issue, User, Project, Search models |
-| API-CORE-002 | ⏸️ | **Core Jira Operations**: Implement core Jira Server API operations (issues, search, projects, users) | API-CORE-001, ARCH-UTIL-001 | Group-5 | lib/jira/ with issues.ts, search.ts, projects.ts, users.ts, fields.ts |
+| API-CORE-001 | ✅ | **Data Models**: Define comprehensive Jira Server data models for all entities | ARCH-CORE-002 | Group-3 | lib/models/ with Issue, User, Project, Search models |
+| API-CORE-002 | ⏳ | **Core Jira Operations**: Implement core Jira Server API operations (issues, search, projects, users) | API-CORE-001, ARCH-UTIL-001 | Group-5 | lib/jira/ with issues.ts, search.ts, projects.ts, users.ts, fields.ts |
 | API-CORE-003 | ⏸️ | **Agile Operations**: Implement Jira Agile/Software API operations (boards, sprints, worklogs) | API-CORE-002 | Group-6 | lib/jira/ with agile.ts, worklog.ts, attachments.ts |
 | API-UTIL-001 | ⏸️ | **Field Processing Engine**: Implement nested field selection with dot notation and filtering | API-CORE-001, ARCH-UTIL-002 | Group-5 | Advanced field filtering logic with performance optimization |
 
