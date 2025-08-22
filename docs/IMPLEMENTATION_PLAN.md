@@ -38,7 +38,7 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 
 | Task ID | Status | Task Description | Dependencies | Parallel Group | Key Deliverables |
 |---------|--------|-----------------|--------------|----------------|------------------|
-| MCP-CORE-001 | ⏸️ | **Tools Framework**: Build MCP tools registration and execution framework | ARCH-CORE-002, ARCH-CORE-003 | Group-3 | tools/index.ts with registration system and execution pipeline |
+| MCP-CORE-001 | 🔄 | **Tools Framework**: Build MCP tools registration and execution framework | ARCH-CORE-002, ARCH-CORE-003 | Group-3 | tools/index.ts with registration system and execution pipeline |
 | MCP-TOOL-001 | ⏸️ | **Issue Management Tools**: Implement issue-related MCP tools (get_issue, get_transitions, get_worklog, download_attachments) | MCP-CORE-001, API-CORE-002 | Group-7A | 4 tools in tools/operations/ directory |
 | MCP-TOOL-002 | ⏸️ | **Search Tools**: Implement search-related MCP tools (search JQL, search_fields, get_project_issues) | MCP-CORE-001, API-CORE-002 | Group-7B | 3 tools in tools/search/ directory |
 | MCP-TOOL-003 | ⏸️ | **Project and User Tools**: Implement project/user management tools (get_all_projects, get_project_versions, get_user_profile, get_link_types) | MCP-CORE-001, API-CORE-002 | Group-7C | 4 tools in tools/operations/ directory |
