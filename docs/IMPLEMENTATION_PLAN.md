@@ -22,7 +22,7 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 | ARCH-CORE-002 | ✅ | **Type System Foundation**: Define comprehensive TypeScript types for entire project | ARCH-CORE-001 | Group-2 | types/ directory with all interface definitions |
 | ARCH-CORE-003 | ✅ | **Configuration System**: Implement configuration loading and validation with Zod schemas | ARCH-CORE-002 | Group-3 | config/ directory with environment validation |
 | ARCH-UTIL-001 | ⏸️ | **HTTP Client Infrastructure**: Build HTTP client with PAT authentication and error handling | ARCH-CORE-003 | Group-4A | lib/client/ with HTTP client, auth, error handling |
-| ARCH-UTIL-002 | ⏸️ | **Logging and Utilities**: Implement Winston logger and utility functions | ARCH-CORE-003 | Group-4B | lib/utils/ with logger, validation, URI parser, field filter |
+| ARCH-UTIL-002 | ⏸️ | **Logging and Utilities**: Implement Winston logger and utility functions | ARCH-CORE-003 | Group-4B | lib/utils/ with logger, validation, and URI parser |
 
 ### Jira API Integration Tasks
 
@@ -64,10 +64,10 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 
 ### 👤 AI Engineer Assignment
 
-| Engineer | Role | Tasks | Branch |
-|----------|------|-------|--------|
-| **AI Engineer 1** | Foundation & API Specialist | ARCH-*, API-* (9 tasks) | `feature/foundation-api` |
-| **AI Engineer 2** | MCP & Integration Specialist | MCP-*, TEST-*, INTG-* (11 tasks) | `feature/mcp-integration` |
+| Engineer | Role | Tasks | Branch Strategy |
+|----------|------|-------|-----------------|
+| **AI Engineer 1** | Foundation & API Specialist | ARCH-*, API-* (9 tasks) | `feature/ai-[TASK-ID]` |
+| **AI Engineer 2** | MCP & Integration Specialist | MCP-*, TEST-*, INTG-* (11 tasks) | `feature/ai-[TASK-ID]` |
 
 ### 🔀 Execution Phases & Handoffs
 
@@ -125,13 +125,13 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 
 **AI Engineer 1 Critical Path:**
 ```
-ARCH-CORE-001 ✅ → ARCH-CORE-002 ⏳ → ARCH-CORE-003 → ARCH-UTIL-001 → 
+ARCH-CORE-001 ✅ → ARCH-CORE-002 ✅ → ARCH-CORE-003 ✅ → ARCH-UTIL-001 → 
 API-CORE-002 → API-CORE-003
 ```
 
 **AI Engineer 2 Critical Path:**
 ```
-[Wait for ARCH-CORE-002] → TEST-CORE-001 → MCP-CORE-001 → 
+[Wait for ARCH-CORE-002] → TEST-CORE-001 ✅ → MCP-CORE-001 → 
 [Wait for API-CORE-002] → MCP-TOOL-001/002/003 → MCP-TOOL-004 → 
 INTG-CORE-001 → INTG-CORE-002
 ```
