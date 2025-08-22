@@ -21,7 +21,7 @@ All development must follow these core principles:
 4.  **测试驱动 (Test-Driven)**: Unit tests must be written alongside the implementation. All new code requires corresponding tests. **Important: Any modification to existing test cases, unless fixing a syntax error, requires prior approval.**
 5.  **代码规范 (Code Conventions)**: Adhere strictly to the project's existing code style, formatting (`.prettierrc`), and architectural patterns.
 6.  **小步快提 (Commit Frequently)**: Commit your changes frequently with clear, descriptive messages.
-7.  **Create Pull Request**: Once a task is complete, the engineer must create a Pull Request (PR) from their feature branch (`feature/ai-[TASK-ID]`) to the `develop` branch. This should be done using the GitHub CLI:
+7.  **Create Pull Request**: Once a task is complete, pull the latest changes from the `develop` branch into your feature branch to ensure it's up to date. Then, the engineer must create a Pull Request (PR) from their feature branch (`feature/ai-[TASK-ID]`) to the `develop` branch. This should be done using the GitHub CLI:
     ```bash
     gh pr create --title "[TASK-ID] - Task Description" --body "Detailed description of changes." --base develop
     ```
