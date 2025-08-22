@@ -5,7 +5,6 @@
  */
 
 import { config as loadDotenv } from 'dotenv';
-import { z } from 'zod';
 import { EnvironmentInputSchema, type EnvironmentInput } from './schema';
 import { getEnvironmentDefaults } from './defaults';
 import { ValidationError } from '../types/common';

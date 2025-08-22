@@ -17,6 +17,7 @@ module.exports = {
     '^@/tools/(.*)$': '<rootDir>/src/tools/$1',
     '^@/resources/(.*)$': '<rootDir>/src/resources/$1',
     '^@/types/(.*)$': '<rootDir>/src/types/$1',
+    '^@tests/(.*)$': '<rootDir>/tests/$1',
   },
   
   // TypeScript configuration
@@ -28,6 +29,11 @@ module.exports = {
   
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  
+  // Test environment for MSW
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   
   // Coverage configuration
   collectCoverage: false,
