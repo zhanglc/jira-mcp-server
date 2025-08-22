@@ -22,7 +22,7 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 | ARCH-CORE-001 | ✅ | **Project Skeleton Setup**: Create complete project structure with build tools and configurations | None | Group-1 | package.json, TypeScript config, ESLint/Prettier, Jest config, directory structure |
 | ARCH-CORE-002 | ✅ | **Type System Foundation**: Define comprehensive TypeScript types for entire project | ARCH-CORE-001 | Group-2 | types/ directory with all interface definitions |
 | ARCH-CORE-003 | ✅ | **Configuration System**: Implement configuration loading and validation with Zod schemas | ARCH-CORE-002 | Group-3 | config/ directory with environment validation |
-| ARCH-UTIL-001 | ⏸️ | **HTTP Client Infrastructure**: Build HTTP client with PAT authentication and error handling | ARCH-CORE-003 | Group-4A | lib/client/ with HTTP client, auth, error handling |
+| ARCH-UTIL-001 | 🔄 | **HTTP Client Infrastructure**: Build HTTP client with PAT authentication and error handling | ARCH-CORE-003 | Group-4A | lib/client/ with HTTP client, auth, error handling |
 | ARCH-UTIL-002 | ⏸️ | **Logging and Utilities**: Implement Winston logger and utility functions | ARCH-CORE-003 | Group-4B | lib/utils/ with logger, validation, and URI parser |
 
 ### Jira API Integration Tasks

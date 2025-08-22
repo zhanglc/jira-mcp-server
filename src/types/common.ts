@@ -31,7 +31,7 @@ export interface BaseError {
   code: string;
   message: string;
   timestamp: string;
-  details?: Record<string, unknown>;
+  details?: Record<string, unknown> | undefined;
 }
 
 export interface JiraError extends BaseError {
