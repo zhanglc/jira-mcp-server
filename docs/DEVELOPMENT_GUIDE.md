@@ -7,7 +7,7 @@
 #### MCP Official Dependencies
 ```typescript
 // Main dependencies
-"@modelcontextprotocol/sdk": "^1.0.0"  // Official MCP TypeScript SDK
+"(@modelcontextprotocol/sdk": "^1.0.0"  // Official MCP TypeScript SDK
 ```
 
 #### Configuration Interface (Simplified)
@@ -334,7 +334,7 @@ See [Project Structure](./PROJECT_STRUCTURE.md) for detailed directory layout.
 - **Task Domains**: ARCH-* + API-* tasks (9 tasks total)
 - **Responsibilities**:
   - **ARCH-CORE-001**: ✅ Project Skeleton Setup
-  - **ARCH-CORE-002**: ⏳ Type System Foundation  
+  - **ARCH-CORE-002**: ✅ Type System Foundation  
   - **ARCH-CORE-003**: ⏸️ Configuration System
   - **ARCH-UTIL-001**: ⏸️ HTTP Client Infrastructure
   - **ARCH-UTIL-002**: ⏸️ Logging and Utilities
@@ -670,6 +670,40 @@ Before marking this task complete, please:
 - **Common Utilities**: Coordinate through shared documentation before implementation
 - **API Contracts**: AI Engineer 1 defines interfaces, AI Engineer 2 implements MCP tools against them
 - **Testing Strategy**: AI Engineer 2 writes tests for AI Engineer 1's components
+
+### 推荐工具：使用 Git Worktree 进行并行开发
+
+为了让多名工程师（或AI）在同一台机器上高效协作且互不干扰，我们强烈推荐使用 `git worktree`。该工具允许你从单个 Git 仓库中检出多个工作目录，每个目录关联一个独立的分支。
+
+**核心优势**:
+- **物理隔离**: 每个开发者在自己的目录中工作，完全隔离了文件、依赖 (`node_modules`) 和构建产物。
+- **无需切换分支**: 无需在同一个目录中频繁使用 `git checkout`，极大地提升了效率。
+- **共享历史**: 所有 worktree 共享底层的 Git 历史记录，合并代码非常方便。
+
+**操作指南**:
+
+假设项目主目录位于 `jira-mcp-server`，并且你想为两位工程师（AI Engineer 1, AI Engineer 2）创建独立的开发环境。
+
+1.  **为 AI Engineer 1 创建 Worktree**:
+    在主项目录 (`jira-mcp-server`) 的终端中运行：
+    ```bash
+    # 这会创建一个名为 `feature/ai-1` 的新分支，并检出到 `../jira-mcp-server-ai1` 目录
+    git worktree add -b feature/ai-1 ../jira-mcp-server-ai1
+    ```
+    AI Engineer 1 现在应该只在 `../jira-mcp-server-ai1` 目录中工作。
+
+2.  **为 AI Engineer 2 创建 Worktree**:
+    同样，在主项目录中运行：
+    ```bash
+    git worktree add -b feature/ai-2 ../jira-mcp-server-ai2
+    ```
+    AI Engineer 2 现在应该只在 `../jira-mcp-server-ai2` 目录中工作。
+
+3.  **管理 Worktrees**:
+    - 查看所有 worktree: `git worktree list`
+    - 当一个功能分支合并后，可以安全地移除其 worktree: `git worktree remove <path-to-worktree>`
+
+通过这种方式，两个开发流程可以完全独立地进行，直到需要将各自的功能分支合并到主开发分支（如 `develop` 或 `main`）时为止。
 
 ## 🔗 Related Documentation
 

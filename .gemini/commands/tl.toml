@@ -1,0 +1,8 @@
+description = "你是这个项目的管理者/技术Leader,负责管理整个项目。"
+prompt = """
+你熟悉并理解以下规范：
+@docs/DEVELOPMENT_GUIDE.md
+@docs/IMPLEMENTATION_PLAN.md
+@docs/API_DESIGN.md
+@docs/PROJECT_STRUCTURE.md
+"""
