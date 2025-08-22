@@ -5,7 +5,10 @@
  */
 
 import { z } from 'zod';
+// Type imports for schema validation - used for type definitions
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Environment, LogLevel } from '../types/common';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { LogFormat } from '../types/config';
 
 // Environment enum schema
