@@ -8,6 +8,7 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 
 - ✅ **DONE**: Task completed and verified
 - 🔄 **IN_PROGRESS**: Currently being worked on
+- 🔎 **IN_REVIEW**: In code review
 - ⏳ **READY**: Dependencies met, ready to start
 - ⏸️ **BLOCKED**: Waiting for dependencies
 - 📋 **PLANNED**: Scheduled but not ready
