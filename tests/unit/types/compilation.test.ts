@@ -1,6 +1,6 @@
 /**
  * Type Compilation Tests
- * 
+ *
  * Verifies that all type definitions compile correctly and can be used together.
  */
 
@@ -70,18 +70,19 @@ describe('Type Compilation Tests', () => {
       const partialTest: DeepPartial<TestInterface> = {
         nested: {
           // value is optional due to DeepPartial
-        }
+        },
       };
 
       // Test RequireOne
-      const requireOneTest: RequireOne<TestInterface, 'required' | 'optional'> = {
-        required: 'test',
-        nested: { value: true }
-      };
+      const requireOneTest: RequireOne<TestInterface, 'required' | 'optional'> =
+        {
+          required: 'test',
+          nested: { value: true },
+        };
 
       // Test Optional
       const optionalTest: Optional<TestInterface, 'required'> = {
-        nested: { value: true }
+        nested: { value: true },
         // required is now optional
       };
 
@@ -94,19 +95,19 @@ describe('Type Compilation Tests', () => {
       const baseError: BaseError = {
         code: 'TEST_ERROR',
         message: 'Test error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       const jiraError: JiraError = {
         ...baseError,
         type: 'jira_api_error',
-        statusCode: 404
+        statusCode: 404,
       };
 
       const mcpError: MCPError = {
         ...baseError,
         type: 'mcp_error',
-        toolName: 'test_tool'
+        toolName: 'test_tool',
       };
 
       const validationError: ValidationError = {
@@ -114,7 +115,7 @@ describe('Type Compilation Tests', () => {
         type: 'validation_error',
         field: 'username',
         value: '',
-        constraints: ['required']
+        constraints: ['required'],
       };
 
       expect(baseError).toBeDefined();
@@ -126,14 +127,14 @@ describe('Type Compilation Tests', () => {
     it('should compile search and pagination types correctly', () => {
       const paginationOptions: PaginationOptions = {
         startAt: 0,
-        maxResults: 50
+        maxResults: 50,
       };
 
       const searchResult: SearchResult<string> = {
         items: ['item1', 'item2'],
         startAt: 0,
         maxResults: 50,
-        total: 2
+        total: 2,
       };
 
       expect(paginationOptions.startAt).toBe(0);
@@ -143,14 +144,14 @@ describe('Type Compilation Tests', () => {
     it('should compile environment and logging types correctly', () => {
       const environment: Environment = 'development';
       const logLevel: LogLevel = 'info';
-      
+
       const loggingConfig: LoggingConfig = {
         level: logLevel,
         format: 'json',
         console: {
           enabled: true,
-          colorize: false
-        }
+          colorize: false,
+        },
       };
 
       expect(environment).toBe('development');
@@ -163,13 +164,13 @@ describe('Type Compilation Tests', () => {
     it('should compile configuration interfaces correctly', () => {
       const authConfig: AuthConfig = {
         personalToken: 'test-token',
-        tokenType: 'bearer'
+        tokenType: 'bearer',
       };
 
       const connectionConfig: ConnectionConfig = {
         timeout: 30000,
         sslVerify: true,
-        keepAlive: true
+        keepAlive: true,
       };
 
       const mcpServerConfig: MCPServerConfig = {
@@ -177,8 +178,8 @@ describe('Type Compilation Tests', () => {
         version: '1.0.0',
         capabilities: {
           tools: true,
-          resources: true
-        }
+          resources: true,
+        },
       };
 
       expect(authConfig.personalToken).toBe('test-token');
@@ -207,8 +208,8 @@ describe('Type Compilation Tests', () => {
           '16x16': 'http://example.com/avatar16.png',
           '24x24': 'http://example.com/avatar24.png',
           '32x32': 'http://example.com/avatar32.png',
-          '48x48': 'http://example.com/avatar48.png'
-        }
+          '48x48': 'http://example.com/avatar48.png',
+        },
       };
 
       const jiraProject: Partial<JiraProject> = {
@@ -219,7 +220,7 @@ describe('Type Compilation Tests', () => {
         components: [],
         issueTypes: [],
         versions: [],
-        roles: {}
+        roles: {},
       };
 
       expect(jiraUser.name).toBe('testuser');
@@ -234,8 +235,8 @@ describe('Type Compilation Tests', () => {
         type: 'scrum',
         location: {
           type: 'project',
-          projectId: 10000
-        }
+          projectId: 10000,
+        },
       };
 
       const jiraSprint: Partial<JiraSprint> = {
@@ -244,7 +245,7 @@ describe('Type Compilation Tests', () => {
         name: 'Sprint 1',
         state: 'active',
         startDate: new Date().toISOString(),
-        endDate: new Date().toISOString()
+        endDate: new Date().toISOString(),
       };
 
       const jiraWorklog: Partial<JiraWorklog> = {
@@ -254,7 +255,7 @@ describe('Type Compilation Tests', () => {
         timeSpentSeconds: 7200,
         started: new Date().toISOString(),
         created: new Date().toISOString(),
-        updated: new Date().toISOString()
+        updated: new Date().toISOString(),
       };
 
       const jiraAttachment: Partial<JiraAttachment> = {
@@ -264,7 +265,7 @@ describe('Type Compilation Tests', () => {
         size: 1024,
         mimeType: 'application/pdf',
         content: 'http://example.com/attachment/content/10000',
-        created: new Date().toISOString()
+        created: new Date().toISOString(),
       };
 
       expect(jiraBoard.type).toBe('scrum');
@@ -279,14 +280,14 @@ describe('Type Compilation Tests', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        expand: 'names,schema'
+        expand: 'names,schema',
       };
 
       const searchOptions: JiraSearchOptions = {
         jql: 'project = TEST',
         fields: ['summary', 'status'],
         maxResults: 100,
-        startAt: 0
+        startAt: 0,
       };
 
       expect(searchResponse.total).toBe(0);
@@ -301,10 +302,10 @@ describe('Type Compilation Tests', () => {
         properties: {
           issueKey: {
             type: 'string',
-            description: 'The issue key'
-          }
+            description: 'The issue key',
+          },
         },
-        required: ['issueKey']
+        required: ['issueKey'],
       };
 
       const toolContext: MCPToolContext = {
@@ -317,14 +318,14 @@ describe('Type Compilation Tests', () => {
           sslVerify: true,
           timeout: 30000,
           logLevel: 'info',
-          logFormat: 'simple'
+          logFormat: 'simple',
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       const issueToolArgs: IssueToolArgs = {
         issueKey: 'TEST-123',
-        fields: ['summary', 'status']
+        fields: ['summary', 'status'],
       };
 
       expect(toolInputSchema.type).toBe('object');
@@ -353,10 +354,10 @@ describe('Type Compilation Tests', () => {
           sslVerify: true,
           timeout: 30000,
           logLevel: 'info',
-          logFormat: 'simple'
+          logFormat: 'simple',
         },
         timestamp: new Date().toISOString(),
-        requestId: 'req-123'
+        requestId: 'req-123',
       };
 
       expect(resourceContext.config.environment).toBe('test');
@@ -370,7 +371,7 @@ describe('Type Compilation Tests', () => {
         type: 'string',
         description: 'A string field',
         required: true,
-        example: 'example value'
+        example: 'example value',
       };
 
       const customFieldDefinition: CustomFieldDefinition = {
@@ -380,12 +381,12 @@ describe('Type Compilation Tests', () => {
         fieldName: 'Epic Link',
         fieldType: 'com.pyxis.greenhopper.jira:gh-epic-link',
         isGlobal: true,
-        isLocked: false
+        isLocked: false,
       };
 
       const fieldSchema: FieldSchema = {
         fields: {
-          summary: fieldDefinition
+          summary: fieldDefinition,
         },
         metadata: {
           entityType: 'issue',
@@ -393,8 +394,8 @@ describe('Type Compilation Tests', () => {
           lastUpdated: new Date().toISOString(),
           source: 'jira-server',
           customFieldsIncluded: false,
-          totalFields: 1
-        }
+          totalFields: 1,
+        },
       };
 
       expect(fieldDefinition.type).toBe('string');
@@ -409,7 +410,7 @@ describe('Type Compilation Tests', () => {
         description: 'Field definitions for issues',
         version: '1.0.0',
         lastModified: new Date().toISOString(),
-        contentType: 'application/json'
+        contentType: 'application/json',
       };
 
       expect(resourceMetadata.uri).toBe('jira://fields/issue');
@@ -423,8 +424,8 @@ describe('Type Compilation Tests', () => {
           fields: {
             summary: {
               type: 'string',
-              description: 'Issue summary'
-            }
+              description: 'Issue summary',
+            },
           },
           metadata: {
             entityType: 'issue',
@@ -432,8 +433,8 @@ describe('Type Compilation Tests', () => {
             lastUpdated: new Date().toISOString(),
             source: 'jira-server',
             customFieldsIncluded: false,
-            totalFields: 1
-          }
+            totalFields: 1,
+          },
         },
         includes: {
           coreFields: true,
@@ -442,8 +443,8 @@ describe('Type Compilation Tests', () => {
           timeTrackingFields: false,
           attachmentFields: false,
           commentFields: false,
-          linkFields: false
-        }
+          linkFields: false,
+        },
       };
 
       expect(issueFieldsResource.uri).toBe('jira://fields/issue');
@@ -459,14 +460,14 @@ describe('Type Compilation Tests', () => {
         ...DEFAULT_CONFIG,
         url: 'http://test-jira.com',
         auth: {
-          personalToken: 'test-token'
-        }
+          personalToken: 'test-token',
+        },
       };
 
       const searchArgs: SearchToolArgs = {
         jql: 'project = TEST AND status = "In Progress"',
         fields: ['summary', 'assignee.displayName', 'status.name'],
-        maxResults: 50
+        maxResults: 50,
       };
 
       const mockSearchResult: SearchResult<Partial<JiraIssue>> = {
@@ -488,8 +489,8 @@ describe('Type Compilation Tests', () => {
                   id: 4,
                   key: 'indeterminate',
                   colorName: 'yellow',
-                  name: 'In Progress'
-                }
+                  name: 'In Progress',
+                },
               },
               created: new Date().toISOString(),
               updated: new Date().toISOString(),
@@ -499,7 +500,7 @@ describe('Type Compilation Tests', () => {
                 name: 'Task',
                 description: 'A task',
                 iconUrl: 'http://test-jira.com/task-icon.png',
-                subtask: false
+                subtask: false,
               },
               project: {
                 id: '10000',
@@ -514,15 +515,15 @@ describe('Type Compilation Tests', () => {
                   '16x16': 'http://test-jira.com/project-icon-16.png',
                   '24x24': 'http://test-jira.com/project-icon-24.png',
                   '32x32': 'http://test-jira.com/project-icon-32.png',
-                  '48x48': 'http://test-jira.com/project-icon-48.png'
-                }
-              }
-            }
-          }
+                  '48x48': 'http://test-jira.com/project-icon-48.png',
+                },
+              },
+            },
+          },
         ],
         startAt: 0,
         maxResults: 50,
-        total: 1
+        total: 1,
       };
 
       expect(config.url).toBe('http://test-jira.com');
@@ -543,7 +544,7 @@ describe('Type-only Compilation', () => {
       const _tool: JiraMCPTool = {} as JiraMCPTool;
       const _resource: JiraMCPResource = {} as JiraMCPResource;
       const _fieldDef: FieldDefinition = {} as FieldDefinition;
-      
+
       // If this compiles, the types are structurally correct
       expect(true).toBe(true);
     };

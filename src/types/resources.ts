@@ -1,6 +1,6 @@
 /**
  * MCP Resource Type Definitions
- * 
+ *
  * Type definitions for MCP resources, including field definitions,
  * schema metadata, and resource content structures.
  */
@@ -45,7 +45,14 @@ export interface FieldSchema {
   fields: Record<string, FieldDefinition>;
   nestedFields?: Record<string, NestedFieldDefinition>;
   metadata: {
-    entityType: 'issue' | 'project' | 'user' | 'board' | 'sprint' | 'worklog' | 'custom';
+    entityType:
+      | 'issue'
+      | 'project'
+      | 'user'
+      | 'board'
+      | 'sprint'
+      | 'worklog'
+      | 'custom';
     version: string;
     lastUpdated: IsoDateString;
     source: 'jira-server' | 'configuration' | 'dynamic';

@@ -37,7 +37,7 @@ const ENV_MAPPING = {
   // MCP settings
   MCP_SERVER_NAME: 'mcp.name',
   MCP_SERVER_VERSION: 'mcp.version',
-  MCP_SERVER_DESCRIPTION: 'mcp.description'
+  MCP_SERVER_DESCRIPTION: 'mcp.description',
 } as const;
 
 /**
@@ -47,9 +47,13 @@ function convertValue(value: string, path: string): unknown {
   // Boolean conversion
   if (value.toLowerCase() === 'true') return true;
   if (value.toLowerCase() === 'false') return false;
-  
+
   // Number conversion for specific paths
-  if (path.includes('timeout') || path.includes('retryAttempts') || path.includes('retryDelay')) {
+  if (
+    path.includes('timeout') ||
+    path.includes('retryAttempts') ||
+    path.includes('retryDelay')
+  ) {
     const num = parseInt(value, 10);
     if (isNaN(num)) {
       throw new ValidationError({
@@ -59,12 +63,12 @@ function convertValue(value: string, path: string): unknown {
         field: path,
         value,
         constraints: ['must be a valid number'],
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
     return num;
   }
-  
+
   // String value (default)
   return value;
 }
@@ -75,7 +79,7 @@ function convertValue(value: string, path: string): unknown {
 function setNestedProperty(obj: any, path: string, value: unknown): void {
   const keys = path.split('.');
   let current = obj;
-  
+
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
     if (!key) continue;
@@ -84,7 +88,7 @@ function setNestedProperty(obj: any, path: string, value: unknown): void {
     }
     current = current[key];
   }
-  
+
   const lastKey = keys[keys.length - 1];
   if (lastKey) {
     current[lastKey] = value;
@@ -97,12 +101,12 @@ function setNestedProperty(obj: any, path: string, value: unknown): void {
 export function loadEnvironmentVariables(): Partial<JiraServerConfig> {
   // Load .env files
   loadDotenv();
-  
+
   // Validate environment variable structure
   const envInput = EnvironmentInputSchema.parse(process.env);
-  
+
   const config: Partial<JiraServerConfig> = {};
-  
+
   // Map environment variables to configuration object
   for (const [envVar, configPath] of Object.entries(ENV_MAPPING)) {
     const value = envInput[envVar as keyof EnvironmentInput];
@@ -121,20 +125,20 @@ export function loadEnvironmentVariables(): Partial<JiraServerConfig> {
           field: envVar,
           value,
           constraints: ['valid format required'],
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
     }
   }
-  
+
   // Set up authentication structure if personalToken is provided
   if (config.personalToken) {
     config.auth = {
       personalToken: config.personalToken,
-      tokenType: 'bearer'
+      tokenType: 'bearer',
     };
   }
-  
+
   return config;
 }
 
@@ -146,22 +150,26 @@ export function mergeWithDefaults(
 ): Partial<JiraServerConfig> {
   const environment = envConfig.environment || 'development';
   const envDefaults = getEnvironmentDefaults(environment);
-  
+
   // Deep merge function
   function deepMerge(target: any, source: any): any {
     const result = { ...target };
-    
+
     for (const key in source) {
-      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      if (
+        source[key] &&
+        typeof source[key] === 'object' &&
+        !Array.isArray(source[key])
+      ) {
         result[key] = deepMerge(target[key] || {}, source[key]);
       } else if (source[key] !== undefined) {
         result[key] = source[key];
       }
     }
-    
+
     return result;
   }
-  
+
   return deepMerge(envDefaults, envConfig);
 }
 
@@ -171,13 +179,13 @@ export function mergeWithDefaults(
 export function validateRequiredEnvironmentVariables(): void {
   const required = ['JIRA_URL', 'JIRA_PERSONAL_TOKEN'];
   const missing: string[] = [];
-  
+
   for (const envVar of required) {
     if (!process.env[envVar] || process.env[envVar]?.trim() === '') {
       missing.push(envVar);
     }
   }
-  
+
   if (missing.length > 0) {
     throw new ValidationError({
       code: 'MISSING_REQUIRED_ENV',
@@ -185,7 +193,7 @@ export function validateRequiredEnvironmentVariables(): void {
       type: 'validation_error',
       field: missing.join(', '),
       constraints: missing.map(var_ => `${var_} is required`),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -193,7 +201,9 @@ export function validateRequiredEnvironmentVariables(): void {
 /**
  * Get configuration summary for logging (without sensitive data)
  */
-export function getConfigurationSummary(config: Partial<JiraServerConfig>): object {
+export function getConfigurationSummary(
+  config: Partial<JiraServerConfig>
+): object {
   return {
     environment: config.environment,
     url: config.url ? '[CONFIGURED]' : '[NOT SET]',
@@ -204,6 +214,6 @@ export function getConfigurationSummary(config: Partial<JiraServerConfig>): obje
     logFormat: config.logFormat,
     mcpServerName: config.mcp?.name,
     connectionConfig: config.connection ? '[CONFIGURED]' : '[DEFAULT]',
-    loggingConfig: config.logging ? '[CONFIGURED]' : '[DEFAULT]'
+    loggingConfig: config.logging ? '[CONFIGURED]' : '[DEFAULT]',
   };
 }

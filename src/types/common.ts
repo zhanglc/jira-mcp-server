@@ -1,6 +1,6 @@
 /**
  * Common Type Definitions
- * 
+ *
  * Shared utility types and common interfaces used throughout the application.
  */
 
@@ -14,9 +14,10 @@ export type DeepPartial<T> = {
 /**
  * Utility type requiring at least one property from the given keys
  */
-export type RequireOne<T, K extends keyof T> = T & {
-  [P in K]-?: Required<Pick<T, P>> & Partial<Pick<T, Exclude<K, P>>>;
-}[K];
+export type RequireOne<T, K extends keyof T> = T &
+  {
+    [P in K]-?: Required<Pick<T, P>> & Partial<Pick<T, Exclude<K, P>>>;
+  }[K];
 
 /**
  * Make specific properties optional
@@ -93,7 +94,12 @@ export class ValidationError extends Error {
 /**
  * Common status types
  */
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'cancelled';
+export type TaskStatus =
+  | 'pending'
+  | 'in_progress'
+  | 'completed'
+  | 'failed'
+  | 'cancelled';
 
 export type IssueStatusCategory = 'new' | 'indeterminate' | 'done';
 

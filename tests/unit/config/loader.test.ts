@@ -1,14 +1,14 @@
 /**
  * Configuration Loader Tests
- * 
+ *
  * Tests for environment variable loading and processing.
  */
 
-import { 
-  loadEnvironmentVariables, 
-  mergeWithDefaults, 
+import {
+  loadEnvironmentVariables,
+  mergeWithDefaults,
   validateRequiredEnvironmentVariables,
-  getConfigurationSummary 
+  getConfigurationSummary,
 } from '@/config/loader';
 import { ValidationError } from '@/types/common';
 
@@ -38,7 +38,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_URL = 'https://test-jira.com';
       process.env.JIRA_PERSONAL_TOKEN = 'test-token';
       process.env.NODE_ENV = 'test';
-      
+
       const config = loadEnvironmentVariables();
       expect(config.url).toBe('https://test-jira.com');
       expect(config.personalToken).toBe('test-token');
@@ -53,7 +53,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_SSL_VERIFY = 'false';
       process.env.LOG_LEVEL = 'debug';
       process.env.MCP_SERVER_NAME = 'custom-mcp';
-      
+
       const config = loadEnvironmentVariables();
       expect(config.sslVerify).toBe(false);
       expect(config.logLevel).toBe('debug');
@@ -65,7 +65,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_PERSONAL_TOKEN = 'token';
       process.env.JIRA_SSL_VERIFY = ''; // Empty string
       process.env.LOG_LEVEL = '   '; // Whitespace only
-      
+
       const config = loadEnvironmentVariables();
       expect(config.url).toBe('https://jira.com');
       expect(config.personalToken).toBe('token');
@@ -80,7 +80,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_PERSONAL_TOKEN = 'token';
       process.env.JIRA_TIMEOUT = '45000';
       process.env.JIRA_RETRY_ATTEMPTS = '5';
-      
+
       const config = loadEnvironmentVariables();
       expect(config.timeout).toBe(45000);
       expect(typeof config.timeout).toBe('number');
@@ -94,7 +94,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_SSL_VERIFY = 'false';
       process.env.LOG_CONSOLE_ENABLED = 'true';
       process.env.JIRA_KEEP_ALIVE = 'false';
-      
+
       const config = loadEnvironmentVariables();
       expect(config.sslVerify).toBe(false);
       expect(typeof config.sslVerify).toBe('boolean');
@@ -107,7 +107,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_URL = 'https://jira.com';
       process.env.JIRA_PERSONAL_TOKEN = 'token';
       process.env.JIRA_TIMEOUT = 'not-a-number';
-      
+
       expect(() => loadEnvironmentVariables()).toThrow(ValidationError);
     });
 
@@ -115,7 +115,7 @@ describe('Environment Variable Loading', () => {
       process.env.JIRA_URL = 'https://jira.com';
       process.env.JIRA_PERSONAL_TOKEN = 'token';
       process.env.JIRA_RETRY_DELAY = 'invalid-number';
-      
+
       expect(() => loadEnvironmentVariables()).toThrow(ValidationError);
       try {
         loadEnvironmentVariables();
@@ -131,20 +131,24 @@ describe('Environment Variable Loading', () => {
     it('should pass validation when all required variables are present', () => {
       process.env.JIRA_URL = 'https://jira.com';
       process.env.JIRA_PERSONAL_TOKEN = 'token';
-      
+
       expect(() => validateRequiredEnvironmentVariables()).not.toThrow();
     });
 
     it('should throw error when required variables are missing', () => {
       delete process.env.JIRA_URL;
       delete process.env.JIRA_PERSONAL_TOKEN;
-      
-      expect(() => validateRequiredEnvironmentVariables()).toThrow(ValidationError);
+
+      expect(() => validateRequiredEnvironmentVariables()).toThrow(
+        ValidationError
+      );
       try {
         validateRequiredEnvironmentVariables();
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationError);
-        expect(error.message).toContain('Missing required environment variables');
+        expect(error.message).toContain(
+          'Missing required environment variables'
+        );
         expect(error.constraints).toContain('JIRA_URL is required');
         expect(error.constraints).toContain('JIRA_PERSONAL_TOKEN is required');
       }
@@ -153,15 +157,19 @@ describe('Environment Variable Loading', () => {
     it('should throw error when required variables are empty', () => {
       process.env.JIRA_URL = '';
       process.env.JIRA_PERSONAL_TOKEN = '   '; // Whitespace only
-      
-      expect(() => validateRequiredEnvironmentVariables()).toThrow(ValidationError);
+
+      expect(() => validateRequiredEnvironmentVariables()).toThrow(
+        ValidationError
+      );
     });
 
     it('should throw error when only some required variables are missing', () => {
       process.env.JIRA_URL = 'https://jira.com';
       delete process.env.JIRA_PERSONAL_TOKEN;
-      
-      expect(() => validateRequiredEnvironmentVariables()).toThrow(ValidationError);
+
+      expect(() => validateRequiredEnvironmentVariables()).toThrow(
+        ValidationError
+      );
       try {
         validateRequiredEnvironmentVariables();
       } catch (error) {
@@ -176,9 +184,9 @@ describe('Environment Variable Loading', () => {
         environment: 'development' as const,
         url: 'https://jira.com',
         personalToken: 'token',
-        timeout: 45000
+        timeout: 45000,
       };
-      
+
       const merged = mergeWithDefaults(envConfig);
       expect(merged.environment).toBe('development');
       expect(merged.url).toBe('https://jira.com');
@@ -191,9 +199,9 @@ describe('Environment Variable Loading', () => {
       const envConfig = {
         environment: 'production' as const,
         url: 'https://jira.com',
-        personalToken: 'token'
+        personalToken: 'token',
       };
-      
+
       const merged = mergeWithDefaults(envConfig);
       expect(merged.environment).toBe('production');
       expect(merged.logLevel).toBe('info'); // From production defaults
@@ -209,11 +217,11 @@ describe('Environment Variable Loading', () => {
         logging: {
           level: 'warn' as const,
           console: {
-            enabled: false
-          }
-        }
+            enabled: false,
+          },
+        },
       };
-      
+
       const merged = mergeWithDefaults(envConfig);
       expect(merged.logging?.level).toBe('warn'); // From env config
       expect(merged.logging?.console?.enabled).toBe(false); // From env config
@@ -224,9 +232,9 @@ describe('Environment Variable Loading', () => {
     it('should default to development environment when not specified', () => {
       const envConfig = {
         url: 'https://jira.com',
-        personalToken: 'token'
+        personalToken: 'token',
       };
-      
+
       const merged = mergeWithDefaults(envConfig);
       expect(merged.environment).toBe('development');
       expect(merged.logLevel).toBe('debug'); // Development default
@@ -245,11 +253,11 @@ describe('Environment Variable Loading', () => {
         logFormat: 'json' as const,
         mcp: { name: 'custom-mcp' },
         connection: { timeout: 45000 },
-        logging: { level: 'debug' as const }
+        logging: { level: 'debug' as const },
       };
-      
+
       const summary = getConfigurationSummary(config);
-      
+
       expect(summary.environment).toBe('development');
       expect(summary.url).toBe('[CONFIGURED]');
       expect(summary.personalToken).toBe('[CONFIGURED]'); // Sensitive data hidden
@@ -264,11 +272,11 @@ describe('Environment Variable Loading', () => {
     it('should handle missing optional fields in summary', () => {
       const config = {
         environment: 'test' as const,
-        logLevel: 'error' as const
+        logLevel: 'error' as const,
       };
-      
+
       const summary = getConfigurationSummary(config);
-      
+
       expect(summary.url).toBe('[NOT SET]');
       expect(summary.personalToken).toBe('[NOT SET]');
       expect(summary.connectionConfig).toBe('[DEFAULT]');

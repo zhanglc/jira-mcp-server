@@ -1,15 +1,15 @@
 /**
  * Jira Server API Response Type Definitions
- * 
+ *
  * Comprehensive type definitions for Jira Server/Data Center API responses.
  * These types are specifically designed for Server/DC environments (not Cloud).
  */
 
-import type { 
-  IsoDateString, 
-  SearchResult, 
+import type {
+  IsoDateString,
+  SearchResult,
   IssueStatusCategory,
-  PaginationOptions 
+  PaginationOptions,
 } from './common';
 
 /**
@@ -172,10 +172,10 @@ export interface JiraProject extends JiraEntity {
 /**
  * Jira Custom Field Value (can be various types)
  */
-export type JiraCustomFieldValue = 
-  | string 
-  | number 
-  | boolean 
+export type JiraCustomFieldValue =
+  | string
+  | number
+  | boolean
   | null
   | JiraUser
   | JiraUser[]
@@ -198,27 +198,27 @@ export interface JiraIssueFields {
   priority?: JiraPriority;
   issuetype: JiraIssueType;
   project: JiraProject;
-  
+
   // People
   assignee?: JiraUser;
   reporter?: JiraUser;
   creator?: JiraUser;
-  
+
   // Dates
   created: IsoDateString;
   updated: IsoDateString;
   resolutiondate?: IsoDateString;
   duedate?: IsoDateString;
-  
+
   // Resolution
   resolution?: JiraResolution;
-  
+
   // Classifications
   components: JiraComponent[];
   fixVersions: JiraVersion[];
   versions: JiraVersion[];
   labels: string[];
-  
+
   // Relationships
   parent?: {
     id: string;
@@ -241,7 +241,7 @@ export interface JiraIssueFields {
     };
   }>;
   issuelinks?: JiraIssueLink[];
-  
+
   // Time tracking
   timeoriginalestimate?: number;
   timeestimate?: number;
@@ -249,7 +249,7 @@ export interface JiraIssueFields {
   aggregatetimeoriginalestimate?: number;
   aggregatetimeestimate?: number;
   aggregatetimespent?: number;
-  
+
   // Worklog
   worklog?: {
     startAt: number;
@@ -257,10 +257,10 @@ export interface JiraIssueFields {
     total: number;
     worklogs: JiraWorklog[];
   };
-  
+
   // Attachments
   attachment?: JiraAttachment[];
-  
+
   // Comments
   comment?: {
     startAt: number;
@@ -268,7 +268,7 @@ export interface JiraIssueFields {
     total: number;
     comments: JiraComment[];
   };
-  
+
   // Votes and watches
   votes?: {
     self: string;
@@ -282,7 +282,7 @@ export interface JiraIssueFields {
     isWatching: boolean;
     watchers: JiraUser[];
   };
-  
+
   // Security
   security?: {
     self: string;
@@ -290,10 +290,10 @@ export interface JiraIssueFields {
     name: string;
     description: string;
   };
-  
+
   // Environment and other text fields
   environment?: string;
-  
+
   // Custom fields (Server/DC specific patterns)
   [key: `customfield_${number}`]: JiraCustomFieldValue;
 }
