@@ -12,7 +12,6 @@ import type { Environment, LogLevel } from '../types/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { LogFormat } from '../types/config';
 
-
 // Environment enum schema
 export const EnvironmentSchema = z.enum([
   'development',

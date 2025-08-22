@@ -1,6 +1,6 @@
 /**
  * MCP Tools Registration Framework
- * 
+ *
  * This module implements the MCP tools registration system, providing:
  * - Tool registration and management
  * - Tool execution pipeline with error handling
@@ -11,11 +11,11 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Logger } from 'winston';
 import { z } from 'zod';
-import type { 
+import type {
   JiraServerConfig,
   MCPToolContext,
   MCPToolHandler,
-  ToolResponse 
+  ToolResponse,
 } from '@/types';
 
 /**
@@ -61,7 +61,7 @@ class ToolsRegistry {
       totalExecutionTime: 0,
       averageExecutionTime: 0,
       lastExecuted: new Date().toISOString(),
-      errors: 0
+      errors: 0,
     });
   }
 
@@ -78,7 +78,8 @@ class ToolsRegistry {
     if (metrics) {
       metrics.executionCount++;
       metrics.totalExecutionTime += executionTime;
-      metrics.averageExecutionTime = metrics.totalExecutionTime / metrics.executionCount;
+      metrics.averageExecutionTime =
+        metrics.totalExecutionTime / metrics.executionCount;
       metrics.lastExecuted = new Date().toISOString();
       if (!success) {
         metrics.errors++;
@@ -88,7 +89,7 @@ class ToolsRegistry {
 
   getMetrics(name?: string): ToolMetrics | ToolMetrics[] {
     if (name) {
-      return this.metrics.get(name) || {} as ToolMetrics;
+      return this.metrics.get(name) || ({} as ToolMetrics);
     }
     return Array.from(this.metrics.values());
   }
@@ -107,9 +108,11 @@ function createToolContext(
 ): MCPToolContext {
   return {
     config,
-    requestId: requestId || `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    requestId:
+      requestId ||
+      `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     clientInfo: clientInfo || { name: 'unknown', version: '1.0.0' },
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
@@ -121,14 +124,17 @@ function wrapToolHandler(
   handler: MCPToolHandler,
   logger: Logger
 ): MCPToolHandler {
-  return async (args: Record<string, any>, context: MCPToolContext): Promise<string> => {
+  return async (
+    args: Record<string, any>,
+    context: MCPToolContext
+  ): Promise<string> => {
     const startTime = Date.now();
-    
+
     try {
       logger.debug(`Executing tool: ${toolName}`, {
         tool: toolName,
         requestId: context.requestId,
-        args: Object.keys(args)
+        args: Object.keys(args),
       });
 
       const result = await handler(args, context);
@@ -140,14 +146,13 @@ function wrapToolHandler(
       logger.info(`Tool executed successfully: ${toolName}`, {
         tool: toolName,
         requestId: context.requestId,
-        executionTime
+        executionTime,
       });
 
       return result;
-
     } catch (error) {
       const executionTime = Date.now() - startTime;
-      
+
       // Update metrics
       toolsRegistry.updateMetrics(toolName, executionTime, false);
 
@@ -155,7 +160,7 @@ function wrapToolHandler(
         tool: toolName,
         requestId: context.requestId,
         error: error instanceof Error ? error.message : String(error),
-        executionTime
+        executionTime,
       });
 
       // Return structured error response
@@ -163,18 +168,19 @@ function wrapToolHandler(
         success: false,
         error: {
           code: 'TOOL_EXECUTION_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown error occurred',
+          message:
+            error instanceof Error ? error.message : 'Unknown error occurred',
           timestamp: new Date().toISOString(),
           details: {
             tool: toolName,
-            requestId: context.requestId
-          }
+            requestId: context.requestId,
+          },
         },
         meta: {
           requestId: context.requestId!,
           timestamp: new Date().toISOString(),
-          executionTime
-        }
+          executionTime,
+        },
       };
 
       return JSON.stringify(errorResponse);
@@ -194,30 +200,30 @@ function zodToMCPSchema(schema: z.ZodSchema): any {
 
     for (const [key, value] of Object.entries(shape)) {
       if (value instanceof z.ZodString) {
-        properties[key] = { 
-          type: 'string', 
-          description: value.description || `String parameter: ${key}` 
+        properties[key] = {
+          type: 'string',
+          description: value.description || `String parameter: ${key}`,
         };
       } else if (value instanceof z.ZodNumber) {
-        properties[key] = { 
-          type: 'number', 
-          description: value.description || `Number parameter: ${key}` 
+        properties[key] = {
+          type: 'number',
+          description: value.description || `Number parameter: ${key}`,
         };
       } else if (value instanceof z.ZodBoolean) {
-        properties[key] = { 
-          type: 'boolean', 
-          description: value.description || `Boolean parameter: ${key}` 
+        properties[key] = {
+          type: 'boolean',
+          description: value.description || `Boolean parameter: ${key}`,
         };
       } else if (value instanceof z.ZodArray) {
-        properties[key] = { 
-          type: 'array', 
+        properties[key] = {
+          type: 'array',
           items: { type: 'string' },
-          description: value.description || `Array parameter: ${key}` 
+          description: value.description || `Array parameter: ${key}`,
         };
       } else {
-        properties[key] = { 
-          type: 'string', 
-          description: `Parameter: ${key}` 
+        properties[key] = {
+          type: 'string',
+          description: `Parameter: ${key}`,
         };
       }
 
@@ -231,7 +237,7 @@ function zodToMCPSchema(schema: z.ZodSchema): any {
       type: 'object',
       properties,
       required,
-      additionalProperties: false
+      additionalProperties: false,
     };
   }
 
@@ -239,7 +245,7 @@ function zodToMCPSchema(schema: z.ZodSchema): any {
   return {
     type: 'object',
     properties: {},
-    additionalProperties: true
+    additionalProperties: true,
   };
 }
 
@@ -262,11 +268,12 @@ export function registerTool(
   server.registerTool(
     tool.name,
     {
-      title: tool.name.split('_').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-      ).join(' '),
+      title: tool.name
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' '),
       description: tool.description,
-      inputSchema: zodToMCPSchema(tool.inputSchema)
+      inputSchema: zodToMCPSchema(tool.inputSchema),
     },
     async (args: Record<string, any>) => {
       // Validate input against schema
@@ -280,38 +287,40 @@ export function registerTool(
             timestamp: new Date().toISOString(),
             details: {
               errors: parseResult.error.errors,
-              received: args
-            }
+              received: args,
+            },
           },
           meta: {
-            timestamp: new Date().toISOString()
-          }
+            timestamp: new Date().toISOString(),
+          },
         };
-        
+
         return {
-          content: [{ 
-            type: 'text' as const, 
-            text: JSON.stringify(validationError, null, 2) 
-          }],
-          isError: true
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(validationError, null, 2),
+            },
+          ],
+          isError: true,
         };
       }
 
       // Create execution context
       const context = createToolContext(config);
-      
+
       // Execute tool handler
       const result = await wrappedHandler(parseResult.data, context);
-      
+
       return {
-        content: [{ type: 'text' as const, text: result }]
+        content: [{ type: 'text' as const, text: result }],
       };
     }
   );
 
   logger.info(`Registered tool: ${tool.name}`, {
     tool: tool.name,
-    category: tool.category
+    category: tool.category,
   });
 }
 
@@ -327,13 +336,13 @@ export async function registerTools(
 
   // Import and register all tool categories
   // Note: These imports will be implemented in subsequent tasks
-  
+
   try {
     // Issue tools (MCP-TOOL-001)
     // const issueTools = await import('./operations/issue-tools.js');
     // issueTools.getTools().forEach(tool => registerTool(server, config, logger, tool));
 
-    // Search tools (MCP-TOOL-002) 
+    // Search tools (MCP-TOOL-002)
     // const searchTools = await import('./search/search-tools.js');
     // searchTools.getTools().forEach(tool => registerTool(server, config, logger, tool));
 
@@ -350,7 +359,10 @@ export async function registerTools(
       name: 'health_check',
       description: 'Check the health status of the Jira MCP server',
       inputSchema: z.object({
-        include_metrics: z.boolean().optional().describe('Include performance metrics in response')
+        include_metrics: z
+          .boolean()
+          .optional()
+          .describe('Include performance metrics in response'),
       }),
       category: 'operation',
       handler: async (args, context) => {
@@ -361,21 +373,21 @@ export async function registerTools(
             timestamp: context.timestamp,
             server: {
               name: 'jira-server-mcp',
-              version: '1.0.0'
+              version: '1.0.0',
             },
             jira: {
               url: context.config.url,
-              connected: true // This would be a real check in practice
+              connected: true, // This would be a real check in practice
             },
             ...(args.include_metrics && {
-              metrics: toolsRegistry.getMetrics()
-            })
+              metrics: toolsRegistry.getMetrics(),
+            }),
           },
           meta: {
             requestId: context.requestId!,
             timestamp: context.timestamp,
-            executionTime: 1
-          }
+            executionTime: 1,
+          },
         };
 
         return JSON.stringify(response, null, 2);
@@ -384,25 +396,24 @@ export async function registerTools(
         {
           name: 'Basic health check',
           description: 'Check if the server is running',
-          arguments: {}
+          arguments: {},
         },
         {
           name: 'Health check with metrics',
           description: 'Check server health and include performance metrics',
-          arguments: { include_metrics: true }
-        }
-      ]
+          arguments: { include_metrics: true },
+        },
+      ],
     });
 
     const registeredTools = toolsRegistry.getAll();
     logger.info(`Tool registration completed successfully`, {
       toolCount: registeredTools.length,
-      tools: registeredTools.map(t => ({ name: t.name, category: t.category }))
+      tools: registeredTools.map(t => ({ name: t.name, category: t.category })),
     });
-
   } catch (error) {
     logger.error('Failed to register tools', {
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }
@@ -417,7 +428,7 @@ export function getToolsRegistry(): {
 } {
   return {
     getAll: () => toolsRegistry.getAll(),
-    getMetrics: (name?: string) => toolsRegistry.getMetrics(name)
+    getMetrics: (name?: string) => toolsRegistry.getMetrics(name),
   };
 }
 
@@ -438,6 +449,6 @@ export function createToolDefinition(
     inputSchema,
     handler,
     category,
-    examples: examples || []
+    examples: examples || [],
   };
 }

@@ -1,14 +1,14 @@
 /**
  * MCP Test Utilities
- * 
+ *
  * Utility functions for testing MCP tools and resources.
  */
 
-import type { 
-  MCPToolContext, 
+import type {
+  MCPToolContext,
   MCPResourceContext,
   ToolResponse,
-  ResourceContent 
+  ResourceContent,
 } from '@/types/mcp';
 import type { JiraServerConfig } from '@/types/config';
 
@@ -24,12 +24,12 @@ export function createMockToolContext(
       personalToken: 'test-token',
       timeout: 5000,
       sslVerify: true,
-      projectsFilter: []
+      projectsFilter: [],
     },
     server: {
       name: 'test-jira-mcp',
-      version: '1.0.0'
-    }
+      version: '1.0.0',
+    },
   };
 
   return {
@@ -37,10 +37,10 @@ export function createMockToolContext(
     requestId: 'test-request-123',
     clientInfo: {
       name: 'test-client',
-      version: '1.0.0'
+      version: '1.0.0',
     },
     timestamp: new Date().toISOString(),
-    ...overrides
+    ...overrides,
   };
 }
 
@@ -66,9 +66,9 @@ export function createMockToolResponse<T = any>(
     meta: {
       requestId: 'test-request-123',
       timestamp: new Date().toISOString(),
-      executionTime: 100
+      executionTime: 100,
     },
-    ...overrides
+    ...overrides,
   };
 }
 
@@ -84,7 +84,7 @@ export function createMockResourceContent(
     uri,
     mimeType: 'application/json',
     text,
-    ...overrides
+    ...overrides,
   };
 }
 
@@ -132,17 +132,12 @@ export function generateFieldSelectionTestCases() {
     nested: ['assignee.displayName', 'project.key', 'status.name'],
     complex: [
       'assignee.displayName',
-      'project.lead.emailAddress', 
+      'project.lead.emailAddress',
       'components[0].name',
-      'fixVersions[*].releaseDate'
+      'fixVersions[*].releaseDate',
     ],
     invalid: ['nonexistent', 'invalid.field', 'badarray[invalid]'],
-    mixed: [
-      'summary',
-      'assignee.displayName',
-      'nonexistent',
-      'project.key'
-    ]
+    mixed: ['summary', 'assignee.displayName', 'nonexistent', 'project.key'],
   };
 }
 
@@ -164,17 +159,17 @@ export class MockJiraResponseFactory {
             id: 2,
             key: 'new',
             colorName: 'blue-gray',
-            name: 'To Do'
-          }
+            name: 'To Do',
+          },
         },
         priority: {
           id: '3',
-          name: 'Medium'
+          name: 'Medium',
         },
         assignee: {
           name: 'testuser',
           displayName: 'Test User',
-          emailAddress: 'test@example.com'
+          emailAddress: 'test@example.com',
         },
         project: {
           id: '10000',
@@ -183,12 +178,12 @@ export class MockJiraResponseFactory {
           lead: {
             name: 'projectlead',
             displayName: 'Project Lead',
-            emailAddress: 'lead@example.com'
-          }
+            emailAddress: 'lead@example.com',
+          },
         },
         created: '2023-01-01T10:00:00.000Z',
-        updated: '2023-01-02T15:30:00.000Z'
-      }
+        updated: '2023-01-02T15:30:00.000Z',
+      },
     };
   }
 
@@ -197,7 +192,7 @@ export class MockJiraResponseFactory {
       startAt: 0,
       maxResults: 50,
       total: issues.length,
-      issues
+      issues,
     };
   }
 
@@ -209,11 +204,11 @@ export class MockJiraResponseFactory {
       self: `https://test.atlassian.net/rest/api/2/project/${projectKey}`,
       lead: {
         name: 'projectlead',
-        displayName: 'Project Lead'
+        displayName: 'Project Lead',
       },
       components: [],
       versions: [],
-      roles: {}
+      roles: {},
     };
   }
 
@@ -223,7 +218,7 @@ export class MockJiraResponseFactory {
       displayName: 'Test User',
       emailAddress: `${username}@example.com`,
       active: true,
-      self: `https://test.atlassian.net/rest/api/2/user?username=${username}`
+      self: `https://test.atlassian.net/rest/api/2/user?username=${username}`,
     };
   }
 
@@ -237,8 +232,8 @@ export class MockJiraResponseFactory {
         type: 'project',
         projectId: 10000,
         projectKey: 'TEST',
-        projectName: 'Test Project'
-      }
+        projectName: 'Test Project',
+      },
     };
   }
 
@@ -249,7 +244,7 @@ export class MockJiraResponseFactory {
       state: 'active',
       self: `https://test.atlassian.net/rest/agile/1.0/sprint/${sprintId}`,
       startDate: '2023-01-01T10:00:00.000Z',
-      endDate: '2023-01-15T10:00:00.000Z'
+      endDate: '2023-01-15T10:00:00.000Z',
     };
   }
 }
@@ -262,7 +257,7 @@ export function expectValidToolResponse<T>(response: ToolResponse<T>) {
   expect(response).toHaveProperty('meta');
   expect(response.meta).toHaveProperty('timestamp');
   expect(response.meta).toHaveProperty('requestId');
-  
+
   if (response.success) {
     expect(response).toHaveProperty('data');
   } else {
@@ -286,7 +281,7 @@ export function expectFieldSelectionWorking(
 ) {
   // Check that only requested fields are present
   const resultFields = Object.keys(result);
-  
+
   for (const field of requestedFields) {
     if (field.includes('.')) {
       // For nested fields, check if the root field exists
@@ -301,12 +296,15 @@ export function expectFieldSelectionWorking(
 /**
  * Performance testing helpers
  */
-export function measureExecutionTime<T>(fn: () => T): { result: T; time: number } {
+export function measureExecutionTime<T>(fn: () => T): {
+  result: T;
+  time: number;
+} {
   const start = process.hrtime.bigint();
   const result = fn();
   const end = process.hrtime.bigint();
   const time = Number(end - start) / 1_000_000; // Convert to milliseconds
-  
+
   return { result, time };
 }
 
@@ -317,6 +315,6 @@ export async function measureAsyncExecutionTime<T>(
   const result = await fn();
   const end = process.hrtime.bigint();
   const time = Number(end - start) / 1_000_000; // Convert to milliseconds
-  
+
   return { result, time };
 }
