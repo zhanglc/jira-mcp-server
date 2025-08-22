@@ -1,6 +1,6 @@
 /**
  * Field Selection Test Utilities
- * 
+ *
  * Specialized utilities for testing field selection and filtering functionality.
  */
 
@@ -16,10 +16,16 @@ export class FieldSelectionTestData {
       simple: {
         description: 'Simple field selection',
         requestedFields: ['summary', 'status', 'priority'],
-        availableFields: ['summary', 'status', 'priority', 'description', 'assignee'],
+        availableFields: [
+          'summary',
+          'status',
+          'priority',
+          'description',
+          'assignee',
+        ],
         expectedValid: ['summary', 'status', 'priority'],
         expectedInvalid: [],
-        expectedNested: []
+        expectedNested: [],
       },
 
       nested: {
@@ -28,7 +34,7 @@ export class FieldSelectionTestData {
         availableFields: ['assignee', 'project', 'status', 'summary'],
         expectedValid: ['assignee.displayName', 'project.key', 'status.name'],
         expectedInvalid: [],
-        expectedNested: ['assignee.displayName', 'project.key', 'status.name']
+        expectedNested: ['assignee.displayName', 'project.key', 'status.name'],
       },
 
       deepNested: {
@@ -37,22 +43,22 @@ export class FieldSelectionTestData {
           'project.lead.displayName',
           'project.lead.emailAddress',
           'assignee.groups.items[0].name',
-          'status.statusCategory.name'
+          'status.statusCategory.name',
         ],
         availableFields: ['project', 'assignee', 'status'],
         expectedValid: [
           'project.lead.displayName',
-          'project.lead.emailAddress', 
+          'project.lead.emailAddress',
           'assignee.groups.items[0].name',
-          'status.statusCategory.name'
+          'status.statusCategory.name',
         ],
         expectedInvalid: [],
         expectedNested: [
           'project.lead.displayName',
           'project.lead.emailAddress',
-          'assignee.groups.items[0].name', 
-          'status.statusCategory.name'
-        ]
+          'assignee.groups.items[0].name',
+          'status.statusCategory.name',
+        ],
       },
 
       arrayAccess: {
@@ -61,46 +67,54 @@ export class FieldSelectionTestData {
           'components[0].name',
           'components[*].description',
           'fixVersions[0].releaseDate',
-          'labels[*]'
+          'labels[*]',
         ],
         availableFields: ['components', 'fixVersions', 'labels'],
         expectedValid: [
           'components[0].name',
           'components[*].description',
           'fixVersions[0].releaseDate',
-          'labels[*]'
+          'labels[*]',
         ],
         expectedInvalid: [],
         expectedNested: [
           'components[0].name',
-          'components[*].description', 
+          'components[*].description',
           'fixVersions[0].releaseDate',
-          'labels[*]'
-        ]
+          'labels[*]',
+        ],
       },
 
       mixed: {
         description: 'Mixed valid and invalid fields',
         requestedFields: [
-          'summary',              // Valid simple
+          'summary', // Valid simple
           'assignee.displayName', // Valid nested
-          'nonexistent',          // Invalid
-          'project.invalid',      // Invalid nested
-          'status.name'           // Valid nested
+          'nonexistent', // Invalid
+          'project.invalid', // Invalid nested
+          'status.name', // Valid nested
         ],
         availableFields: ['summary', 'assignee', 'project', 'status'],
         expectedValid: ['summary', 'assignee.displayName', 'status.name'],
         expectedInvalid: ['nonexistent', 'project.invalid'],
-        expectedNested: ['assignee.displayName', 'status.name']
+        expectedNested: ['assignee.displayName', 'status.name'],
       },
 
       invalid: {
         description: 'All invalid field selections',
-        requestedFields: ['nonexistent', 'invalid.field', 'missing.deeply.nested'],
+        requestedFields: [
+          'nonexistent',
+          'invalid.field',
+          'missing.deeply.nested',
+        ],
         availableFields: ['summary', 'status', 'assignee'],
         expectedValid: [],
-        expectedInvalid: ['nonexistent', 'invalid.field', 'missing.deeply.nested'],
-        expectedNested: ['invalid.field', 'missing.deeply.nested']
+        expectedInvalid: [
+          'nonexistent',
+          'invalid.field',
+          'missing.deeply.nested',
+        ],
+        expectedNested: ['invalid.field', 'missing.deeply.nested'],
       },
 
       empty: {
@@ -109,7 +123,7 @@ export class FieldSelectionTestData {
         availableFields: ['summary', 'status', 'assignee'],
         expectedValid: [],
         expectedInvalid: [],
-        expectedNested: []
+        expectedNested: [],
       },
 
       allFields: {
@@ -118,8 +132,8 @@ export class FieldSelectionTestData {
         availableFields: ['summary', 'status', 'assignee', 'project'],
         expectedValid: ['summary', 'status', 'assignee', 'project'],
         expectedInvalid: [],
-        expectedNested: []
-      }
+        expectedNested: [],
+      },
     };
   }
 
@@ -128,8 +142,9 @@ export class FieldSelectionTestData {
    */
   static getPerformanceScenarios() {
     const largeFieldSet = Array.from({ length: 100 }, (_, i) => `field${i}`);
-    const deepNestedFields = Array.from({ length: 50 }, (_, i) => 
-      `level1.level2.level3.level4.field${i}`
+    const deepNestedFields = Array.from(
+      { length: 50 },
+      (_, i) => `level1.level2.level3.level4.field${i}`
     );
 
     return {
@@ -137,14 +152,14 @@ export class FieldSelectionTestData {
         description: 'Large number of simple fields',
         requestedFields: largeFieldSet,
         availableFields: largeFieldSet,
-        expectedExecutionTime: 100 // milliseconds
+        expectedExecutionTime: 100, // milliseconds
       },
 
       deepNesting: {
         description: 'Deep nested field access',
         requestedFields: deepNestedFields,
         availableFields: ['level1'],
-        expectedExecutionTime: 200 // milliseconds
+        expectedExecutionTime: 200, // milliseconds
       },
 
       complexMixed: {
@@ -153,11 +168,11 @@ export class FieldSelectionTestData {
           ...largeFieldSet.slice(0, 25),
           ...deepNestedFields.slice(0, 25),
           'array[0].nested.field',
-          'array[*].nested.deep.field'
+          'array[*].nested.deep.field',
         ],
         availableFields: [...largeFieldSet.slice(0, 25), 'level1', 'array'],
-        expectedExecutionTime: 300 // milliseconds
-      }
+        expectedExecutionTime: 300, // milliseconds
+      },
     };
   }
 }
@@ -191,7 +206,7 @@ export class FieldSelectionValidator {
 
         for (let i = 0; i < fieldPath.length; i++) {
           const segment = fieldPath[i];
-          
+
           if (current === null || current === undefined) {
             valid = false;
             break;
@@ -201,7 +216,7 @@ export class FieldSelectionValidator {
             // Handle array access
             const [arrayField, indexPart] = segment.split('[');
             const index = indexPart.replace(']', '');
-            
+
             if (!current[arrayField]) {
               valid = false;
               break;
@@ -218,7 +233,10 @@ export class FieldSelectionValidator {
             } else {
               // Specific index access
               const idx = parseInt(index);
-              if (!Array.isArray(current[arrayField]) || !current[arrayField][idx]) {
+              if (
+                !Array.isArray(current[arrayField]) ||
+                !current[arrayField][idx]
+              ) {
                 valid = false;
                 break;
               }
@@ -234,7 +252,9 @@ export class FieldSelectionValidator {
         }
 
         if (!valid) {
-          warnings.push(`Nested field '${field}' not found or incomplete in result`);
+          warnings.push(
+            `Nested field '${field}' not found or incomplete in result`
+          );
         }
       } else {
         // Handle simple fields
@@ -247,11 +267,14 @@ export class FieldSelectionValidator {
     // Check for unexpected fields in result
     const resultFields = this.getFieldPaths(result);
     const expectedPaths = this.expandFieldPaths(requestedFields);
-    
+
     for (const resultField of resultFields) {
-      if (!expectedPaths.some(expected => 
-        resultField.startsWith(expected) || expected.startsWith(resultField)
-      )) {
+      if (
+        !expectedPaths.some(
+          expected =>
+            resultField.startsWith(expected) || expected.startsWith(resultField)
+        )
+      ) {
         warnings.push(`Unexpected field '${resultField}' found in result`);
       }
     }
@@ -259,7 +282,7 @@ export class FieldSelectionValidator {
     return {
       success: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -342,7 +365,7 @@ export class FieldSelectionPerformanceTester {
       const start = process.hrtime.bigint();
       const result = await selectionFn(fields);
       const end = process.hrtime.bigint();
-      
+
       const time = Number(end - start) / 1_000_000; // Convert to milliseconds
       times.push(time);
       results.push(result);
@@ -352,7 +375,7 @@ export class FieldSelectionPerformanceTester {
       averageTime: times.reduce((a, b) => a + b, 0) / times.length,
       minTime: Math.min(...times),
       maxTime: Math.max(...times),
-      results
+      results,
     };
   }
 
@@ -372,7 +395,7 @@ export class FieldSelectionPerformanceTester {
 
     return {
       result,
-      memoryUsed: memAfter - memBefore
+      memoryUsed: memAfter - memBefore,
     };
   }
 }
@@ -400,14 +423,15 @@ export class FieldSelectionMockData {
             id: 2,
             key: 'new',
             colorName: 'blue-gray',
-            name: 'To Do'
-          }
+            name: 'To Do',
+          },
         },
         priority: {
           id: '3',
           name: 'Medium',
           description: 'Medium priority',
-          iconUrl: 'https://test.atlassian.net/images/icons/priorities/medium.svg'
+          iconUrl:
+            'https://test.atlassian.net/images/icons/priorities/medium.svg',
         },
         assignee: {
           name: 'testuser',
@@ -417,20 +441,20 @@ export class FieldSelectionMockData {
           active: true,
           avatarUrls: {
             '16x16': 'https://test.atlassian.net/avatar/16',
-            '24x24': 'https://test.atlassian.net/avatar/24'
+            '24x24': 'https://test.atlassian.net/avatar/24',
           },
           groups: {
             size: 2,
             items: [
               { id: '1', name: 'jira-users' },
-              { id: '2', name: 'developers' }
-            ]
-          }
+              { id: '2', name: 'developers' },
+            ],
+          },
         },
         reporter: {
           name: 'reporter',
           displayName: 'Issue Reporter',
-          emailAddress: 'reporter@example.com'
+          emailAddress: 'reporter@example.com',
         },
         project: {
           id: '10000',
@@ -440,7 +464,7 @@ export class FieldSelectionMockData {
           lead: {
             name: 'projectlead',
             displayName: 'Project Lead',
-            emailAddress: 'lead@example.com'
+            emailAddress: 'lead@example.com',
           },
           components: [
             {
@@ -449,22 +473,22 @@ export class FieldSelectionMockData {
               description: 'Frontend components',
               lead: {
                 name: 'frontendlead',
-                displayName: 'Frontend Lead'
-              }
+                displayName: 'Frontend Lead',
+              },
             },
             {
               id: '10002',
               name: 'Backend',
-              description: 'Backend components'
-            }
-          ]
+              description: 'Backend components',
+            },
+          ],
         },
         components: [
           {
             id: '10001',
             name: 'Frontend',
-            description: 'Frontend components'
-          }
+            description: 'Frontend components',
+          },
         ],
         fixVersions: [
           {
@@ -473,15 +497,15 @@ export class FieldSelectionMockData {
             description: 'First release',
             released: false,
             archived: false,
-            releaseDate: '2023-12-31'
-          }
+            releaseDate: '2023-12-31',
+          },
         ],
         versions: [
           {
             id: '10001',
             name: 'Version 0.9',
-            released: true
-          }
+            released: true,
+          },
         ],
         labels: ['bug', 'critical', 'frontend'],
         created: '2023-01-01T10:00:00.000Z',
@@ -500,32 +524,32 @@ export class FieldSelectionMockData {
               id: '10000',
               author: {
                 name: 'testuser',
-                displayName: 'Test User'
+                displayName: 'Test User',
               },
               comment: 'Initial work on the issue',
               started: '2023-01-01T09:00:00.000Z',
               timeSpent: '30m',
-              timeSpentSeconds: 1800
-            }
-          ]
+              timeSpentSeconds: 1800,
+            },
+          ],
         },
         // Custom fields
         customfield_10001: 'Custom text value',
         customfield_10002: {
           value: 'Option 1',
-          id: '10001'
+          id: '10001',
         },
         customfield_10003: [
           { value: 'Multi 1', id: '20001' },
-          { value: 'Multi 2', id: '20002' }
+          { value: 'Multi 2', id: '20002' },
         ],
         customfield_10004: 42.5,
         customfield_10005: '2023-01-01',
         customfield_10006: {
           name: 'customuser',
-          displayName: 'Custom User'
-        }
-      }
+          displayName: 'Custom User',
+        },
+      },
     };
   }
 
@@ -542,8 +566,8 @@ export class FieldSelectionMockData {
         expected: {
           summary: baseIssue.fields.summary,
           status: baseIssue.fields.status,
-          priority: baseIssue.fields.priority
-        }
+          priority: baseIssue.fields.priority,
+        },
       },
 
       nestedFields: {
@@ -551,28 +575,32 @@ export class FieldSelectionMockData {
         fields: ['assignee.displayName', 'project.key', 'status.name'],
         expected: {
           assignee: {
-            displayName: baseIssue.fields.assignee.displayName
+            displayName: baseIssue.fields.assignee.displayName,
           },
           project: {
-            key: baseIssue.fields.project.key
+            key: baseIssue.fields.project.key,
           },
           status: {
-            name: baseIssue.fields.status.name
-          }
-        }
+            name: baseIssue.fields.status.name,
+          },
+        },
       },
 
       arrayFields: {
         input: baseIssue,
         fields: ['components[0].name', 'fixVersions[*].name', 'labels[*]'],
         expected: {
-          components: [{
-            name: baseIssue.fields.components[0].name
-          }],
-          fixVersions: baseIssue.fields.fixVersions.map(v => ({ name: v.name })),
-          labels: baseIssue.fields.labels
-        }
-      }
+          components: [
+            {
+              name: baseIssue.fields.components[0].name,
+            },
+          ],
+          fixVersions: baseIssue.fields.fixVersions.map(v => ({
+            name: v.name,
+          })),
+          labels: baseIssue.fields.labels,
+        },
+      },
     };
   }
 }

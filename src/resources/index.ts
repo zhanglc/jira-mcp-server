@@ -1,5 +1,6 @@
 /**
  * MCP Resources Registration Framework
+
  * 
  * This module implements the MCP resources registration system for Jira field definitions.
  * Provides 7 field definition resources for MCP clients to understand available fields.
@@ -31,7 +32,7 @@ export interface ResourceHandler {
 
 /**
  * Register all resources with the MCP server
- * 
+ *
  * @param server - The MCP server instance
  * @param config - Server configuration
  * @param logger - Logger instance

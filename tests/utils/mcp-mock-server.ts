@@ -1,6 +1,6 @@
 /**
  * MSW Mock Server Setup for Jira API
- * 
+ *
  * Mock server configuration for testing Jira Server/Data Center API interactions.
  */
 
@@ -24,62 +24,68 @@ export const jiraApiHandlers = [
     return HttpResponse.json(issue);
   }),
 
-  http.get(`${JIRA_BASE_URL}/rest/api/2/issue/:issueKey/transitions`, ({ params }) => {
-    const { issueKey: _issueKey } = params;
-    return HttpResponse.json({
-      transitions: [
-        {
-          id: '11',
-          name: 'To Do',
-          to: {
-            id: '1',
+  http.get(
+    `${JIRA_BASE_URL}/rest/api/2/issue/:issueKey/transitions`,
+    ({ params }) => {
+      const { issueKey: _issueKey } = params;
+      return HttpResponse.json({
+        transitions: [
+          {
+            id: '11',
             name: 'To Do',
-            statusCategory: { key: 'new' }
-          }
-        },
-        {
-          id: '21',
-          name: 'In Progress',
-          to: {
-            id: '3',
+            to: {
+              id: '1',
+              name: 'To Do',
+              statusCategory: { key: 'new' },
+            },
+          },
+          {
+            id: '21',
             name: 'In Progress',
-            statusCategory: { key: 'indeterminate' }
-          }
-        },
-        {
-          id: '31',
-          name: 'Done',
-          to: {
-            id: '10001',
+            to: {
+              id: '3',
+              name: 'In Progress',
+              statusCategory: { key: 'indeterminate' },
+            },
+          },
+          {
+            id: '31',
             name: 'Done',
-            statusCategory: { key: 'done' }
-          }
-        }
-      ]
-    });
-  }),
+            to: {
+              id: '10001',
+              name: 'Done',
+              statusCategory: { key: 'done' },
+            },
+          },
+        ],
+      });
+    }
+  ),
 
-  http.get(`${JIRA_BASE_URL}/rest/api/2/issue/:issueKey/worklog`, ({ params }) => {
-    const { issueKey } = params;
-    return HttpResponse.json({
-      startAt: 0,
-      maxResults: 20,
-      total: 1,
-      worklogs: [
-        {
-          id: '10000',
-          self: `${JIRA_BASE_URL}/rest/api/2/issue/${issueKey}/worklog/10000`,
-          author: MockJiraResponseFactory.user('testuser'),
-          comment: 'Test worklog entry',
-          started: '2023-01-01T10:00:00.000Z',
-          timeSpent: '1h',
-          timeSpentSeconds: 3600,
-          created: '2023-01-01T10:00:00.000Z',
-          updated: '2023-01-01T10:00:00.000Z'
-        }
-      ]
-    });
-  }),
+  http.get(
+    `${JIRA_BASE_URL}/rest/api/2/issue/:issueKey/worklog`,
+    ({ params }) => {
+      const { issueKey } = params;
+      return HttpResponse.json({
+        startAt: 0,
+        maxResults: 20,
+        total: 1,
+        worklogs: [
+          {
+            id: '10000',
+            self: `${JIRA_BASE_URL}/rest/api/2/issue/${issueKey}/worklog/10000`,
+            author: MockJiraResponseFactory.user('testuser'),
+            comment: 'Test worklog entry',
+            started: '2023-01-01T10:00:00.000Z',
+            timeSpent: '1h',
+            timeSpentSeconds: 3600,
+            created: '2023-01-01T10:00:00.000Z',
+            updated: '2023-01-01T10:00:00.000Z',
+          },
+        ],
+      });
+    }
+  ),
 
   // Search endpoints
   http.get(`${JIRA_BASE_URL}/rest/api/2/search`, ({ request }) => {
@@ -108,7 +114,7 @@ export const jiraApiHandlers = [
         navigable: true,
         searchable: true,
         clauseNames: ['summary'],
-        schema: { type: 'string', system: 'summary' }
+        schema: { type: 'string', system: 'summary' },
       },
       {
         id: 'status',
@@ -118,7 +124,7 @@ export const jiraApiHandlers = [
         navigable: true,
         searchable: true,
         clauseNames: ['status'],
-        schema: { type: 'status', system: 'status' }
+        schema: { type: 'status', system: 'status' },
       },
       {
         id: 'customfield_10001',
@@ -128,8 +134,12 @@ export const jiraApiHandlers = [
         navigable: true,
         searchable: true,
         clauseNames: ['cf[10001]', 'Custom Text Field'],
-        schema: { type: 'string', custom: 'com.atlassian.jira.plugin.system.customfieldtypes:textfield', customId: 10001 }
-      }
+        schema: {
+          type: 'string',
+          custom: 'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
+          customId: 10001,
+        },
+      },
     ]);
   }),
 
@@ -137,37 +147,42 @@ export const jiraApiHandlers = [
   http.get(`${JIRA_BASE_URL}/rest/api/2/project`, () => {
     return HttpResponse.json([
       MockJiraResponseFactory.project('TEST'),
-      MockJiraResponseFactory.project('DEMO')
+      MockJiraResponseFactory.project('DEMO'),
     ]);
   }),
 
   http.get(`${JIRA_BASE_URL}/rest/api/2/project/:projectKey`, ({ params }) => {
     const { projectKey } = params;
-    return HttpResponse.json(MockJiraResponseFactory.project(projectKey as string));
+    return HttpResponse.json(
+      MockJiraResponseFactory.project(projectKey as string)
+    );
   }),
 
-  http.get(`${JIRA_BASE_URL}/rest/api/2/project/:projectKey/version`, ({ params }) => {
-    const { projectKey: _projectKey } = params;
-    return HttpResponse.json([
-      {
-        id: '10000',
-        name: 'Version 1.0',
-        archived: false,
-        released: true,
-        releaseDate: '2023-01-01',
-        self: `${JIRA_BASE_URL}/rest/api/2/version/10000`,
-        projectId: 10000
-      },
-      {
-        id: '10001',
-        name: 'Version 2.0',
-        archived: false,
-        released: false,
-        self: `${JIRA_BASE_URL}/rest/api/2/version/10001`,
-        projectId: 10000
-      }
-    ]);
-  }),
+  http.get(
+    `${JIRA_BASE_URL}/rest/api/2/project/:projectKey/version`,
+    ({ params }) => {
+      const { projectKey: _projectKey } = params;
+      return HttpResponse.json([
+        {
+          id: '10000',
+          name: 'Version 1.0',
+          archived: false,
+          released: true,
+          releaseDate: '2023-01-01',
+          self: `${JIRA_BASE_URL}/rest/api/2/version/10000`,
+          projectId: 10000,
+        },
+        {
+          id: '10001',
+          name: 'Version 2.0',
+          archived: false,
+          released: false,
+          self: `${JIRA_BASE_URL}/rest/api/2/version/10001`,
+          projectId: 10000,
+        },
+      ]);
+    }
+  ),
 
   // User endpoints
   http.get(`${JIRA_BASE_URL}/rest/api/2/user`, ({ request }) => {
@@ -185,16 +200,16 @@ export const jiraApiHandlers = [
           name: 'Blocks',
           inward: 'is blocked by',
           outward: 'blocks',
-          self: `${JIRA_BASE_URL}/rest/api/2/issueLinkType/10000`
+          self: `${JIRA_BASE_URL}/rest/api/2/issueLinkType/10000`,
         },
         {
           id: '10001',
           name: 'Relates',
           inward: 'relates to',
           outward: 'relates to',
-          self: `${JIRA_BASE_URL}/rest/api/2/issueLinkType/10001`
-        }
-      ]
+          self: `${JIRA_BASE_URL}/rest/api/2/issueLinkType/10001`,
+        },
+      ],
     });
   }),
 
@@ -206,8 +221,8 @@ export const jiraApiHandlers = [
       total: 2,
       values: [
         MockJiraResponseFactory.board('1'),
-        MockJiraResponseFactory.board('2')
-      ]
+        MockJiraResponseFactory.board('2'),
+      ],
     });
   }),
 
@@ -216,66 +231,85 @@ export const jiraApiHandlers = [
     return HttpResponse.json(MockJiraResponseFactory.board(boardId as string));
   }),
 
-  http.get(`${JIRA_BASE_URL}/rest/agile/1.0/board/:boardId/issue`, ({ params, request }) => {
-    const { boardId } = params;
-    const url = new URL(request.url);
-    const startAt = parseInt(url.searchParams.get('startAt') || '0');
-    const maxResults = parseInt(url.searchParams.get('maxResults') || '50');
+  http.get(
+    `${JIRA_BASE_URL}/rest/agile/1.0/board/:boardId/issue`,
+    ({ params, request }) => {
+      const { boardId } = params;
+      const url = new URL(request.url);
+      const startAt = parseInt(url.searchParams.get('startAt') || '0');
+      const maxResults = parseInt(url.searchParams.get('maxResults') || '50');
 
-    const issues = [];
-    for (let i = 0; i < Math.min(maxResults, 3); i++) {
-      issues.push(MockJiraResponseFactory.issue(`BOARD-${boardId}-${startAt + i + 1}`));
+      const issues = [];
+      for (let i = 0; i < Math.min(maxResults, 3); i++) {
+        issues.push(
+          MockJiraResponseFactory.issue(`BOARD-${boardId}-${startAt + i + 1}`)
+        );
+      }
+
+      return HttpResponse.json({
+        startAt,
+        maxResults,
+        total: issues.length,
+        issues,
+      });
     }
+  ),
 
-    return HttpResponse.json({
-      startAt,
-      maxResults,
-      total: issues.length,
-      issues
-    });
-  }),
-
-  http.get(`${JIRA_BASE_URL}/rest/agile/1.0/board/:boardId/sprint`, ({ params }) => {
-    const { boardId: _boardId } = params;
-    return HttpResponse.json({
-      startAt: 0,
-      maxResults: 50,
-      total: 2,
-      values: [
-        MockJiraResponseFactory.sprint('1'),
-        MockJiraResponseFactory.sprint('2')
-      ]
-    });
-  }),
+  http.get(
+    `${JIRA_BASE_URL}/rest/agile/1.0/board/:boardId/sprint`,
+    ({ params }) => {
+      const { boardId: _boardId } = params;
+      return HttpResponse.json({
+        startAt: 0,
+        maxResults: 50,
+        total: 2,
+        values: [
+          MockJiraResponseFactory.sprint('1'),
+          MockJiraResponseFactory.sprint('2'),
+        ],
+      });
+    }
+  ),
 
   http.get(`${JIRA_BASE_URL}/rest/agile/1.0/sprint/:sprintId`, ({ params }) => {
     const { sprintId } = params;
-    return HttpResponse.json(MockJiraResponseFactory.sprint(sprintId as string));
+    return HttpResponse.json(
+      MockJiraResponseFactory.sprint(sprintId as string)
+    );
   }),
 
-  http.get(`${JIRA_BASE_URL}/rest/agile/1.0/sprint/:sprintId/issue`, ({ params, request }) => {
-    const { sprintId } = params;
-    const url = new URL(request.url);
-    const startAt = parseInt(url.searchParams.get('startAt') || '0');
-    const maxResults = parseInt(url.searchParams.get('maxResults') || '50');
+  http.get(
+    `${JIRA_BASE_URL}/rest/agile/1.0/sprint/:sprintId/issue`,
+    ({ params, request }) => {
+      const { sprintId } = params;
+      const url = new URL(request.url);
+      const startAt = parseInt(url.searchParams.get('startAt') || '0');
+      const maxResults = parseInt(url.searchParams.get('maxResults') || '50');
 
-    const issues = [];
-    for (let i = 0; i < Math.min(maxResults, 3); i++) {
-      issues.push(MockJiraResponseFactory.issue(`SPRINT-${sprintId}-${startAt + i + 1}`));
+      const issues = [];
+      for (let i = 0; i < Math.min(maxResults, 3); i++) {
+        issues.push(
+          MockJiraResponseFactory.issue(`SPRINT-${sprintId}-${startAt + i + 1}`)
+        );
+      }
+
+      return HttpResponse.json({
+        startAt,
+        maxResults,
+        total: issues.length,
+        issues,
+      });
     }
-
-    return HttpResponse.json({
-      startAt,
-      maxResults,
-      total: issues.length,
-      issues
-    });
-  }),
+  ),
 
   // Error handling scenarios
   http.get(`${JIRA_BASE_URL}/rest/api/2/issue/ERROR-404`, () => {
     return HttpResponse.json(
-      { errorMessages: ['Issue does not exist or you do not have permission to see it.'] },
+      {
+        errorMessages: [
+          'Issue does not exist or you do not have permission to see it.',
+        ],
+      },
       { status: 404 }
     );
   }),
@@ -292,7 +326,7 @@ export const jiraApiHandlers = [
       { errorMessages: ['Internal server error.'] },
       { status: 500 }
     );
-  })
+  }),
 ];
 
 /**

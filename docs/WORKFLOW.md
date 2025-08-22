@@ -20,8 +20,14 @@ All development must follow these core principles:
 3.  **文档同步 (Documentation Sync)**: Upon starting a task, immediately update its status to `🔄 IN_PROGRESS` in the `IMPLEMENTATION_PLAN.md`. 
 4.  **测试驱动 (Test-Driven)**: Unit tests must be written alongside the implementation. All new code requires corresponding tests. **Important: Any modification to existing test cases, unless fixing a syntax error, requires prior approval.**
 5.  **代码规范 (Code Conventions)**: Adhere strictly to the project's existing code style, formatting (`.prettierrc`), and architectural patterns.
-6.  **小步快提 (Commit Frequently)**: Commit your changes frequently with clear, descriptive messages.
-7.  **Create Pull Request**: Once a task is complete, the engineer must create a Pull Request (PR) from their feature branch (`feature/ai-[TASK-ID]`) to the `develop` branch. This should be done using the GitHub CLI:
+6.  **提交前检查 (Pre-commit Checks)**: **MANDATORY** - Before any commit, you MUST run:
+    ```bash
+    npm run format  # Format code automatically
+    npm run test    # Run all tests - must pass
+    ```
+    **Commits are NOT allowed if tests fail.** Fix all failing tests before committing.
+7.  **小步快提 (Commit Frequently)**: Commit your changes frequently with clear, descriptive messages.
+8.  **Create Pull Request**: Once a task is complete, pull the latest changes from the `develop` branch into your feature branch to ensure it's up to date. Then, the engineer must create a Pull Request (PR) from their feature branch (`feature/ai-[TASK-ID]`) to the `develop` branch. This should be done using the GitHub CLI:
     ```bash
     gh pr create --title "[TASK-ID] - Task Description" --body "Detailed description of changes." --base develop
     ```
@@ -58,3 +64,21 @@ git worktree add -b ai2-develop ../jira-mcp-server-ai2 develop # AI Engineer 2
     git switch -c feature/ai-[下一个任务ID]
     ```
     请确保 `[下一个任务ID]` 替换为实际的任务ID。
+
+## 🚨 重要提醒：提交前必须执行的检查
+
+**每次提交前都必须执行以下命令，确保代码质量：**
+
+```bash
+# 1. 格式化代码（必须）
+npm run format
+
+# 2. 运行测试（必须通过）
+npm run test
+
+# 3. 可选：运行完整的质量检查
+npm run lint
+npm run typecheck
+```
+
+**如果测试失败，绝对不允许提交！** 必须修复所有失败的测试后才能提交代码。
