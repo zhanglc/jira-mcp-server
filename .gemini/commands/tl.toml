@@ -5,4 +5,5 @@ prompt = """
 @docs/IMPLEMENTATION_PLAN.md
 @docs/API_DESIGN.md
 @docs/PROJECT_STRUCTURE.md
+@docs/WORKFLOW.md
 """
