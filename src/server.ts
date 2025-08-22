@@ -8,38 +8,38 @@
  * - Error handling and logging
  */
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import type { Logger } from 'winston';
 import type { JiraServerConfig } from './types/config';
-
-// Import tool and resource handlers (to be implemented)
-// import { registerTools } from './tools/index.js';
-// import { registerResources } from './resources/index.js';
+import { registerTools } from './tools/index.js';
+import { registerResources } from './resources/index.js';
 
 /**
  * Create and configure the MCP server
  */
 export async function createMCPServer(
-  _config: JiraServerConfig,
+  config: JiraServerConfig,
   logger: Logger
-): Promise<Server> {
-  const server = new Server(
+): Promise<McpServer> {
+  const server = new McpServer(
     {
       name: 'jira-server-mcp',
       version: '1.0.0',
     },
     {
-      capabilities: {
-        tools: {},
-        resources: {},
-      },
+      // Enable notification debouncing for better performance
+      debouncedNotificationMethods: [
+        'notifications/tools/list_changed',
+        'notifications/resources/list_changed',
+        'notifications/prompts/list_changed'
+      ]
     }
   );
 
   // Register tools and resources
-  // await registerTools(server, config, logger);
-  // await registerResources(server, config, logger);
+  await registerTools(server, config, logger);
+  await registerResources(server, config, logger);
 
   // Connect to stdio transport
   const transport = new StdioServerTransport();
