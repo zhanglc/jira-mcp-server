@@ -6,11 +6,11 @@
 
 import { ZodError } from 'zod';
 import { JiraServerConfigSchema } from './schema';
-import { 
-  loadEnvironmentVariables, 
-  mergeWithDefaults, 
+import {
+  loadEnvironmentVariables,
+  mergeWithDefaults,
   validateRequiredEnvironmentVariables,
-  getConfigurationSummary 
+  getConfigurationSummary,
 } from './loader';
 import { ValidationError } from '../types/common';
 import type { JiraServerConfig } from '../types/config';
@@ -22,14 +22,15 @@ let cacheTimestamp: number = 0;
 /**
  * Cache TTL in milliseconds (5 minutes in development, 1 hour in production)
  */
-const CACHE_TTL = process.env.NODE_ENV === 'development' ? 5 * 60 * 1000 : 60 * 60 * 1000;
+const CACHE_TTL =
+  process.env.NODE_ENV === 'development' ? 5 * 60 * 1000 : 60 * 60 * 1000;
 
 /**
  * Load and validate configuration from environment variables
  */
 export async function loadConfig(): Promise<JiraServerConfig> {
   // Return cached configuration if valid
-  if (configCache && (Date.now() - cacheTimestamp) < CACHE_TTL) {
+  if (configCache && Date.now() - cacheTimestamp < CACHE_TTL) {
     return configCache;
   }
 
@@ -52,26 +53,32 @@ export async function loadConfig(): Promise<JiraServerConfig> {
 
     // Step 6: Log configuration summary (without sensitive data)
     if (process.env.NODE_ENV !== 'test') {
-      console.log('Configuration loaded successfully:', getConfigurationSummary(validatedConfig as JiraServerConfig));
+      // eslint-disable-next-line no-console
+      console.log(
+        'Configuration loaded successfully:',
+        getConfigurationSummary(validatedConfig as JiraServerConfig)
+      );
     }
 
     return validatedConfig as JiraServerConfig;
-
   } catch (error) {
     // Transform Zod errors to ValidationError
     if (error instanceof ZodError) {
-      const constraints = error.issues.map(issue => 
-        `${issue.path.join('.')}: ${issue.message}`
+      const constraints = error.issues.map(
+        issue => `${issue.path.join('.')}: ${issue.message}`
       );
-      
+
       throw new ValidationError({
         code: 'CONFIG_VALIDATION_ERROR',
         message: 'Configuration validation failed',
         type: 'validation_error',
         field: error.issues[0]?.path.join('.') || 'unknown',
-        value: 'value' in (error.issues[0] || {}) ? (error.issues[0] as any).value : undefined,
+        value:
+          'value' in (error.issues[0] || {})
+            ? (error.issues[0] as any).value
+            : undefined,
         constraints,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
 
@@ -86,7 +93,7 @@ export async function loadConfig(): Promise<JiraServerConfig> {
       message: `Failed to load configuration: ${(error as Error).message}`,
       type: 'validation_error',
       constraints: ['Configuration loading failed'],
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -105,7 +112,7 @@ export function clearConfigCache(): void {
  * Returns null if no valid cache exists
  */
 export function getCachedConfig(): JiraServerConfig | null {
-  if (configCache && (Date.now() - cacheTimestamp) < CACHE_TTL) {
+  if (configCache && Date.now() - cacheTimestamp < CACHE_TTL) {
     return configCache;
   }
   return null;
@@ -115,7 +122,7 @@ export function getCachedConfig(): JiraServerConfig | null {
  * Check if configuration is cached and valid
  */
 export function isConfigCached(): boolean {
-  return configCache !== null && (Date.now() - cacheTimestamp) < CACHE_TTL;
+  return configCache !== null && Date.now() - cacheTimestamp < CACHE_TTL;
 }
 
 /**
@@ -135,18 +142,21 @@ export function validateConfig(config: unknown): JiraServerConfig {
     return JiraServerConfigSchema.parse(config) as JiraServerConfig;
   } catch (error) {
     if (error instanceof ZodError) {
-      const constraints = error.issues.map(issue => 
-        `${issue.path.join('.')}: ${issue.message}`
+      const constraints = error.issues.map(
+        issue => `${issue.path.join('.')}: ${issue.message}`
       );
-      
+
       throw new ValidationError({
         code: 'CONFIG_VALIDATION_ERROR',
         message: 'Configuration validation failed',
         type: 'validation_error',
         field: error.issues[0]?.path.join('.') || 'unknown',
-        value: 'value' in (error.issues[0] || {}) ? (error.issues[0] as any).value : undefined,
+        value:
+          'value' in (error.issues[0] || {})
+            ? (error.issues[0] as any).value
+            : undefined,
         constraints,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
     throw error;

@@ -1,6 +1,6 @@
 /**
  * Configuration Type Definitions
- * 
+ *
  * Type definitions for application configuration including Jira Server settings,
  * authentication, logging, and performance options.
  */

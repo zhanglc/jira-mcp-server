@@ -1,6 +1,6 @@
 /**
  * MCP Protocol Type Definitions
- * 
+ *
  * Type definitions for MCP (Model Context Protocol) specific functionality,
  * including tools, resources, and server extensions.
  */
@@ -15,16 +15,19 @@ import type { BaseError } from './common';
 export interface ToolInputSchema {
   [x: string]: unknown;
   type: 'object';
-  properties?: Record<string, {
-    type: string;
-    description: string;
-    enum?: string[];
-    items?: { type: string };
-    default?: any;
-    pattern?: string;
-    minimum?: number;
-    maximum?: number;
-  }>;
+  properties?: Record<
+    string,
+    {
+      type: string;
+      description: string;
+      enum?: string[];
+      items?: { type: string };
+      default?: any;
+      pattern?: string;
+      minimum?: number;
+      maximum?: number;
+    }
+  >;
   required?: string[];
   additionalProperties?: boolean;
 }
@@ -121,16 +124,22 @@ export interface JiraMCPResource extends Resource {
  * Field Definition Resource Content
  */
 export interface FieldDefinitionContent {
-  fields: Record<string, {
-    type: string;
-    description: string;
-    required?: boolean;
-    example?: any;
-    nested?: Record<string, {
+  fields: Record<
+    string,
+    {
       type: string;
       description: string;
-    }>;
-  }>;
+      required?: boolean;
+      example?: any;
+      nested?: Record<
+        string,
+        {
+          type: string;
+          description: string;
+        }
+      >;
+    }
+  >;
   metadata: {
     entityType: string;
     lastUpdated: string;
@@ -142,7 +151,7 @@ export interface FieldDefinitionContent {
 /**
  * Resource URI Patterns
  */
-export type ResourceUriPattern = 
+export type ResourceUriPattern =
   | 'jira://fields/issue'
   | 'jira://fields/project'
   | 'jira://fields/user'

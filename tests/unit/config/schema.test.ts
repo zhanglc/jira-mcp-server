@@ -1,18 +1,17 @@
 /**
  * Configuration Schema Tests
- * 
+ *
  * Tests for Zod schema validation of configuration objects.
  */
 
-import { 
-  JiraServerConfigSchema, 
-  AuthConfigSchema, 
+import {
+  JiraServerConfigSchema,
+  AuthConfigSchema,
   ConnectionConfigSchema,
   LoggingConfigSchema,
-  MCPServerConfigSchema,
   EnvironmentSchema,
   LogLevelSchema,
-  LogFormatSchema
+  LogFormatSchema,
 } from '@/config/schema';
 
 describe('Configuration Schema Validation', () => {
@@ -22,12 +21,12 @@ describe('Configuration Schema Validation', () => {
         environment: 'development' as const,
         url: 'https://jira.company.com',
         personalToken: 'valid-token-123',
-        auth: { 
+        auth: {
           personalToken: 'valid-token-123',
-          tokenType: 'bearer' as const
-        }
+          tokenType: 'bearer' as const,
+        },
       };
-      
+
       expect(() => JiraServerConfigSchema.parse(config)).not.toThrow();
       const result = JiraServerConfigSchema.parse(config);
       expect(result.environment).toBe('development');
@@ -39,36 +38,42 @@ describe('Configuration Schema Validation', () => {
       const fullConfig = {
         environment: 'production' as const,
         url: 'https://jira.company.com',
-        auth: { 
+        auth: {
           personalToken: 'token',
-          tokenType: 'bearer' as const
+          tokenType: 'bearer' as const,
         },
-        connection: { 
-          timeout: 45000, 
-          sslVerify: true, 
+        connection: {
+          timeout: 45000,
+          sslVerify: true,
           keepAlive: true,
           retryAttempts: 5,
-          retryDelay: 2000
+          retryDelay: 2000,
         },
-        logging: { 
-          level: 'info' as const, 
-          format: 'json' as const, 
+        logging: {
+          level: 'info' as const,
+          format: 'json' as const,
           console: { enabled: true, colorize: false, timestamp: true },
-          file: { enabled: true, filename: 'app.log', maxSize: '50m', maxFiles: 10, rotateDaily: true }
+          file: {
+            enabled: true,
+            filename: 'app.log',
+            maxSize: '50m',
+            maxFiles: 10,
+            rotateDaily: true,
+          },
         },
-        mcp: { 
-          name: 'jira-server-mcp', 
-          version: '1.0.0', 
+        mcp: {
+          name: 'jira-server-mcp',
+          version: '1.0.0',
           description: 'Jira Server MCP',
-          capabilities: { tools: true, resources: true, prompts: false }
+          capabilities: { tools: true, resources: true, prompts: false },
         },
         personalToken: 'token',
         sslVerify: true,
         timeout: 45000,
         logLevel: 'info' as const,
-        logFormat: 'json' as const
+        logFormat: 'json' as const,
       };
-      
+
       expect(() => JiraServerConfigSchema.parse(fullConfig)).not.toThrow();
       const result = JiraServerConfigSchema.parse(fullConfig);
       expect(result.logging?.level).toBe('info');
@@ -81,9 +86,9 @@ describe('Configuration Schema Validation', () => {
       const incompleteConfigs = [
         { environment: 'development' }, // missing url, personalToken, auth
         { url: 'https://jira.com' }, // missing environment, personalToken, auth
-        { personalToken: 'token' } // missing environment, url, auth
+        { personalToken: 'token' }, // missing environment, url, auth
       ];
-      
+
       incompleteConfigs.forEach(config => {
         expect(() => JiraServerConfigSchema.parse(config)).toThrow();
       });
@@ -94,40 +99,40 @@ describe('Configuration Schema Validation', () => {
         'not-a-url',
         'ftp://jira.com',
         'https://',
-        'javascript:alert(1)'
+        'javascript:alert(1)',
       ];
-      
+
       invalidUrls.forEach(url => {
-        const config = { 
-          environment: 'development', 
-          url, 
+        const config = {
+          environment: 'development',
+          url,
           personalToken: 'token',
-          auth: { personalToken: 'token' }
+          auth: { personalToken: 'token' },
         };
         expect(() => JiraServerConfigSchema.parse(config)).toThrow();
       });
     });
 
     it('should reject invalid environment values', () => {
-      const config = { 
-        environment: 'invalid-env', 
-        url: 'https://jira.com', 
+      const config = {
+        environment: 'invalid-env',
+        url: 'https://jira.com',
         personalToken: 'token',
-        auth: { personalToken: 'token' }
+        auth: { personalToken: 'token' },
       };
       expect(() => JiraServerConfigSchema.parse(config)).toThrow();
     });
 
     it('should reject invalid timeout values', () => {
       const invalidTimeouts = [-1, 0, 1.5]; // Negative, zero, non-integer
-      
+
       invalidTimeouts.forEach(timeout => {
-        const config = { 
-          environment: 'development', 
-          url: 'https://jira.com', 
+        const config = {
+          environment: 'development',
+          url: 'https://jira.com',
           personalToken: 'token',
           auth: { personalToken: 'token' },
-          timeout 
+          timeout,
         };
         expect(() => JiraServerConfigSchema.parse(config)).toThrow();
       });
@@ -138,9 +143,9 @@ describe('Configuration Schema Validation', () => {
         environment: 'development',
         url: 'https://jira.com',
         personalToken: 'token1',
-        auth: { personalToken: 'token2' } // Different token
+        auth: { personalToken: 'token2' }, // Different token
       };
-      
+
       expect(() => JiraServerConfigSchema.parse(config)).toThrow();
     });
 
@@ -149,9 +154,9 @@ describe('Configuration Schema Validation', () => {
         environment: 'development',
         url: 'https://jira.com',
         personalToken: '',
-        auth: { personalToken: '' }
+        auth: { personalToken: '' },
       };
-      
+
       expect(() => JiraServerConfigSchema.parse(config)).toThrow();
     });
   });
@@ -162,9 +167,9 @@ describe('Configuration Schema Validation', () => {
         environment: 'development' as const,
         url: 'https://jira.com',
         personalToken: 'token',
-        auth: { personalToken: 'token' }
+        auth: { personalToken: 'token' },
       };
-      
+
       const result = JiraServerConfigSchema.parse(minimalConfig);
       expect(result.sslVerify).toBe(true);
       expect(result.timeout).toBe(30000);
@@ -181,9 +186,9 @@ describe('Configuration Schema Validation', () => {
         auth: { personalToken: 'token' },
         connection: {},
         logging: {},
-        mcp: {}
+        mcp: {},
       };
-      
+
       const result = JiraServerConfigSchema.parse(configWithOptionals);
       expect(result.connection?.timeout).toBe(30000);
       expect(result.connection?.sslVerify).toBe(true);
@@ -197,7 +202,7 @@ describe('Configuration Schema Validation', () => {
       const validAuth = { personalToken: 'token123' };
       const result = AuthConfigSchema.parse(validAuth);
       expect(result.tokenType).toBe('bearer'); // default value
-      
+
       const invalidAuth = { personalToken: '' };
       expect(() => AuthConfigSchema.parse(invalidAuth)).toThrow();
     });
@@ -207,7 +212,7 @@ describe('Configuration Schema Validation', () => {
       const result = ConnectionConfigSchema.parse(validConnection);
       expect(result?.keepAlive).toBe(true); // default value
       expect(result?.retryAttempts).toBe(3); // default value
-      
+
       const invalidConnection = { timeout: -1 };
       expect(() => ConnectionConfigSchema.parse(invalidConnection)).toThrow();
     });
@@ -217,7 +222,7 @@ describe('Configuration Schema Validation', () => {
       const result = LoggingConfigSchema.parse(validLogging);
       expect(result?.format).toBe('simple'); // default value
       expect(result?.console.enabled).toBe(true); // default value
-      
+
       const invalidLogging = { level: 'invalid-level' };
       expect(() => LoggingConfigSchema.parse(invalidLogging)).toThrow();
     });
@@ -228,12 +233,12 @@ describe('Configuration Schema Validation', () => {
       expect(() => EnvironmentSchema.parse('production')).not.toThrow();
       expect(() => EnvironmentSchema.parse('test')).not.toThrow();
       expect(() => EnvironmentSchema.parse('invalid')).toThrow();
-      
+
       // LogLevel enum
       expect(() => LogLevelSchema.parse('debug')).not.toThrow();
       expect(() => LogLevelSchema.parse('info')).not.toThrow();
       expect(() => LogLevelSchema.parse('invalid')).toThrow();
-      
+
       // LogFormat enum
       expect(() => LogFormatSchema.parse('json')).not.toThrow();
       expect(() => LogFormatSchema.parse('simple')).not.toThrow();

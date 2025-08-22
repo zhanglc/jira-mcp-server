@@ -4,11 +4,11 @@
  * Provides default values for configuration sections.
  */
 
-import type { 
-  JiraServerConfig, 
-  ConnectionConfig, 
-  LoggingConfig, 
-  MCPServerConfig 
+import type {
+  JiraServerConfig,
+  ConnectionConfig,
+  LoggingConfig,
+  MCPServerConfig,
 } from '../types/config';
 
 /**
@@ -19,7 +19,7 @@ export const DEFAULT_CONNECTION_CONFIG: ConnectionConfig = {
   sslVerify: true,
   keepAlive: true,
   retryAttempts: 3,
-  retryDelay: 1000
+  retryDelay: 1000,
 };
 
 /**
@@ -31,14 +31,14 @@ export const DEFAULT_LOGGING_CONFIG: LoggingConfig = {
   console: {
     enabled: true,
     colorize: true,
-    timestamp: true
+    timestamp: true,
   },
   file: {
     enabled: false,
     maxSize: '10m',
     maxFiles: 5,
-    rotateDaily: true
-  }
+    rotateDaily: true,
+  },
 };
 
 /**
@@ -51,8 +51,8 @@ export const DEFAULT_MCP_CONFIG: MCPServerConfig = {
   capabilities: {
     tools: true,
     resources: true,
-    prompts: false
-  }
+    prompts: false,
+  },
 };
 
 /**
@@ -67,7 +67,7 @@ export const DEVELOPMENT_DEFAULTS: Partial<JiraServerConfig> = {
   connection: {
     ...DEFAULT_CONNECTION_CONFIG,
     sslVerify: false,
-    timeout: 60000 // Longer timeout for development
+    timeout: 60000, // Longer timeout for development
   },
   logging: {
     ...DEFAULT_LOGGING_CONFIG,
@@ -75,10 +75,10 @@ export const DEVELOPMENT_DEFAULTS: Partial<JiraServerConfig> = {
     console: {
       enabled: true,
       colorize: true,
-      timestamp: true
-    }
+      timestamp: true,
+    },
   },
-  mcp: DEFAULT_MCP_CONFIG
+  mcp: DEFAULT_MCP_CONFIG,
 };
 
 /**
@@ -93,7 +93,7 @@ export const PRODUCTION_DEFAULTS: Partial<JiraServerConfig> = {
   connection: {
     ...DEFAULT_CONNECTION_CONFIG,
     sslVerify: true,
-    retryAttempts: 5 // More retries in production
+    retryAttempts: 5, // More retries in production
   },
   logging: {
     ...DEFAULT_LOGGING_CONFIG,
@@ -102,17 +102,17 @@ export const PRODUCTION_DEFAULTS: Partial<JiraServerConfig> = {
     console: {
       enabled: true,
       colorize: false, // No colors in production logs
-      timestamp: true
+      timestamp: true,
     },
     file: {
       enabled: true,
       filename: 'jira-mcp-server.log',
       maxSize: '50m',
       maxFiles: 10,
-      rotateDaily: true
-    }
+      rotateDaily: true,
+    },
   },
-  mcp: DEFAULT_MCP_CONFIG
+  mcp: DEFAULT_MCP_CONFIG,
 };
 
 /**
@@ -128,7 +128,7 @@ export const TEST_DEFAULTS: Partial<JiraServerConfig> = {
     ...DEFAULT_CONNECTION_CONFIG,
     sslVerify: false,
     timeout: 10000,
-    retryAttempts: 1 // Fast failure in tests
+    retryAttempts: 1, // Fast failure in tests
   },
   logging: {
     ...DEFAULT_LOGGING_CONFIG,
@@ -136,16 +136,18 @@ export const TEST_DEFAULTS: Partial<JiraServerConfig> = {
     console: {
       enabled: false, // No console output in tests
       colorize: false,
-      timestamp: false
-    }
+      timestamp: false,
+    },
   },
-  mcp: DEFAULT_MCP_CONFIG
+  mcp: DEFAULT_MCP_CONFIG,
 };
 
 /**
  * Get environment-specific defaults
  */
-export function getEnvironmentDefaults(environment: string): Partial<JiraServerConfig> {
+export function getEnvironmentDefaults(
+  environment: string
+): Partial<JiraServerConfig> {
   switch (environment) {
     case 'production':
       return PRODUCTION_DEFAULTS;
