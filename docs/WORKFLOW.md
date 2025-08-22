@@ -54,16 +54,17 @@ A rigorous code review process is mandatory to ensure code quality and prevent i
 **初始设置 (每个工程师执行一次)**:
 为每位工程师创建一个独立的工作区。例如：
 ```bash
-git worktree add -b develop ../jira-mcp-server-ai1 develop # AI Engineer 1
-git worktree add -b develop ../jira-mcp-server-ai2 develop # AI Engineer 2
+git worktree add -b ai1-develop ../jira-mcp-server-ai1 develop # AI Engineer 1
+git worktree add -b ai2-develop ../jira-mcp-server-ai2 develop # AI Engineer 2
 ```
 这将创建两个新的目录 (`../jira-mcp-server-ai1` 和 `../jira-mcp-server-ai2`)，每个目录都是项目的一个完整克隆，并默认检出 `develop` 分支。
 
 **任务切换流程 (在各自的工作区内执行)**:
 当一个任务完成并合并到 `develop` 分支后，工程师可以在其工作区内执行以下步骤来开始下一个任务：
-1.  **切换到 `develop` 分支并拉取最新代码**:
+1.  **更新工作区的基础分支**:
+    在开始新任务前，确保您的工作区的基础分支（例如 `ai1-develop` 或 `ai2-develop`）与主 `develop` 分支保持同步。
     ```bash
-    git switch develop
+    git switch ai1-develop # 或 ai2-develop
     git pull origin develop
     ```
 2.  **创建并切换到新任务分支**:
