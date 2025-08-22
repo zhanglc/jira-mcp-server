@@ -48,7 +48,7 @@ This document defines the task list for developing a Jira Server/Data Center MCP
 
 | Task ID | Status | Task Description | Dependencies | Parallel Group | Key Deliverables |
 |---------|--------|-----------------|--------------|----------------|------------------|
-| MCP-RES-001 | ⏳ | **Resources Framework**: Build MCP resources registration and handling system | ARCH-CORE-002, ARCH-CORE-003 | Group-3 | resources/index.ts with URI handling and caching |
+| MCP-RES-001 | 🔄 | **Resources Framework**: Build MCP resources registration and handling system | ARCH-CORE-002, ARCH-CORE-003 | Group-3 | resources/index.ts with URI handling and caching |
 | MCP-RES-002 | ⏸️ | **Field Definition Resources**: Implement 7 field definition resources for MCP clients | MCP-RES-001, API-CORE-001 | Group-6 | 7 resources in resources/ directory |
 
 ### Testing & Integration Tasks
