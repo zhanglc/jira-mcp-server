@@ -15,10 +15,10 @@ For a detailed and up-to-date list of tasks, see the [**Implementation Plan**](.
 
 All development must follow these core principles:
 
-1.  **分支管理 (Branch Management)**: Before starting a task, create and switch to a dedicated feature branch from `develop`. The branch must follow the naming convention: `feature/ai-[TASK-ID]`.
-2.  **文档同步 (Documentation Sync)**: Upon starting a task, immediately update its status to `🔄 IN_PROGRESS` in the `IMPLEMENTATION_PLAN.md`. When finished, update it to `✅ DONE`.
-3.  **计划先行 (Plan First)**: Before writing implementation code, ensure you have a clear plan.
-4.  **测试驱动 (Test-Driven)**: Unit tests must be written alongside the implementation. All new code requires corresponding tests.
+1.  **任务分解 (Task Breakdown)**: If a task is large, break it down into smaller, logical sub-tasks. Create a clear plan for these sub-tasks and present it for review before implementation.
+2.  **分支管理 (Branch Management)**: Before starting a task, create and switch to a dedicated feature branch from `develop`. The branch must follow the naming convention: `feature/ai-[TASK-ID]`.
+3.  **文档同步 (Documentation Sync)**: Upon starting a task, immediately update its status to `🔄 IN_PROGRESS` in the `IMPLEMENTATION_PLAN.md`. When finished, update it to `✅ DONE`.
+4.  **测试驱动 (Test-Driven)**: Unit tests must be written alongside the implementation. All new code requires corresponding tests. **Important: Any modification to existing test cases, unless fixing a syntax error, requires prior approval.**
 5.  **代码规范 (Code Conventions)**: Adhere strictly to the project's existing code style, formatting (`.prettierrc`), and architectural patterns.
 6.  **小步快提 (Commit Frequently)**: Commit your changes frequently with clear, descriptive messages.
 
