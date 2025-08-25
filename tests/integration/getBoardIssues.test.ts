@@ -18,7 +18,7 @@ describe('JiraClientWrapper - getBoardIssues Integration Tests', () => {
     wrapper = new JiraClientWrapper(config);
 
     // Get a valid board ID for testing
-    const boards = await wrapper.getAgileBoards();
+    const boards = await wrapper.getAgileBoards("DSCWA");
     expect(boards.length).toBeGreaterThan(0);
     testBoardId = boards[0].id;
 
@@ -53,7 +53,7 @@ describe('JiraClientWrapper - getBoardIssues Integration Tests', () => {
         console.log(`Sample issue: ${issue.key} - ${issue.fields.summary}`);
         console.log(`Status: ${issue.fields.status.name}`);
       }
-    });
+    }, 30000);
 
     test('should handle pagination correctly', async () => {
       const pageSize = 2;

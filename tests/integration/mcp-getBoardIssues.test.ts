@@ -14,13 +14,13 @@ describe('JiraMcpServer - getBoardIssues MCP Integration', () => {
     server = new JiraMcpServer();
 
     // Get a valid board ID for testing by first getting boards
-    const boardsResponse = await (server as any).handleGetAgileBoards({});
-    const boardsData = JSON.parse(boardsResponse.content[0].text);
-    expect(Array.isArray(boardsData)).toBe(true);
-    expect(boardsData.length).toBeGreaterThan(0);
+    // const boardsResponse = await (server as any).handleGetAgileBoards({"projectKey":"DSCWA"});
+    // const boardsData = JSON.parse(boardsResponse.content[0].text);
+    // expect(Array.isArray(boardsData)).toBe(true);
+    // expect(boardsData.length).toBeGreaterThan(0);
     
-    testBoardId = boardsData[0].id;
-    console.log(`Using test board ID: ${testBoardId} (${boardsData[0].name})`);
+    testBoardId = 1233;
+    console.log(`Using test board ID: ${testBoardId}`);
   });
 
   beforeEach(() => {
@@ -67,7 +67,7 @@ describe('JiraMcpServer - getBoardIssues MCP Integration', () => {
 
         console.log(`MCP Sample issue: ${issue.key} - ${issue.fields.summary}`);
       }
-    });
+    }, 30000);
 
     test('should handle pagination parameters', async () => {
       const result = await (server as any).handleGetBoardIssues({

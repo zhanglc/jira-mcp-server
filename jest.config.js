@@ -1,5 +1,6 @@
-module.exports = {
-  preset: 'ts-jest',
+export default {
+  preset: 'ts-jest/presets/default-esm',
+  extensionsToTreatAsEsm: ['.ts'],
   testEnvironment: 'node',
   
   // Test file patterns
@@ -18,14 +19,24 @@ module.exports = {
     '^@/resources/(.*)$': '<rootDir>/src/resources/$1',
     '^@/types/(.*)$': '<rootDir>/src/types/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
+    '^(.*)\\.js$': '$1',
+    // Force uuid to use Node.js version instead of browser ESM
+    '^uuid$': '<rootDir>/node_modules/uuid/dist/index.js',
+    '^uuid/(.*)$': '<rootDir>/node_modules/uuid/dist/$1',
   },
   
   // TypeScript configuration
   transform: {
     '^.+\\.ts$': ['ts-jest', {
+      useESM: true,
       tsconfig: 'tsconfig.json',
     }],
   },
+  
+  // Transform CommonJS modules
+  transformIgnorePatterns: [
+    'node_modules/(?!(jira-client|postman-request)/)',
+  ],
   
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
