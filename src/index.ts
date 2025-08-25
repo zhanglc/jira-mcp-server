@@ -1,51 +1,25 @@
 #!/usr/bin/env node
 
-/**
- * Jira Server MCP - Main entry point
- * 
- * This is the main entry point for the Jira Server/Data Center MCP server.
- * It initializes the MCP server with all tools and resources.
- */
+import { JiraMcpServer } from './server/jira-mcp-server.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
-import { createMCPServer } from './server.js';
-import { loadConfig } from './config/index.js';
-import { createLogger } from './lib/utils/logger.js';
+const server = new JiraMcpServer();
+const transport = new StdioServerTransport();
 
-async function main(): Promise<void> {
+async function main() {
   try {
-    // Load configuration
-    const config = await loadConfig();
-    
-    // Create logger
-    const logger = createLogger(config);
-    logger.info('Starting Jira Server MCP...');
-    
-    // Create and start MCP server
-    const _server = await createMCPServer(config, logger);
-    
-    // Handle process termination
-    process.on('SIGINT', () => {
-      logger.info('Received SIGINT, shutting down gracefully...');
-      process.exit(0);
-    });
-    
-    process.on('SIGTERM', () => {
-      logger.info('Received SIGTERM, shutting down gracefully...');
-      process.exit(0);
-    });
-    
-    logger.info('Jira Server MCP started successfully');
-    
+    console.log('Starting Jira MCP Server...');
+    await server.connect(transport);
+    console.log('Jira MCP Server started successfully');
   } catch (error) {
-    console.error('Failed to start Jira Server MCP:', error);
+    console.error('Failed to start Jira MCP Server:', error);
     process.exit(1);
   }
 }
 
-// Run the main function
-if (require.main === module) {
-  main().catch(error => {
-    console.error('Unhandled error:', error);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    console.error('Unhandled error in main:', error);
     process.exit(1);
   });
 }
