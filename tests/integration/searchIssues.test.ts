@@ -36,7 +36,9 @@ describe('SearchIssues Integration Tests', () => {
 
     it('should handle invalid project name with error', async () => {
       // Real Jira server throws error for non-existent project instead of empty results
-      await expect(jiraClient.searchIssues('project = NONEXISTENT12345')).rejects.toThrow(ApiError);
+      await expect(
+        jiraClient.searchIssues('project = NONEXISTENT12345')
+      ).rejects.toThrow(ApiError);
     }, 30000);
   });
 
@@ -44,7 +46,7 @@ describe('SearchIssues Integration Tests', () => {
     it('should respect startAt and maxResults parameters', async () => {
       const options: SearchOptions = {
         startAt: 0,
-        maxResults: 2
+        maxResults: 2,
       };
 
       const result = await jiraClient.searchIssues('project = DSCWA', options);
@@ -58,15 +60,20 @@ describe('SearchIssues Integration Tests', () => {
 
     it('should handle pagination with startAt offset', async () => {
       // First, get total count
-      const firstResult = await jiraClient.searchIssues('project = DSCWA', { maxResults: 1 });
-      
+      const firstResult = await jiraClient.searchIssues('project = DSCWA', {
+        maxResults: 1,
+      });
+
       if (firstResult.total > 1) {
         const options: SearchOptions = {
           startAt: 1,
-          maxResults: 1
+          maxResults: 1,
         };
 
-        const result = await jiraClient.searchIssues('project = DSCWA', options);
+        const result = await jiraClient.searchIssues(
+          'project = DSCWA',
+          options
+        );
 
         expect(result.startAt).toBe(1);
         expect(result.maxResults).toBe(1);
@@ -82,7 +89,7 @@ describe('SearchIssues Integration Tests', () => {
     it('should return only requested fields', async () => {
       const options: SearchOptions = {
         fields: ['summary', 'status'],
-        maxResults: 1
+        maxResults: 1,
       };
 
       const result = await jiraClient.searchIssues('project = DSCWA', options);
@@ -100,7 +107,7 @@ describe('SearchIssues Integration Tests', () => {
     it('should handle custom fields in field selection', async () => {
       const options: SearchOptions = {
         fields: ['summary', 'customfield_10001'],
-        maxResults: 1
+        maxResults: 1,
       };
 
       const result = await jiraClient.searchIssues('project = DSCWA', options);
@@ -115,36 +122,44 @@ describe('SearchIssues Integration Tests', () => {
     it('should handle complex JQL with multiple conditions', async () => {
       const jql = 'project = DSCWA AND created >= -30d ORDER BY created DESC';
       const options: SearchOptions = {
-        maxResults: 5
+        maxResults: 5,
       };
 
       const result = await jiraClient.searchIssues(jql, options);
 
       expect(result).toBeDefined();
       expect(Array.isArray(result.issues)).toBe(true);
-      
+
       if (result.issues.length > 1) {
         // Check if results are ordered by created date (descending)
         const firstCreated = new Date(result.issues[0].fields.created);
         const secondCreated = new Date(result.issues[1].fields.created);
-        expect(firstCreated.getTime()).toBeGreaterThanOrEqual(secondCreated.getTime());
+        expect(firstCreated.getTime()).toBeGreaterThanOrEqual(
+          secondCreated.getTime()
+        );
       }
     }, 30000);
   });
 
   describe('Error Handling', () => {
     it('should throw ApiError for invalid JQL syntax', async () => {
-      await expect(jiraClient.searchIssues('INVALID JQL SYNTAX HERE')).rejects.toThrow(ApiError);
+      await expect(
+        jiraClient.searchIssues('INVALID JQL SYNTAX HERE')
+      ).rejects.toThrow(ApiError);
     }, 30000);
 
     it('should throw ApiError for invalid field reference', async () => {
-      await expect(jiraClient.searchIssues('invalidField = "test"')).rejects.toThrow(ApiError);
+      await expect(
+        jiraClient.searchIssues('invalidField = "test"')
+      ).rejects.toThrow(ApiError);
     }, 30000);
   });
 
   describe('Real Data Model Validation', () => {
     it('should validate returned issue structure matches JiraIssue interface', async () => {
-      const result = await jiraClient.searchIssues('project = DSCWA', { maxResults: 1 });
+      const result = await jiraClient.searchIssues('project = DSCWA', {
+        maxResults: 1,
+      });
 
       if (result.issues.length > 0) {
         const issue = result.issues[0];
@@ -189,7 +204,9 @@ describe('SearchIssues Integration Tests', () => {
     }, 30000);
 
     it('should validate SearchResult structure matches interface', async () => {
-      const result = await jiraClient.searchIssues('project = DSCWA', { maxResults: 1 });
+      const result = await jiraClient.searchIssues('project = DSCWA', {
+        maxResults: 1,
+      });
 
       // Validate SearchResult interface
       expect(typeof result.expand).toBe('string');

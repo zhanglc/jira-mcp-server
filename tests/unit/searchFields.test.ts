@@ -5,7 +5,7 @@ import { JiraField } from '../../src/types/jira-types.js';
 
 // Mock the jira-client module
 const mockJiraClient = {
-  listFields: jest.fn()
+  listFields: jest.fn(),
 };
 
 jest.mock('jira-client', () => {
@@ -16,8 +16,8 @@ jest.mock('jira-client', () => {
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('searchFields Method - TDD Implementation', () => {
@@ -27,12 +27,12 @@ describe('searchFields Method - TDD Implementation', () => {
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();
-    
+
     mockConfig = {
       url: 'https://test.atlassian.net',
-      bearer: 'test-bearer-token'
+      bearer: 'test-bearer-token',
     };
-    
+
     jiraClientWrapper = new JiraClientWrapper(mockConfig);
   });
 
@@ -50,8 +50,8 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['summary'],
           schema: {
             type: 'string',
-            system: 'summary'
-          }
+            system: 'summary',
+          },
         },
         {
           id: 'status',
@@ -63,8 +63,8 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['status'],
           schema: {
             type: 'status',
-            system: 'status'
-          }
+            system: 'status',
+          },
         },
         {
           id: 'customfield_10001',
@@ -76,10 +76,11 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['cf[10001]', 'Custom Text Field'],
           schema: {
             type: 'string',
-            custom: 'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
-            customId: 10001
-          }
-        }
+            custom:
+              'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
+            customId: 10001,
+          },
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -110,8 +111,8 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['summary'],
           schema: {
             type: 'string',
-            system: 'summary'
-          }
+            system: 'summary',
+          },
         },
         {
           id: 'status',
@@ -123,8 +124,8 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['status'],
           schema: {
             type: 'status',
-            system: 'status'
-          }
+            system: 'status',
+          },
         },
         {
           id: 'customfield_10001',
@@ -136,10 +137,11 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['cf[10001]', 'Custom Summary Field'],
           schema: {
             type: 'string',
-            custom: 'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
-            customId: 10001
-          }
-        }
+            custom:
+              'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
+            customId: 10001,
+          },
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -167,7 +169,7 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['summary']
+          clauseNames: ['summary'],
         },
         {
           id: 'customfield_10001',
@@ -176,7 +178,7 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['cf[10001]', 'Custom Text Field']
+          clauseNames: ['cf[10001]', 'Custom Text Field'],
         },
         {
           id: 'customfield_10002',
@@ -185,8 +187,8 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['cf[10002]', 'custom number field']
-        }
+          clauseNames: ['cf[10002]', 'custom number field'],
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -211,7 +213,7 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['summary']
+          clauseNames: ['summary'],
         },
         {
           id: 'status',
@@ -220,8 +222,8 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: false,
           navigable: true,
           searchable: true,
-          clauseNames: ['status']
-        }
+          clauseNames: ['status'],
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -245,8 +247,8 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['summary']
-        }
+          clauseNames: ['summary'],
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -269,8 +271,8 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['summary']
-        }
+          clauseNames: ['summary'],
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -288,15 +290,17 @@ describe('searchFields Method - TDD Implementation', () => {
       // Arrange
       const jiraError = {
         statusCode: 403,
-        message: 'Forbidden - Insufficient permissions to view fields'
+        message: 'Forbidden - Insufficient permissions to view fields',
       };
 
       mockJiraClient.listFields.mockRejectedValue(jiraError);
 
       // Act & Assert
       await expect(jiraClientWrapper.searchFields()).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.searchFields()).rejects.toThrow('Jira API Error: Forbidden - Insufficient permissions to view fields');
-      
+      await expect(jiraClientWrapper.searchFields()).rejects.toThrow(
+        'Jira API Error: Forbidden - Insufficient permissions to view fields'
+      );
+
       expect(mockJiraClient.listFields).toHaveBeenCalledWith();
     });
 
@@ -304,14 +308,18 @@ describe('searchFields Method - TDD Implementation', () => {
       // Arrange
       const jiraError = {
         statusCode: 401,
-        message: 'Unauthorized'
+        message: 'Unauthorized',
       };
 
       mockJiraClient.listFields.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.searchFields('summary')).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.searchFields('summary')).rejects.toThrow('Jira API Error: Unauthorized');
+      await expect(jiraClientWrapper.searchFields('summary')).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.searchFields('summary')).rejects.toThrow(
+        'Jira API Error: Unauthorized'
+      );
     });
 
     test('should throw ApiError for network errors', async () => {
@@ -322,21 +330,27 @@ describe('searchFields Method - TDD Implementation', () => {
 
       // Act & Assert
       await expect(jiraClientWrapper.searchFields()).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.searchFields()).rejects.toThrow('Jira API Error: Network Error - Connection timeout');
+      await expect(jiraClientWrapper.searchFields()).rejects.toThrow(
+        'Jira API Error: Network Error - Connection timeout'
+      );
     });
 
     test('should throw ApiError for server errors (500)', async () => {
       // Arrange
       const serverError = {
         statusCode: 500,
-        message: 'Internal Server Error'
+        message: 'Internal Server Error',
       };
 
       mockJiraClient.listFields.mockRejectedValue(serverError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.searchFields('custom')).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.searchFields('custom')).rejects.toThrow('Jira API Error: Internal Server Error');
+      await expect(jiraClientWrapper.searchFields('custom')).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.searchFields('custom')).rejects.toThrow(
+        'Jira API Error: Internal Server Error'
+      );
     });
   });
 
@@ -396,8 +410,8 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['cf[10001]']
-        }
+          clauseNames: ['cf[10001]'],
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -425,8 +439,8 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['summary'],
           schema: {
             type: 'string',
-            system: 'summary'
-          }
+            system: 'summary',
+          },
         },
         {
           id: 'assignee',
@@ -438,9 +452,9 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['assignee'],
           schema: {
             type: 'user',
-            system: 'assignee'
-          }
-        }
+            system: 'assignee',
+          },
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockSystemFields);
@@ -468,8 +482,8 @@ describe('searchFields Method - TDD Implementation', () => {
           schema: {
             type: 'number',
             custom: 'com.atlassian.jira.plugin.system.customfieldtypes:float',
-            customId: 10001
-          }
+            customId: 10001,
+          },
         },
         {
           id: 'customfield_10002',
@@ -482,9 +496,9 @@ describe('searchFields Method - TDD Implementation', () => {
           schema: {
             type: 'any',
             custom: 'com.pyxis.greenhopper.jira:gh-epic-link',
-            customId: 10002
-          }
-        }
+            customId: 10002,
+          },
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockCustomFields);
@@ -496,7 +510,9 @@ describe('searchFields Method - TDD Implementation', () => {
       expect(result).toHaveLength(2);
       expect(result.every(field => field.custom)).toBe(true);
       expect(result.every(field => field.schema?.customId)).toBe(true);
-      expect(result.every(field => field.id.startsWith('customfield_'))).toBe(true);
+      expect(result.every(field => field.id.startsWith('customfield_'))).toBe(
+        true
+      );
     });
 
     test('should filter fields by custom field ID pattern', async () => {
@@ -510,7 +526,7 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['cf[10001]', 'Story Points']
+          clauseNames: ['cf[10001]', 'Story Points'],
         },
         {
           id: 'customfield_10002',
@@ -519,7 +535,7 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['cf[10002]', 'Epic Link']
+          clauseNames: ['cf[10002]', 'Epic Link'],
         },
         {
           id: 'summary',
@@ -528,8 +544,8 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['summary']
-        }
+          clauseNames: ['summary'],
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFieldsResponse);
@@ -554,8 +570,8 @@ describe('searchFields Method - TDD Implementation', () => {
           custom: false,
           orderable: true,
           navigable: true,
-          searchable: true
-        }
+          searchable: true,
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFields);
@@ -568,7 +584,9 @@ describe('searchFields Method - TDD Implementation', () => {
 
       // Assert
       expect(logger.log).toHaveBeenCalledWith('Searching fields');
-      expect(logger.log).toHaveBeenCalledWith('Successfully retrieved 1 fields');
+      expect(logger.log).toHaveBeenCalledWith(
+        'Successfully retrieved 1 fields'
+      );
     });
 
     test('should log successful field filtering', async () => {
@@ -581,7 +599,7 @@ describe('searchFields Method - TDD Implementation', () => {
           custom: false,
           orderable: true,
           navigable: true,
-          searchable: true
+          searchable: true,
         },
         {
           id: 'customfield_10001',
@@ -589,8 +607,8 @@ describe('searchFields Method - TDD Implementation', () => {
           custom: true,
           orderable: true,
           navigable: true,
-          searchable: true
-        }
+          searchable: true,
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(mockFields);
@@ -602,9 +620,15 @@ describe('searchFields Method - TDD Implementation', () => {
       await jiraClientWrapper.searchFields(query);
 
       // Assert
-      expect(logger.log).toHaveBeenCalledWith(`Searching fields with query: ${query}`);
-      expect(logger.log).toHaveBeenCalledWith('Successfully retrieved 2 fields');
-      expect(logger.log).toHaveBeenCalledWith(`Filtered to 1 fields matching query: ${query}`);
+      expect(logger.log).toHaveBeenCalledWith(
+        `Searching fields with query: ${query}`
+      );
+      expect(logger.log).toHaveBeenCalledWith(
+        'Successfully retrieved 2 fields'
+      );
+      expect(logger.log).toHaveBeenCalledWith(
+        `Filtered to 1 fields matching query: ${query}`
+      );
     });
 
     test('should log errors appropriately', async () => {
@@ -618,7 +642,10 @@ describe('searchFields Method - TDD Implementation', () => {
 
       // Act & Assert
       await expect(jiraClientWrapper.searchFields()).rejects.toThrow();
-      expect(logger.error).toHaveBeenCalledWith('Failed to search fields:', error);
+      expect(logger.error).toHaveBeenCalledWith(
+        'Failed to search fields:',
+        error
+      );
     });
   });
 
@@ -637,8 +664,8 @@ describe('searchFields Method - TDD Implementation', () => {
           clauseNames: ['summary'],
           schema: {
             type: 'string',
-            system: 'summary'
-          }
+            system: 'summary',
+          },
         },
         {
           id: 'customfield_10001',
@@ -651,9 +678,9 @@ describe('searchFields Method - TDD Implementation', () => {
           schema: {
             type: 'number',
             custom: 'com.atlassian.jira.plugin.system.customfieldtypes:float',
-            customId: 10001
-          }
-        }
+            customId: 10001,
+          },
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(completeFieldResponse);
@@ -663,7 +690,7 @@ describe('searchFields Method - TDD Implementation', () => {
 
       // Assert - Validate structure matches JiraField interface
       expect(result).toHaveLength(2);
-      
+
       // Validate system field structure
       expect(result[0]).toMatchObject({
         id: expect.any(String),
@@ -671,9 +698,9 @@ describe('searchFields Method - TDD Implementation', () => {
         custom: expect.any(Boolean),
         orderable: expect.any(Boolean),
         navigable: expect.any(Boolean),
-        searchable: expect.any(Boolean)
+        searchable: expect.any(Boolean),
       });
-      
+
       // Validate custom field structure
       expect(result[1]).toMatchObject({
         id: expect.any(String),
@@ -686,8 +713,8 @@ describe('searchFields Method - TDD Implementation', () => {
         schema: expect.objectContaining({
           type: expect.any(String),
           custom: expect.any(String),
-          customId: expect.any(Number)
-        })
+          customId: expect.any(Number),
+        }),
       });
 
       // Verify specific values
@@ -708,9 +735,9 @@ describe('searchFields Method - TDD Implementation', () => {
           orderable: true,
           navigable: true,
           searchable: true,
-          clauseNames: ['summary']
+          clauseNames: ['summary'],
           // schema field is optional and omitted
-        }
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(fieldWithoutSchema);
@@ -734,9 +761,9 @@ describe('searchFields Method - TDD Implementation', () => {
           custom: false,
           orderable: true,
           navigable: true,
-          searchable: true
+          searchable: true,
           // clauseNames field is optional and omitted
-        }
+        },
       ];
 
       mockJiraClient.listFields.mockResolvedValue(fieldWithoutClauseNames);

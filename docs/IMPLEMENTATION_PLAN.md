@@ -35,7 +35,7 @@ The core approach adopts a **hybrid static-dynamic field architecture** that com
 
 1. **Environment Setup**: Ensure `.env` file is configured and can successfully connect to your Jira Server instance
 2. **Dependencies**: Run `npm install` to ensure all dependencies are installed
-3. **Sample Issues**: Identify 1-2 representative issue keys with rich fields (e.g., `DSCWA-428`) for analysis
+3. **Sample Issues**: Identify 1-2 representative issue keys with rich fields (e.g., `DSCWA-428`，`DSCWA-373`) for analysis
 4. **Testing Setup**: Verify Jest configuration and test environment
 
 ---
@@ -49,8 +49,8 @@ The core approach adopts a **hybrid static-dynamic field architecture** that com
 | Task ID | Task | Key Files | Deliverable | TDD Priority |
 |---------|------|-----------|-------------|-------------|
 | **Task-1** | **Field Definition Generation Script** | `scripts/generate-field-definitions.ts`<br>`tests/scripts/generate-definitions.test.ts` | Script to connect to Jira, fetch complete issue data, and save as JSON | Red-Green-Refactor |
-| **Task-2** | **Static Definition Files & Types** | `src/types/field-definition.ts`<br>`src/resources/static-definitions/issue-fields.ts`<br>`tests/unit/types/field-definition.test.ts` | Type definitions and static field definitions for core fields | Test-First |
-| **Task-3** | **Basic Resource Handler** | `src/resources/resource-handler.ts`<br>`tests/unit/resources/resource-handler.test.ts` | `JiraResourceHandler` class handling ListResources and ReadResource requests | TDD |
+| **Task-2** | **Static Definition Files & Types** | `src/types/field-definition.ts`<br>`src/server/resources/static-definitions/issue-fields.ts`<br>`tests/unit/types/field-definition.test.ts` | Type definitions and static field definitions for core fields | Test-First |
+| **Task-3** | **Basic Resource Handler** | `src/server/resources/resource-handler.ts`<br>`tests/unit/server/resources/resource-handler.test.ts` | `JiraResourceHandler` class handling ListResources and ReadResource requests | TDD |
 | **Task-4** | **MCP Server Integration** | `src/server/jira-mcp-server.ts`<br>`tests/integration/mcp-server-resources.test.ts` | Integrate resource handler into main MCP server | Integration Tests |
 | **Task-5** | **Enhanced Tool Descriptions** | `src/server/tools/issue-tools.ts`<br>`tests/unit/tools/enhanced-descriptions.test.ts` | Update tool descriptions with field selection guidance | Test Coverage |
 | **Task-6** | **Basic Field Validation** | `src/server/handlers/tool-handler.ts`<br>`tests/unit/handlers/field-validation.test.ts` | Implement field path validation in tool handlers | TDD Implementation |
@@ -78,7 +78,7 @@ import * as fs from 'fs/promises';
  */
 async function getSampleIssue(): Promise<void> {
   const client = new JiraClientWrapper(config);
-  const issueKey = 'DSCWA-428'; // Use your representative issue
+  const issueKey = 'DSCWA-373'; // Use your representative issue
   
   try {
     const issue = await client.getIssue(issueKey);
@@ -106,7 +106,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 **Static Field Definitions**:
 
 ```typescript
-// src/resources/static-definitions/issue-fields.ts
+// src/server/resources/static-definitions/issue-fields.ts
 import { ResourceDefinition } from '../../types/field-definition.js';
 
 export const ISSUE_FIELD_DEFINITIONS: ResourceDefinition = {
@@ -169,7 +169,7 @@ export const ISSUE_FIELD_DEFINITIONS: ResourceDefinition = {
 4. **typescript-pro**: Address review feedback
 
 ```typescript
-// src/resources/resource-handler.ts
+// src/server/resources/resource-handler.ts
 import { ISSUE_FIELD_DEFINITIONS } from './static-definitions/issue-fields.js';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 
@@ -279,9 +279,9 @@ interface ValidationResult {
 
 | Task ID | Task | Key Files | Deliverable | TDD Focus |
 |---------|------|-----------|-------------|----------|
-| **Task-7** | **Hybrid Resource Handler Core** | `src/resources/hybrid-resource-handler.ts`<br>`tests/unit/resources/hybrid-resource-handler.test.ts` | `HybridResourceHandler` extending base handler with dynamic capabilities | TDD Implementation |
-| **Task-8** | **Dynamic Field Discovery & Caching** | `src/resources/hybrid-resource-handler.ts`<br>`tests/unit/resources/dynamic-field-discovery.test.ts` | `getDynamicCustomFields()` method with intelligent caching | Cache Testing |
-| **Task-9** | **Definition Fusion Logic** | `src/resources/hybrid-resource-handler.ts`<br>`tests/unit/resources/definition-fusion.test.ts` | Merge static system fields with dynamic custom fields | Integration Testing |
+| **Task-7** | **Hybrid Resource Handler Core** | `src/server/resources/hybrid-resource-handler.ts`<br>`tests/unit/server/resources/hybrid-resource-handler.test.ts` | `HybridResourceHandler` extending base handler with dynamic capabilities | TDD Implementation |
+| **Task-8** | **Dynamic Field Discovery & Caching** | `src/server/resources/hybrid-resource-handler.ts`<br>`tests/unit/server/resources/dynamic-field-discovery.test.ts` | `getDynamicCustomFields()` method with intelligent caching | Cache Testing |
+| **Task-9** | **Definition Fusion Logic** | `src/server/resources/hybrid-resource-handler.ts`<br>`tests/unit/server/resources/definition-fusion.test.ts` | Merge static system fields with dynamic custom fields | Integration Testing |
 | **Task-10** | **Configuration & Feature Toggle** | `src/types/config-types.ts`<br>`src/utils/config.ts`<br>`tests/unit/config/hybrid-config.test.ts` | Environment variables and configuration management | Config Testing |
 | **Task-11** | **Server Integration Upgrade** | `src/server/jira-mcp-server.ts`<br>`tests/integration/hybrid-server.test.ts` | Switch to `HybridResourceHandler` in main server | Integration TDD |
 
@@ -296,7 +296,7 @@ interface ValidationResult {
 4. **typescript-pro**: Optimize based on feedback
 
 ```typescript
-// src/resources/hybrid-resource-handler.ts
+// src/server/resources/hybrid-resource-handler.ts
 import { JiraResourceHandler } from './resource-handler.js';
 import { JiraClientWrapper } from '../client/jira-client-wrapper.js';
 import type { JiraField } from '../types/jira-types.js';
@@ -484,9 +484,9 @@ interface CustomFieldCache {
 
 | Task ID | Task | Key Files | Deliverable | TDD Approach |
 |---------|------|-----------|-------------|-------------|
-| **Task-12** | **Field Usage Analyzer** | `src/resources/field-usage-analyzer.ts`<br>`tests/unit/resources/field-usage-analyzer.test.ts`<br>`tests/fixtures/sample-issues.json` | `FieldUsageAnalyzer` for analyzing actual field structures through JQL queries | Mock-Based TDD |
-| **Task-13** | **Enhanced Field Validator** | `src/resources/enhanced-field-validator.ts`<br>`tests/unit/resources/enhanced-field-validator.test.ts` | Smart path validation with similarity matching and suggestions | Algorithm TDD |
-| **Task-14** | **Smart Suggestions Integration** | `src/resources/hybrid-resource-handler.ts`<br>`src/server/handlers/tool-handler.ts`<br>`tests/integration/smart-validation.test.ts` | Integrate analyzer and enhanced validator into hybrid handler | Integration TDD |
+| **Task-12** | **Field Usage Analyzer** | `src/server/resources/field-usage-analyzer.ts`<br>`tests/unit/server/resources/field-usage-analyzer.test.ts`<br>`tests/fixtures/sample-issues.json` | `FieldUsageAnalyzer` for analyzing actual field structures through JQL queries | Mock-Based TDD |
+| **Task-13** | **Enhanced Field Validator** | `src/server/resources/enhanced-field-validator.ts`<br>`tests/unit/server/resources/enhanced-field-validator.test.ts` | Smart path validation with similarity matching and suggestions | Algorithm TDD |
+| **Task-14** | **Smart Suggestions Integration** | `src/server/resources/hybrid-resource-handler.ts`<br>`src/server/handlers/tool-handler.ts`<br>`tests/integration/smart-validation.test.ts` | Integrate analyzer and enhanced validator into hybrid handler | Integration TDD |
 | **Task-15** | **Comprehensive Testing & Validation** | `tests/e2e/complete-workflow.test.ts`<br>`tests/integration/error-handling.test.ts` | End-to-end workflow validation and error handling scenarios | E2E Testing |
 
 ---

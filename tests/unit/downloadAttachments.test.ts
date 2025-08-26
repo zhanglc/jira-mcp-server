@@ -13,13 +13,13 @@ describe('JiraClientWrapper.downloadAttachments', () => {
   const config: JiraConfig = {
     url: 'https://test.jira.com',
     username: 'testuser',
-    password: 'testpass'
+    password: 'testpass',
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockClient = {
-      findIssue: jest.fn()
+      findIssue: jest.fn(),
     };
     mockJiraClient.mockImplementation(() => mockClient);
     wrapper = new JiraClientWrapper(config);
@@ -42,12 +42,12 @@ describe('JiraClientWrapper.downloadAttachments', () => {
             emailAddress: 'test@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-15T10:30:00.000Z',
           size: 1024000,
           mimeType: 'application/pdf',
-          content: 'https://test.jira.com/secure/attachment/10001/document.pdf'
+          content: 'https://test.jira.com/secure/attachment/10001/document.pdf',
         },
         {
           id: '10002',
@@ -61,14 +61,14 @@ describe('JiraClientWrapper.downloadAttachments', () => {
             emailAddress: 'test2@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-16T14:45:00.000Z',
           size: 512000,
           mimeType: 'image/png',
           content: 'https://test.jira.com/secure/attachment/10002/image.png',
-          thumbnail: 'https://test.jira.com/secure/thumbnail/10002/image.png'
-        }
+          thumbnail: 'https://test.jira.com/secure/thumbnail/10002/image.png',
+        },
       ];
 
       const mockIssue = {
@@ -76,8 +76,8 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         key: issueKey,
         self: 'https://test.jira.com/rest/api/2/issue/10000',
         fields: {
-          attachment: mockAttachments
-        }
+          attachment: mockAttachments,
+        },
       };
 
       mockClient.findIssue.mockResolvedValue(mockIssue);
@@ -86,9 +86,13 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const result = await wrapper.downloadAttachments(issueKey);
 
       // Assert
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
       expect(result).toHaveLength(2);
-      
+
       // Verify first attachment
       expect(result[0]).toEqual({
         id: '10001',
@@ -98,7 +102,7 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         created: '2024-01-15T10:30:00.000Z',
         size: 1024000,
         mimeType: 'application/pdf',
-        content: 'https://test.jira.com/secure/attachment/10001/document.pdf'
+        content: 'https://test.jira.com/secure/attachment/10001/document.pdf',
       });
 
       // Verify second attachment (with thumbnail)
@@ -111,7 +115,7 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         size: 512000,
         mimeType: 'image/png',
         content: 'https://test.jira.com/secure/attachment/10002/image.png',
-        thumbnail: 'https://test.jira.com/secure/thumbnail/10002/image.png'
+        thumbnail: 'https://test.jira.com/secure/thumbnail/10002/image.png',
       });
     });
 
@@ -123,8 +127,8 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         key: issueKey,
         self: 'https://test.jira.com/rest/api/2/issue/10001',
         fields: {
-          attachment: []
-        }
+          attachment: [],
+        },
       };
 
       mockClient.findIssue.mockResolvedValue(mockIssue);
@@ -133,7 +137,11 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const result = await wrapper.downloadAttachments(issueKey);
 
       // Assert
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
       expect(result).toEqual([]);
     });
 
@@ -145,8 +153,8 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         key: issueKey,
         self: 'https://test.jira.com/rest/api/2/issue/10002',
         fields: {
-          attachment: null
-        }
+          attachment: null,
+        },
       };
 
       mockClient.findIssue.mockResolvedValue(mockIssue);
@@ -155,7 +163,11 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const result = await wrapper.downloadAttachments(issueKey);
 
       // Assert
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
       expect(result).toEqual([]);
     });
 
@@ -166,7 +178,7 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         id: '10003',
         key: issueKey,
         self: 'https://test.jira.com/rest/api/2/issue/10003',
-        fields: {}
+        fields: {},
       };
 
       mockClient.findIssue.mockResolvedValue(mockIssue);
@@ -175,7 +187,11 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const result = await wrapper.downloadAttachments(issueKey);
 
       // Assert
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
       expect(result).toEqual([]);
     });
   });
@@ -186,14 +202,23 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const issueKey = 'NONEXISTENT-123';
       const jiraError = {
         statusCode: 404,
-        message: 'Issue does not exist or you do not have permission to see it.'
+        message:
+          'Issue does not exist or you do not have permission to see it.',
       };
       mockClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow('Issue does not exist or you do not have permission to see it');
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        'Issue does not exist or you do not have permission to see it'
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
 
     it('should throw ApiError when access is denied (403)', async () => {
@@ -201,14 +226,22 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const issueKey = 'RESTRICTED-456';
       const jiraError = {
         statusCode: 403,
-        message: 'You do not have permission to view this issue.'
+        message: 'You do not have permission to view this issue.',
       };
       mockClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow('You do not have permission to view this issue');
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        'You do not have permission to view this issue'
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
 
     it('should throw ApiError when authentication fails (401)', async () => {
@@ -216,14 +249,22 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const issueKey = 'TEST-789';
       const jiraError = {
         statusCode: 401,
-        message: 'You are not authenticated.'
+        message: 'You are not authenticated.',
       };
       mockClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow('You are not authenticated');
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        'You are not authenticated'
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
 
     it('should throw ApiError when network error occurs', async () => {
@@ -233,8 +274,14 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       mockClient.findIssue.mockRejectedValue(networkError);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
 
     it('should throw ApiError when response is null', async () => {
@@ -243,9 +290,17 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       mockClient.findIssue.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow('No issue information received');
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        'No issue information received'
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
 
     it('should throw ApiError when response is undefined', async () => {
@@ -254,9 +309,17 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       mockClient.findIssue.mockResolvedValue(undefined);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow('No issue information received');
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        'No issue information received'
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
 
     it('should throw ApiError when response lacks fields property', async () => {
@@ -265,15 +328,23 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const invalidIssue = {
         id: '10004',
         key: issueKey,
-        self: 'https://test.jira.com/rest/api/2/issue/10004'
+        self: 'https://test.jira.com/rest/api/2/issue/10004',
         // Missing fields property
       };
       mockClient.findIssue.mockResolvedValue(invalidIssue);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow('Invalid issue response');
-      expect(mockClient.findIssue).toHaveBeenCalledWith(issueKey, '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        'Invalid issue response'
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        'attachment'
+      );
     });
   });
 
@@ -283,12 +354,14 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const issueKey = '';
       const jiraError = {
         statusCode: 400,
-        message: 'Issue key is required'
+        message: 'Issue key is required',
       };
       mockClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
       expect(mockClient.findIssue).toHaveBeenCalledWith('', '', 'attachment');
     });
 
@@ -297,13 +370,19 @@ describe('JiraClientWrapper.downloadAttachments', () => {
       const issueKey = '   ';
       const jiraError = {
         statusCode: 400,
-        message: 'Issue key is required'
+        message: 'Issue key is required',
       };
       mockClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(ApiError);
-      expect(mockClient.findIssue).toHaveBeenCalledWith('   ', '', 'attachment');
+      await expect(wrapper.downloadAttachments(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(mockClient.findIssue).toHaveBeenCalledWith(
+        '   ',
+        '',
+        'attachment'
+      );
     });
   });
 
@@ -323,12 +402,12 @@ describe('JiraClientWrapper.downloadAttachments', () => {
           emailAddress: 'test@example.com',
           active: true,
           timeZone: 'UTC',
-          avatarUrls: {}
+          avatarUrls: {},
         },
         created: '2024-01-17T09:15:00.000Z',
         size: 2048,
         mimeType: 'text/plain',
-        content: 'https://test.jira.com/secure/attachment/10005/text-file.txt'
+        content: 'https://test.jira.com/secure/attachment/10005/text-file.txt',
         // No thumbnail property for non-image files
       };
 
@@ -337,8 +416,8 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         key: issueKey,
         self: 'https://test.jira.com/rest/api/2/issue/10005',
         fields: {
-          attachment: [mockAttachment]
-        }
+          attachment: [mockAttachment],
+        },
       };
 
       mockClient.findIssue.mockResolvedValue(mockIssue);
@@ -356,7 +435,7 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         created: '2024-01-17T09:15:00.000Z',
         size: 2048,
         mimeType: 'text/plain',
-        content: 'https://test.jira.com/secure/attachment/10005/text-file.txt'
+        content: 'https://test.jira.com/secure/attachment/10005/text-file.txt',
         // thumbnail property should not be present
       });
       expect(result[0]).not.toHaveProperty('thumbnail');
@@ -378,12 +457,14 @@ describe('JiraClientWrapper.downloadAttachments', () => {
             emailAddress: 'test@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-18T11:20:00.000Z',
           size: 51200,
-          mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          content: 'https://test.jira.com/secure/attachment/10006/spreadsheet.xlsx'
+          mimeType:
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          content:
+            'https://test.jira.com/secure/attachment/10006/spreadsheet.xlsx',
         },
         {
           id: '10007',
@@ -397,13 +478,13 @@ describe('JiraClientWrapper.downloadAttachments', () => {
             emailAddress: 'test@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-18T12:30:00.000Z',
           size: 10485760,
           mimeType: 'video/mp4',
-          content: 'https://test.jira.com/secure/attachment/10007/video.mp4'
-        }
+          content: 'https://test.jira.com/secure/attachment/10007/video.mp4',
+        },
       ];
 
       const mockIssue = {
@@ -411,8 +492,8 @@ describe('JiraClientWrapper.downloadAttachments', () => {
         key: issueKey,
         self: 'https://test.jira.com/rest/api/2/issue/10006',
         fields: {
-          attachment: mockAttachments
-        }
+          attachment: mockAttachments,
+        },
       };
 
       mockClient.findIssue.mockResolvedValue(mockIssue);
@@ -422,7 +503,9 @@ describe('JiraClientWrapper.downloadAttachments', () => {
 
       // Assert
       expect(result).toHaveLength(2);
-      expect(result[0].mimeType).toBe('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      expect(result[0].mimeType).toBe(
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
       expect(result[1].mimeType).toBe('video/mp4');
     });
   });

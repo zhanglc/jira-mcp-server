@@ -8,7 +8,9 @@ describe('MCP Server - getProject Integration Tests', () => {
   beforeAll(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      console.log('Skipping MCP Server integration tests - JIRA_PERSONAL_TOKEN not set');
+      console.log(
+        'Skipping MCP Server integration tests - JIRA_PERSONAL_TOKEN not set'
+      );
       return;
     }
 
@@ -18,7 +20,9 @@ describe('MCP Server - getProject Integration Tests', () => {
   beforeEach(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      pending('JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test');
+      pending(
+        'JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test'
+      );
     }
   });
 
@@ -26,7 +30,7 @@ describe('MCP Server - getProject Integration Tests', () => {
     it('should handle getProject tool call for DSCWA project', async () => {
       // Act - Test the handler directly
       const response = await (mcpServer as any).handleGetProject({
-        projectKey: 'DSCWA'
+        projectKey: 'DSCWA',
       });
 
       // Assert
@@ -42,41 +46,49 @@ describe('MCP Server - getProject Integration Tests', () => {
       expect(project.id).toBe('16305');
       expect(project.key).toBe('DSCWA');
       expect(project.name).toBe('Intent Based System');
-      expect(project.self).toBe('https://jira.dentsplysirona.com/rest/api/2/project/16305');
+      expect(project.self).toBe(
+        'https://jira.dentsplysirona.com/rest/api/2/project/16305'
+      );
       expect(project.projectTypeKey).toBeDefined();
 
-      console.log(`MCP Server returned project: ${project.name} (${project.key})`);
+      console.log(
+        `MCP Server returned project: ${project.name} (${project.key})`
+      );
       console.log('Project details count:', {
         componentsCount: project.components?.length || 0,
         versionsCount: project.versions?.length || 0,
         rolesCount: Object.keys(project.roles || {}).length,
-        issueTypesCount: project.issueTypes?.length || 0
+        issueTypesCount: project.issueTypes?.length || 0,
       });
     }, 15000);
 
     it('should handle missing projectKey parameter', async () => {
       // Act & Assert - Test with missing projectKey
-      await expect((mcpServer as any).handleGetProject({}))
-        .rejects.toThrow('projectKey is required and must be a string');
+      await expect((mcpServer as any).handleGetProject({})).rejects.toThrow(
+        'projectKey is required and must be a string'
+      );
     });
 
     it('should handle invalid projectKey type', async () => {
       // Act & Assert - Test with invalid projectKey type
-      await expect((mcpServer as any).handleGetProject({ projectKey: 123 }))
-        .rejects.toThrow('projectKey is required and must be a string');
+      await expect(
+        (mcpServer as any).handleGetProject({ projectKey: 123 })
+      ).rejects.toThrow('projectKey is required and must be a string');
     });
 
     it('should handle non-existent project', async () => {
       // Act & Assert - Test with non-existent project
-      await expect((mcpServer as any).handleGetProject({ 
-        projectKey: 'NONEXISTENT_PROJECT_12345' 
-      })).rejects.toThrow();
+      await expect(
+        (mcpServer as any).handleGetProject({
+          projectKey: 'NONEXISTENT_PROJECT_12345',
+        })
+      ).rejects.toThrow();
     }, 10000);
 
     it('should validate getProject response contains all expected project fields', async () => {
       // Act
       const response = await (mcpServer as any).handleGetProject({
-        projectKey: 'DSCWA'
+        projectKey: 'DSCWA',
       });
 
       // Parse response
@@ -102,7 +114,7 @@ describe('MCP Server - getProject Integration Tests', () => {
           key: !!projectData.key,
           name: !!projectData.name,
           self: !!projectData.self,
-          projectTypeKey: !!projectData.projectTypeKey
+          projectTypeKey: !!projectData.projectTypeKey,
         },
         optionalFields: {
           description: !!projectData.description,
@@ -113,25 +125,27 @@ describe('MCP Server - getProject Integration Tests', () => {
           components: Array.isArray(projectData.components),
           versions: Array.isArray(projectData.versions),
           roles: typeof projectData.roles === 'object',
-          issueTypes: Array.isArray(projectData.issueTypes)
+          issueTypes: Array.isArray(projectData.issueTypes),
         },
         detailedCounts: {
           componentsCount: projectData.components?.length || 0,
           versionsCount: projectData.versions?.length || 0,
           rolesCount: Object.keys(projectData.roles || {}).length,
-          issueTypesCount: projectData.issueTypes?.length || 0
-        }
+          issueTypesCount: projectData.issueTypes?.length || 0,
+        },
       });
     }, 15000);
 
     it('should compare getProject MCP response with getAllProjects MCP response', async () => {
       // Act - Get single project via getProject
       const getProjectResponse = await (mcpServer as any).handleGetProject({
-        projectKey: 'DSCWA'
+        projectKey: 'DSCWA',
       });
 
       // Get all projects via getAllProjects
-      const getAllProjectsResponse = await (mcpServer as any).handleGetAllProjects({});
+      const getAllProjectsResponse = await (
+        mcpServer as any
+      ).handleGetAllProjects({});
 
       // Parse responses
       const singleProject = JSON.parse(getProjectResponse.content[0].text);
@@ -149,7 +163,8 @@ describe('MCP Server - getProject Integration Tests', () => {
       console.log('MCP Response Consistency Check:', {
         'getProject fields': Object.keys(singleProject).length,
         'getAllProjects fields': Object.keys(dscwaFromList).length,
-        'getProject has more details': Object.keys(singleProject).length > Object.keys(dscwaFromList).length
+        'getProject has more details':
+          Object.keys(singleProject).length > Object.keys(dscwaFromList).length,
       });
     }, 20000);
   });

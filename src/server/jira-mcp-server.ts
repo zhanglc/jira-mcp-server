@@ -1,28 +1,66 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { CallToolRequestSchema, ReadResourceRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ReadResourceRequestSchema,
+  ListResourcesRequestSchema,
+  ListToolsRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 import { ToolHandler } from './handlers/index.js';
 import { getAllTools } from './tools/index.js';
 import { logger } from '../utils/logger.js';
 import { BackwardCompatibilityLayer } from './backward-compatibility.js';
+import { JiraResourceHandler } from '@/server/resources/resource-handler.js';
+import { HybridResourceHandler } from '@/server/resources/hybrid-resource-handler.js';
+import { JiraClientWrapper } from '../client/jira-client-wrapper.js';
+import { loadHybridConfig } from '../utils/config.js';
+import type { ValidatedHybridConfig } from '../types/config-types.js';
 
 export class JiraMcpServer {
   private server: Server;
   private toolHandler: ToolHandler;
+  private resourceHandler: JiraResourceHandler;
   private backwardCompatibility: BackwardCompatibilityLayer;
+  private jiraClient: JiraClientWrapper;
+  private hybridConfig: ValidatedHybridConfig;
 
   constructor() {
-    this.server = new Server({
-      name: 'jira-mcp-server',
-      version: '1.0.0',
-    }, {
-      capabilities: {
-        tools: {},
-        resources: {}
-      }
+    // Load hybrid configuration
+    this.hybridConfig = loadHybridConfig();
+    
+    // Initialize Jira client with configuration
+    this.jiraClient = new JiraClientWrapper({
+      url: this.hybridConfig.url,
+      ...(this.hybridConfig.bearer ? { bearer: this.hybridConfig.bearer } : {}),
+      ...(this.hybridConfig.username && this.hybridConfig.password 
+        ? { username: this.hybridConfig.username, password: this.hybridConfig.password }
+        : {})
     });
+    
+    this.server = new Server(
+      {
+        name: 'jira-mcp-server',
+        version: '1.0.0',
+      },
+      {
+        capabilities: {
+          tools: {},
+          resources: {},
+        },
+      }
+    );
 
-    this.toolHandler = new ToolHandler();
-    this.backwardCompatibility = new BackwardCompatibilityLayer(this.toolHandler);
+    // Initialize hybrid resource handler with configuration
+    this.resourceHandler = new HybridResourceHandler(
+      this.jiraClient,
+      this.hybridConfig.enableDynamicFields,
+      this.hybridConfig.dynamicFieldCacheTtl,
+      100 // cacheMaxSize - default value
+    );
+    
+    this.toolHandler = new ToolHandler(this.jiraClient, this.resourceHandler);
+    this.backwardCompatibility = new BackwardCompatibilityLayer(
+      this.toolHandler
+    );
     this.setupHandlers();
   }
 
@@ -30,11 +68,11 @@ export class JiraMcpServer {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       logger.log('ListTools request received');
       return {
-        tools: getAllTools()
+        tools: getAllTools(),
       };
     });
 
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name, arguments: args } = request.params;
       logger.log(`CallTool request: ${name}`, args);
 
@@ -44,15 +82,13 @@ export class JiraMcpServer {
 
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
       logger.log('ListResources request received');
-      return {
-        resources: []
-      };
+      return await this.resourceHandler.listResources();
     });
 
-    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    this.server.setRequestHandler(ReadResourceRequestSchema, async request => {
       const { uri } = request.params;
-      logger.log(`GetResource request: ${uri}`);
-      throw new Error(`Resource not found: ${uri}`);
+      logger.log(`ReadResource request: ${uri}`);
+      return await this.resourceHandler.readResource(uri);
     });
   }
 
@@ -61,6 +97,13 @@ export class JiraMcpServer {
    */
   getToolHandler(): ToolHandler {
     return this.toolHandler;
+  }
+
+  /**
+   * Get the resource handler instance for testing purposes
+   */
+  getResourceHandler(): HybridResourceHandler {
+    return this.resourceHandler as HybridResourceHandler;
   }
 
   // =============================================================================

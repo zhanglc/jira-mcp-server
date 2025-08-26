@@ -8,7 +8,9 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
   beforeAll(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      console.log('Skipping MCP Server getServerInfo integration tests - JIRA_PERSONAL_TOKEN not set');
+      console.log(
+        'Skipping MCP Server getServerInfo integration tests - JIRA_PERSONAL_TOKEN not set'
+      );
       return;
     }
 
@@ -18,7 +20,9 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
   beforeEach(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      pending('JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test');
+      pending(
+        'JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test'
+      );
     }
   });
 
@@ -33,9 +37,9 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
       expect(Array.isArray(response.content)).toBe(true);
       expect(response.content.length).toBe(1);
       expect(response.content[0].type).toBe('text');
-      
+
       const serverInfo = JSON.parse(response.content[0].text);
-      
+
       // Validate structure
       expect(serverInfo).toBeDefined();
       expect(typeof serverInfo.baseUrl).toBe('string');
@@ -60,7 +64,7 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
         version: serverInfo.version,
         deploymentType: serverInfo.deploymentType,
         serverTime: serverInfo.serverTime,
-        defaultLocale: serverInfo.defaultLocale?.locale || 'Not set'
+        defaultLocale: serverInfo.defaultLocale?.locale || 'Not set',
       });
     }, 30000);
 
@@ -80,7 +84,7 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
       const serverTime = new Date(serverInfo.serverTime);
       const now = new Date();
       const timeDiff = Math.abs(now.getTime() - serverTime.getTime());
-      
+
       // Should be within 5 minutes (allowing for server processing time)
       expect(timeDiff).toBeLessThan(5 * 60 * 1000);
 
@@ -91,7 +95,7 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
       console.log('Time comparison:', {
         buildDate: serverInfo.buildDate,
         serverTime: serverInfo.serverTime,
-        timeDifferenceMs: timeDiff
+        timeDifferenceMs: timeDiff,
       });
     }, 30000);
 
@@ -105,7 +109,7 @@ describe('MCP Server - getServerInfo Integration Tests', () => {
         expect(typeof serverInfo.defaultLocale).toBe('object');
         expect(typeof serverInfo.defaultLocale.locale).toBe('string');
         expect(serverInfo.defaultLocale.locale).toMatch(/^[a-z]{2}_[A-Z]{2}$/); // e.g., en_US, de_DE
-        
+
         console.log('Default locale found:', serverInfo.defaultLocale.locale);
       } else {
         console.log('No default locale information available');

@@ -8,7 +8,9 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
   beforeAll(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      console.log('Skipping MCP Server getCurrentUser integration tests - JIRA_PERSONAL_TOKEN not set');
+      console.log(
+        'Skipping MCP Server getCurrentUser integration tests - JIRA_PERSONAL_TOKEN not set'
+      );
       return;
     }
 
@@ -18,7 +20,9 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
   beforeEach(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      pending('JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test');
+      pending(
+        'JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test'
+      );
     }
   });
 
@@ -34,15 +38,15 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       expect(response.content.length).toBe(1);
       expect(response.content[0]).toHaveProperty('type', 'text');
       expect(response.content[0]).toHaveProperty('text');
-      
+
       // Parse the JSON response
       const userText = response.content[0].text;
       expect(typeof userText).toBe('string');
-      
+
       const user = JSON.parse(userText);
       expect(user).toBeDefined();
       expect(typeof user).toBe('object');
-      
+
       // Validate user structure
       expect(user.self).toBeDefined();
       expect(user.name).toBeDefined();
@@ -52,19 +56,22 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       expect(user.active).toBeDefined();
       expect(user.timeZone).toBeDefined();
       expect(user.avatarUrls).toBeDefined();
-      
+
       console.log('✅ MCP getCurrentUser tool returned user:', {
         name: user.name,
         displayName: user.displayName,
         key: user.key,
-        active: user.active
+        active: user.active,
       });
     }, 10000);
 
     it('should reject requests with parameters', async () => {
       // Act & Assert - Test the handler directly with invalid parameters
-      await expect((mcpServer as any).handleGetCurrentUser({ invalidParam: 'should be rejected' }))
-        .rejects.toThrow('getCurrentUser does not accept any parameters');
+      await expect(
+        (mcpServer as any).handleGetCurrentUser({
+          invalidParam: 'should be rejected',
+        })
+      ).rejects.toThrow('getCurrentUser does not accept any parameters');
     });
 
     it('should be consistent with expected authentication user', async () => {
@@ -77,8 +84,11 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       expect(user.name).toMatch(/@dentsplysirona\.com$/);
       expect(user.active).toBe(true);
       expect(user.key).toMatch(/^JIRAUSER\d+$/);
-      
-      console.log('✅ MCP tool consistency verified for user:', user.displayName);
+
+      console.log(
+        '✅ MCP tool consistency verified for user:',
+        user.displayName
+      );
     }, 10000);
 
     it('should provide authentication verification capability via MCP', async () => {
@@ -92,7 +102,7 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       expect(user.name).toBeTruthy();
       expect(user.emailAddress).toBeTruthy();
       expect(user.displayName).toBeTruthy();
-      
+
       // Log authentication summary for MCP context
       console.log('🔐 MCP Authentication Verification:');
       console.log(`   Tool: getCurrentUser`);
@@ -100,7 +110,7 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       console.log(`   Key: ${user.key}`);
       console.log(`   Status: ${user.active ? 'Active' : 'Inactive'}`);
       console.log(`   Authentication: ✅ Verified`);
-      
+
       console.log('✅ MCP authentication verification completed');
     }, 10000);
 
@@ -111,13 +121,13 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
 
       // Assert - JSON formatting validation
       expect(() => JSON.parse(userText)).not.toThrow();
-      
+
       const user = JSON.parse(userText);
       const reformattedJson = JSON.stringify(user, null, 2);
-      
+
       // Verify it's properly formatted JSON (matches our formatting)
       expect(userText).toBe(reformattedJson);
-      
+
       // Verify all expected fields are present and properly typed
       expect(typeof user.self).toBe('string');
       expect(typeof user.name).toBe('string');
@@ -127,7 +137,7 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       expect(typeof user.active).toBe('boolean');
       expect(typeof user.timeZone).toBe('string');
       expect(typeof user.avatarUrls).toBe('object');
-      
+
       console.log('✅ MCP JSON formatting validation passed');
     }, 10000);
 
@@ -143,9 +153,10 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       expect(nullResponse.content).toBeDefined();
 
       // Act & Assert - Test with parameters (should fail)
-      await expect((mcpServer as any).handleGetCurrentUser({ someParam: 'value' }))
-        .rejects.toThrow('getCurrentUser does not accept any parameters');
-      
+      await expect(
+        (mcpServer as any).handleGetCurrentUser({ someParam: 'value' })
+      ).rejects.toThrow('getCurrentUser does not accept any parameters');
+
       console.log('✅ Parameter validation working correctly');
     });
   });
@@ -156,7 +167,7 @@ describe('MCP Server - getCurrentUser Integration Tests', () => {
       // We can test this by checking if the handler function exists
       expect((mcpServer as any).handleGetCurrentUser).toBeDefined();
       expect(typeof (mcpServer as any).handleGetCurrentUser).toBe('function');
-      
+
       console.log('getCurrentUser handler successfully defined in MCP Server');
     });
   });

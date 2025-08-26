@@ -12,7 +12,8 @@ describe('getAllProjects Integration Tests', () => {
   beforeAll(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     const url = process.env.JIRA_URL || 'https://jira.dentsplysirona.com';
-    const username = process.env.JIRA_USERNAME || 'Damon.Zhang@dentsplysirona.com';
+    const username =
+      process.env.JIRA_USERNAME || 'Damon.Zhang@dentsplysirona.com';
 
     if (!token) {
       console.log('Skipping integration tests - JIRA_PERSONAL_TOKEN not set');
@@ -22,7 +23,7 @@ describe('getAllProjects Integration Tests', () => {
     config = {
       url,
       username,
-      bearer: token
+      bearer: token,
     };
 
     wrapper = new JiraClientWrapper(config);
@@ -59,7 +60,9 @@ describe('getAllProjects Integration Tests', () => {
         expect(typeof project.projectTypeKey).toBe('string');
 
         // Check that self URL is valid
-        expect(project.self).toMatch(/^https?:\/\/.+\/rest\/api\/2\/project\/.+/);
+        expect(project.self).toMatch(
+          /^https?:\/\/.+\/rest\/api\/2\/project\/.+/
+        );
       });
 
       console.log(`Retrieved ${projects.length} projects from Jira server`);
@@ -71,7 +74,9 @@ describe('getAllProjects Integration Tests', () => {
       const projects = await wrapper.getAllProjects();
 
       // Assert
-      const dscwaProject = projects.find((project: JiraProject) => project.key === 'DSCWA');
+      const dscwaProject = projects.find(
+        (project: JiraProject) => project.key === 'DSCWA'
+      );
       expect(dscwaProject).toBeDefined();
 
       if (dscwaProject) {
@@ -85,7 +90,7 @@ describe('getAllProjects Integration Tests', () => {
           key: dscwaProject.key,
           name: dscwaProject.name,
           projectTypeKey: dscwaProject.projectTypeKey,
-          archived: dscwaProject.archived
+          archived: dscwaProject.archived,
         });
       }
     }, 30000);
@@ -101,10 +106,14 @@ describe('getAllProjects Integration Tests', () => {
       expect(allProjects.length).toBeGreaterThanOrEqual(activeProjects.length);
 
       // Check that activeProjects doesn't include archived projects
-      const archivedInActive = activeProjects.filter((project: JiraProject) => project.archived === true);
+      const archivedInActive = activeProjects.filter(
+        (project: JiraProject) => project.archived === true
+      );
       expect(archivedInActive.length).toBe(0);
 
-      console.log(`All projects: ${allProjects.length}, Active projects: ${activeProjects.length}`);
+      console.log(
+        `All projects: ${allProjects.length}, Active projects: ${activeProjects.length}`
+      );
     }, 30000);
 
     it('should validate project data structure against real API', async () => {
@@ -115,7 +124,7 @@ describe('getAllProjects Integration Tests', () => {
       expect(projects.length).toBeGreaterThan(0);
 
       const sampleProject = projects[0];
-      
+
       // Required fields
       expect(sampleProject.id).toBeDefined();
       expect(sampleProject.key).toBeDefined();
@@ -135,9 +144,21 @@ describe('getAllProjects Integration Tests', () => {
         hasArchived: 'archived' in sampleProject,
         hasAvatarUrls: 'avatarUrls' in sampleProject,
         hasProjectCategory: 'projectCategory' in sampleProject,
-        additionalFields: Object.keys(sampleProject).filter(key => 
-          !['id', 'key', 'name', 'self', 'projectTypeKey', 'description', 'lead', 'archived', 'avatarUrls', 'projectCategory'].includes(key)
-        )
+        additionalFields: Object.keys(sampleProject).filter(
+          key =>
+            ![
+              'id',
+              'key',
+              'name',
+              'self',
+              'projectTypeKey',
+              'description',
+              'lead',
+              'archived',
+              'avatarUrls',
+              'projectCategory',
+            ].includes(key)
+        ),
       });
     }, 30000);
 
@@ -146,7 +167,7 @@ describe('getAllProjects Integration Tests', () => {
       const invalidConfig: JiraConfig = {
         url: process.env.JIRA_URL || 'https://jira.dentsplysirona.com',
         username: process.env.JIRA_USERNAME || 'Damon.Zhang@dentsplysirona.com',
-        bearer: 'invalid-token-12345'
+        bearer: 'invalid-token-12345',
       };
       const invalidWrapper = new JiraClientWrapper(invalidConfig);
 
@@ -157,7 +178,9 @@ describe('getAllProjects Integration Tests', () => {
         const result = await invalidWrapper.getAllProjects();
         // If no error is thrown, we expect empty results due to lack of permissions
         expect(Array.isArray(result)).toBe(true);
-        console.log(`Authentication test result: ${result.length} projects returned with invalid token`);
+        console.log(
+          `Authentication test result: ${result.length} projects returned with invalid token`
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(ApiError);
       }

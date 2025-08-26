@@ -115,7 +115,7 @@ export interface GetServerInfoArgs {
 }
 
 // Union type for all possible tool arguments
-export type AllToolArgs = 
+export type AllToolArgs =
   | GetIssueArgs
   | GetIssueTransitionsArgs
   | SearchIssuesArgs

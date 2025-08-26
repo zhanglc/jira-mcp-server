@@ -12,16 +12,16 @@ describe('JiraClientWrapper.getProjectIssues', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     const JiraClient = require('jira-client');
     mockClient = {
-      searchJira: jest.fn()
+      searchJira: jest.fn(),
     };
     JiraClient.mockImplementation(() => mockClient);
 
     const config: JiraConfig = {
       url: 'https://test.jira.com',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
 
     wrapper = new JiraClientWrapper(config);
@@ -45,8 +45,8 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 name: 'Open',
                 statusCategory: {
                   key: 'new',
-                  name: 'To Do'
-                }
+                  name: 'To Do',
+                },
               },
               assignee: {
                 self: 'https://test.jira.com/rest/api/2/user?username=testuser',
@@ -56,7 +56,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 emailAddress: 'test@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: { '48x48': 'url' }
+                avatarUrls: { '48x48': 'url' },
               },
               reporter: {
                 self: 'https://test.jira.com/rest/api/2/user?username=reporter',
@@ -66,7 +66,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 emailAddress: 'reporter@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: { '48x48': 'url' }
+                avatarUrls: { '48x48': 'url' },
               },
               creator: {
                 self: 'https://test.jira.com/rest/api/2/user?username=creator',
@@ -76,23 +76,23 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 emailAddress: 'creator@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: { '48x48': 'url' }
+                avatarUrls: { '48x48': 'url' },
               },
               project: {
                 key: 'DSCWA',
-                name: 'Test Project'
+                name: 'Test Project',
               },
               issuetype: {
                 name: 'Bug',
-                subtask: false
+                subtask: false,
               },
               priority: {
                 name: 'High',
-                id: '2'
+                id: '2',
               },
               created: '2023-01-01T10:00:00.000+0000',
-              updated: '2023-01-02T10:00:00.000+0000'
-            }
+              updated: '2023-01-02T10:00:00.000+0000',
+            },
           },
           {
             id: '12346',
@@ -104,8 +104,8 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 name: 'In Progress',
                 statusCategory: {
                   key: 'indeterminate',
-                  name: 'In Progress'
-                }
+                  name: 'In Progress',
+                },
               },
               assignee: null,
               reporter: {
@@ -116,7 +116,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 emailAddress: 'reporter2@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: { '48x48': 'url' }
+                avatarUrls: { '48x48': 'url' },
               },
               creator: {
                 self: 'https://test.jira.com/rest/api/2/user?username=creator2',
@@ -126,25 +126,25 @@ describe('JiraClientWrapper.getProjectIssues', () => {
                 emailAddress: 'creator2@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: { '48x48': 'url' }
+                avatarUrls: { '48x48': 'url' },
               },
               project: {
                 key: 'DSCWA',
-                name: 'Test Project'
+                name: 'Test Project',
               },
               issuetype: {
                 name: 'Task',
-                subtask: false
+                subtask: false,
               },
               priority: {
                 name: 'Medium',
-                id: '3'
+                id: '3',
               },
               created: '2023-01-03T10:00:00.000+0000',
-              updated: '2023-01-04T10:00:00.000+0000'
-            }
-          }
-        ]
+              updated: '2023-01-04T10:00:00.000+0000',
+            },
+          },
+        ],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -165,7 +165,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -183,14 +183,17 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 1,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       await wrapper.getProjectIssues('PROJECT WITH SPACES');
 
-      expect(mockClient.searchJira).toHaveBeenCalledWith('project = "PROJECT WITH SPACES"', {});
+      expect(mockClient.searchJira).toHaveBeenCalledWith(
+        'project = "PROJECT WITH SPACES"',
+        {}
+      );
     });
   });
 
@@ -201,21 +204,21 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 10,
         maxResults: 20,
         total: 100,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       const options: SearchOptions = {
         startAt: 10,
-        maxResults: 20
+        maxResults: 20,
       };
 
       await wrapper.getProjectIssues('DSCWA', options);
 
       expect(mockClient.searchJira).toHaveBeenCalledWith('project = DSCWA', {
         startAt: 10,
-        maxResults: 20
+        maxResults: 20,
       });
     });
 
@@ -225,19 +228,19 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 1,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       const options: SearchOptions = {
-        fields: ['summary', 'status', 'assignee']
+        fields: ['summary', 'status', 'assignee'],
       };
 
       await wrapper.getProjectIssues('DSCWA', options);
 
       expect(mockClient.searchJira).toHaveBeenCalledWith('project = DSCWA', {
-        fields: ['summary', 'status', 'assignee']
+        fields: ['summary', 'status', 'assignee'],
       });
     });
 
@@ -247,7 +250,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 5,
         maxResults: 10,
         total: 50,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -255,7 +258,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
       const options: SearchOptions = {
         startAt: 5,
         maxResults: 10,
-        fields: ['summary', 'status', 'priority']
+        fields: ['summary', 'status', 'priority'],
       };
 
       await wrapper.getProjectIssues('DSCWA', options);
@@ -263,7 +266,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
       expect(mockClient.searchJira).toHaveBeenCalledWith('project = DSCWA', {
         startAt: 5,
         maxResults: 10,
-        fields: ['summary', 'status', 'priority']
+        fields: ['summary', 'status', 'priority'],
       });
     });
   });
@@ -272,29 +275,34 @@ describe('JiraClientWrapper.getProjectIssues', () => {
     it('should handle non-existent project error', async () => {
       const jiraError = {
         statusCode: 400,
-        message: 'The value \'NONEXISTENT\' does not exist for the field \'project\'.'
+        message:
+          "The value 'NONEXISTENT' does not exist for the field 'project'.",
       };
 
       mockClient.searchJira.mockRejectedValue(jiraError);
 
-      await expect(wrapper.getProjectIssues('NONEXISTENT')).rejects.toThrow(ApiError);
+      await expect(wrapper.getProjectIssues('NONEXISTENT')).rejects.toThrow(
+        ApiError
+      );
     });
 
     it('should handle invalid project key format', async () => {
       const jiraError = {
         statusCode: 400,
-        message: 'Invalid project key format.'
+        message: 'Invalid project key format.',
       };
 
       mockClient.searchJira.mockRejectedValue(jiraError);
 
-      await expect(wrapper.getProjectIssues('invalid-project-key!')).rejects.toThrow(ApiError);
+      await expect(
+        wrapper.getProjectIssues('invalid-project-key!')
+      ).rejects.toThrow(ApiError);
     });
 
     it('should handle authentication errors', async () => {
       const jiraError = {
         statusCode: 401,
-        message: 'You are not authenticated.'
+        message: 'You are not authenticated.',
       };
 
       mockClient.searchJira.mockRejectedValue(jiraError);
@@ -305,12 +313,14 @@ describe('JiraClientWrapper.getProjectIssues', () => {
     it('should handle permission errors', async () => {
       const jiraError = {
         statusCode: 403,
-        message: 'You do not have permission to access this project.'
+        message: 'You do not have permission to access this project.',
       };
 
       mockClient.searchJira.mockRejectedValue(jiraError);
 
-      await expect(wrapper.getProjectIssues('RESTRICTED')).rejects.toThrow(ApiError);
+      await expect(wrapper.getProjectIssues('RESTRICTED')).rejects.toThrow(
+        ApiError
+      );
     });
 
     it('should handle network errors', async () => {
@@ -330,7 +340,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 0,
         total: 0,
-        issues: []
+        issues: [],
       });
     });
   });
@@ -342,20 +352,26 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       const options: SearchOptions = {
-        fields: ['summary', 'status', 'invalidField', 'maliciousScript', 'customfield_10001']
+        fields: [
+          'summary',
+          'status',
+          'invalidField',
+          'maliciousScript',
+          'customfield_10001',
+        ],
       };
 
       await wrapper.getProjectIssues('DSCWA', options);
 
       // Should only pass valid fields
       expect(mockClient.searchJira).toHaveBeenCalledWith('project = DSCWA', {
-        fields: ['summary', 'status', 'customfield_10001']
+        fields: ['summary', 'status', 'customfield_10001'],
       });
     });
 
@@ -365,19 +381,19 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       const options: SearchOptions = {
-        fields: ['*all', '*navigable', 'summary']
+        fields: ['*all', '*navigable', 'summary'],
       };
 
       await wrapper.getProjectIssues('DSCWA', options);
 
       expect(mockClient.searchJira).toHaveBeenCalledWith('project = DSCWA', {
-        fields: ['*all', '*navigable', 'summary']
+        fields: ['*all', '*navigable', 'summary'],
       });
     });
   });
@@ -389,7 +405,7 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -405,14 +421,17 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       await wrapper.getProjectIssues('PROJ123');
 
-      expect(mockClient.searchJira).toHaveBeenCalledWith('project = PROJ123', {});
+      expect(mockClient.searchJira).toHaveBeenCalledWith(
+        'project = PROJ123',
+        {}
+      );
     });
 
     it('should construct JQL for project key with underscores', async () => {
@@ -421,14 +440,17 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       await wrapper.getProjectIssues('MY_PROJECT');
 
-      expect(mockClient.searchJira).toHaveBeenCalledWith('project = MY_PROJECT', {});
+      expect(mockClient.searchJira).toHaveBeenCalledWith(
+        'project = MY_PROJECT',
+        {}
+      );
     });
 
     it('should properly quote project keys with special characters', async () => {
@@ -437,14 +459,17 @@ describe('JiraClientWrapper.getProjectIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.searchJira.mockResolvedValue(mockSearchResult);
 
       await wrapper.getProjectIssues('PROJECT-WITH-DASHES');
 
-      expect(mockClient.searchJira).toHaveBeenCalledWith('project = "PROJECT-WITH-DASHES"', {});
+      expect(mockClient.searchJira).toHaveBeenCalledWith(
+        'project = "PROJECT-WITH-DASHES"',
+        {}
+      );
     });
   });
 });

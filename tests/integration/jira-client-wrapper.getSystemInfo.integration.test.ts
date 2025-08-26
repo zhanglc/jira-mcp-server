@@ -10,12 +10,14 @@ describe('JiraClientWrapper.getSystemInfo Integration Tests', () => {
   beforeAll(() => {
     // Verify test environment variables are available
     if (!process.env.JIRA_URL || !process.env.JIRA_PERSONAL_TOKEN) {
-      throw new Error('Integration tests require JIRA_URL and JIRA_PERSONAL_TOKEN environment variables');
+      throw new Error(
+        'Integration tests require JIRA_URL and JIRA_PERSONAL_TOKEN environment variables'
+      );
     }
 
     config = {
       url: process.env.JIRA_URL,
-      bearer: process.env.JIRA_PERSONAL_TOKEN
+      bearer: process.env.JIRA_PERSONAL_TOKEN,
     };
 
     wrapper = new JiraClientWrapper(config);
@@ -42,12 +44,16 @@ describe('JiraClientWrapper.getSystemInfo Integration Tests', () => {
       expect(systemInfo.versionNumbers).toBeDefined();
       expect(Array.isArray(systemInfo.versionNumbers)).toBe(true);
       expect(systemInfo.versionNumbers.length).toBeGreaterThan(0);
-      expect(systemInfo.versionNumbers.every(n => typeof n === 'number')).toBe(true);
+      expect(systemInfo.versionNumbers.every(n => typeof n === 'number')).toBe(
+        true
+      );
 
       expect(systemInfo.deploymentType).toBeDefined();
       expect(typeof systemInfo.deploymentType).toBe('string');
       // For Jira Server, should be 'Server' or 'Data Center'
-      expect(['Server', 'Data Center', 'Cloud'].includes(systemInfo.deploymentType)).toBe(true);
+      expect(
+        ['Server', 'Data Center', 'Cloud'].includes(systemInfo.deploymentType)
+      ).toBe(true);
 
       expect(systemInfo.buildNumber).toBeDefined();
       expect(typeof systemInfo.buildNumber).toBe('number');
@@ -82,7 +88,9 @@ describe('JiraClientWrapper.getSystemInfo Integration Tests', () => {
         });
       }
       if (systemInfo.systemInfoService) {
-        console.log(`System Info Service: ${Object.keys(systemInfo.systemInfoService).length} properties`);
+        console.log(
+          `System Info Service: ${Object.keys(systemInfo.systemInfoService).length} properties`
+        );
       }
       console.log('=====================================');
     }, 10000); // 10 second timeout for real API call
@@ -127,14 +135,14 @@ describe('JiraClientWrapper.getSystemInfo Integration Tests', () => {
 
       // Assert build information validity
       expect(systemInfo.buildNumber).toBeGreaterThan(0);
-      
+
       // Build date should be a valid ISO date
       const buildDate = new Date(systemInfo.buildDate);
       expect(buildDate.getTime()).not.toBeNaN();
-      
+
       // Build date should be in the past
       expect(buildDate.getTime()).toBeLessThan(Date.now());
-      
+
       // SCM info should be a non-empty string (usually a commit hash)
       expect(systemInfo.scmInfo.length).toBeGreaterThan(0);
     });

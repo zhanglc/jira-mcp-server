@@ -1,11 +1,15 @@
 import { JiraClientWrapper } from '../../src/client/jira-client-wrapper.js';
-import { SearchResult, JiraIssue, SearchOptions } from '../../src/types/jira-types.js';
+import {
+  SearchResult,
+  JiraIssue,
+  SearchOptions,
+} from '../../src/types/jira-types.js';
 import { ApiError } from '../../src/types/api-error.js';
 import { logger } from '../../src/utils/logger.js';
 
 // Mock jira-client
 const mockJiraClient = {
-  searchJira: jest.fn()
+  searchJira: jest.fn(),
 };
 
 jest.mock('jira-client', () => {
@@ -16,8 +20,8 @@ jest.mock('jira-client', () => {
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('JiraClientWrapper.getSprintIssues', () => {
@@ -26,12 +30,12 @@ describe('JiraClientWrapper.getSprintIssues', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockConfig = {
       url: 'https://test.jira.com',
-      bearer: 'fake-token'
+      bearer: 'fake-token',
     };
-    
+
     jiraClient = new JiraClientWrapper(mockConfig);
   });
 
@@ -55,8 +59,8 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 name: 'In Progress',
                 statusCategory: {
                   key: 'indeterminate',
-                  name: 'In Progress'
-                }
+                  name: 'In Progress',
+                },
               },
               assignee: {
                 self: 'https://test.jira.com/rest/api/2/user?username=testuser',
@@ -66,7 +70,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 emailAddress: 'test@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: {}
+                avatarUrls: {},
               },
               reporter: {
                 self: 'https://test.jira.com/rest/api/2/user?username=reporter',
@@ -76,7 +80,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 emailAddress: 'reporter@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: {}
+                avatarUrls: {},
               },
               creator: {
                 self: 'https://test.jira.com/rest/api/2/user?username=creator',
@@ -86,23 +90,23 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 emailAddress: 'creator@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: {}
+                avatarUrls: {},
               },
               project: {
                 key: 'DSCWA',
-                name: 'Test Project'
+                name: 'Test Project',
               },
               issuetype: {
                 name: 'Story',
-                subtask: false
+                subtask: false,
               },
               priority: {
                 name: 'Medium',
-                id: '3'
+                id: '3',
               },
               created: '2024-01-01T10:00:00.000Z',
-              updated: '2024-01-02T15:30:00.000Z'
-            }
+              updated: '2024-01-02T15:30:00.000Z',
+            },
           },
           {
             id: '10002',
@@ -114,8 +118,8 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 name: 'To Do',
                 statusCategory: {
                   key: 'new',
-                  name: 'To Do'
-                }
+                  name: 'To Do',
+                },
               },
               assignee: null,
               reporter: {
@@ -126,7 +130,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 emailAddress: 'reporter2@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: {}
+                avatarUrls: {},
               },
               creator: {
                 self: 'https://test.jira.com/rest/api/2/user?username=creator2',
@@ -136,25 +140,25 @@ describe('JiraClientWrapper.getSprintIssues', () => {
                 emailAddress: 'creator2@example.com',
                 active: true,
                 timeZone: 'UTC',
-                avatarUrls: {}
+                avatarUrls: {},
               },
               project: {
                 key: 'DSCWA',
-                name: 'Test Project'
+                name: 'Test Project',
               },
               issuetype: {
                 name: 'Bug',
-                subtask: false
+                subtask: false,
               },
               priority: {
                 name: 'High',
-                id: '2'
+                id: '2',
               },
               created: '2024-01-03T14:00:00.000Z',
-              updated: '2024-01-03T14:00:00.000Z'
-            }
-          }
-        ]
+              updated: '2024-01-03T14:00:00.000Z',
+            },
+          },
+        ],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -169,9 +173,14 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       expect(result.issues[0].key).toBe('DSCWA-1');
       expect(result.issues[1].key).toBe('DSCWA-2');
 
-      expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 123', {});
+      expect(mockJiraClient.searchJira).toHaveBeenCalledWith(
+        'sprint = 123',
+        {}
+      );
       expect(logger.log).toHaveBeenCalledWith('Getting issues for sprint: 123');
-      expect(logger.log).toHaveBeenCalledWith('Successfully found 2 issues for sprint: 123');
+      expect(logger.log).toHaveBeenCalledWith(
+        'Successfully found 2 issues for sprint: 123'
+      );
     });
 
     it('should retrieve sprint issues with pagination options', async () => {
@@ -179,14 +188,14 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const sprintId = 456;
       const options: SearchOptions = {
         startAt: 10,
-        maxResults: 25
+        maxResults: 25,
       };
       const mockSearchResult: SearchResult<JiraIssue> = {
         expand: 'names,schema',
         startAt: 10,
         maxResults: 25,
         total: 100,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -202,7 +211,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
 
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 456', {
         startAt: 10,
-        maxResults: 25
+        maxResults: 25,
       });
       expect(logger.log).toHaveBeenCalledWith('Getting issues for sprint: 456');
     });
@@ -211,14 +220,14 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       // Arrange
       const sprintId = 789;
       const options: SearchOptions = {
-        fields: ['summary', 'status', 'assignee']
+        fields: ['summary', 'status', 'assignee'],
       };
       const mockSearchResult: SearchResult<JiraIssue> = {
         expand: 'names,schema',
         startAt: 0,
         maxResults: 50,
         total: 1,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -230,7 +239,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       expect(result).toEqual(mockSearchResult);
 
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 789', {
-        fields: ['summary', 'status', 'assignee']
+        fields: ['summary', 'status', 'assignee'],
       });
     });
 
@@ -240,14 +249,14 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const options: SearchOptions = {
         startAt: 5,
         maxResults: 15,
-        fields: ['summary', 'status', 'assignee', 'priority']
+        fields: ['summary', 'status', 'assignee', 'priority'],
       };
       const mockSearchResult: SearchResult<JiraIssue> = {
         expand: 'names,schema',
         startAt: 5,
         maxResults: 15,
         total: 50,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -261,7 +270,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 999', {
         startAt: 5,
         maxResults: 15,
-        fields: ['summary', 'status', 'assignee', 'priority']
+        fields: ['summary', 'status', 'assignee', 'priority'],
       });
     });
 
@@ -269,14 +278,20 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       // Arrange
       const sprintId = 111;
       const options: SearchOptions = {
-        fields: ['summary', 'invalid_field', 'status', 'malicious_field', 'customfield_10001']
+        fields: [
+          'summary',
+          'invalid_field',
+          'status',
+          'malicious_field',
+          'customfield_10001',
+        ],
       };
       const mockSearchResult: SearchResult<JiraIssue> = {
         expand: 'names,schema',
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -289,23 +304,25 @@ describe('JiraClientWrapper.getSprintIssues', () => {
 
       // Should only include valid fields
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 111', {
-        fields: ['summary', 'status', 'customfield_10001']
+        fields: ['summary', 'status', 'customfield_10001'],
       });
-      expect(logger.log).toHaveBeenCalledWith('Filtered invalid field names: invalid_field, malicious_field');
+      expect(logger.log).toHaveBeenCalledWith(
+        'Filtered invalid field names: invalid_field, malicious_field'
+      );
     });
 
     it('should handle empty fields array', async () => {
       // Arrange
       const sprintId = 222;
       const options: SearchOptions = {
-        fields: []
+        fields: [],
       };
       const mockSearchResult: SearchResult<JiraIssue> = {
         expand: 'names,schema',
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -318,7 +335,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
 
       // Empty fields should result in fields: [] in search options
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 222', {
-        fields: []
+        fields: [],
       });
     });
   });
@@ -332,7 +349,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -345,8 +362,13 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       expect(result.total).toBe(0);
       expect(result.issues).toHaveLength(0);
 
-      expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 555', {});
-      expect(logger.log).toHaveBeenCalledWith('Successfully found 0 issues for sprint: 555');
+      expect(mockJiraClient.searchJira).toHaveBeenCalledWith(
+        'sprint = 555',
+        {}
+      );
+      expect(logger.log).toHaveBeenCalledWith(
+        'Successfully found 0 issues for sprint: 555'
+      );
     });
 
     it('should handle null response gracefully', async () => {
@@ -363,9 +385,11 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 0,
         total: 0,
-        issues: []
+        issues: [],
       });
-      expect(logger.log).toHaveBeenCalledWith('No response received for JQL search: sprint = 666');
+      expect(logger.log).toHaveBeenCalledWith(
+        'No response received for JQL search: sprint = 666'
+      );
     });
 
     it('should handle undefined response gracefully', async () => {
@@ -382,9 +406,11 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 0,
         total: 0,
-        issues: []
+        issues: [],
       });
-      expect(logger.log).toHaveBeenCalledWith('No response received for JQL search: sprint = 777');
+      expect(logger.log).toHaveBeenCalledWith(
+        'No response received for JQL search: sprint = 777'
+      );
     });
 
     it('should handle zero sprint ID', async () => {
@@ -395,7 +421,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -416,7 +442,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockJiraClient.searchJira.mockResolvedValue(mockSearchResult);
@@ -436,13 +462,18 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const sprintId = 404;
       const mockError = {
         statusCode: 404,
-        message: 'Sprint not found'
+        message: 'Sprint not found',
       };
       mockJiraClient.searchJira.mockRejectedValue(mockError);
 
       // Act & Assert
-      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith('Failed to search issues with JQL sprint = 404:', mockError);
+      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        'Failed to search issues with JQL sprint = 404:',
+        mockError
+      );
     });
 
     it('should throw ApiError when access is denied (403)', async () => {
@@ -450,13 +481,18 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const sprintId = 403;
       const mockError = {
         statusCode: 403,
-        message: 'Forbidden'
+        message: 'Forbidden',
       };
       mockJiraClient.searchJira.mockRejectedValue(mockError);
 
       // Act & Assert
-      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith('Failed to search issues with JQL sprint = 403:', mockError);
+      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        'Failed to search issues with JQL sprint = 403:',
+        mockError
+      );
     });
 
     it('should throw ApiError for general API errors', async () => {
@@ -464,13 +500,18 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const sprintId = 500;
       const mockError = {
         statusCode: 500,
-        message: 'Internal Server Error'
+        message: 'Internal Server Error',
       };
       mockJiraClient.searchJira.mockRejectedValue(mockError);
 
       // Act & Assert
-      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith('Failed to search issues with JQL sprint = 500:', mockError);
+      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        'Failed to search issues with JQL sprint = 500:',
+        mockError
+      );
     });
 
     it('should handle sprint with agile functionality disabled', async () => {
@@ -478,12 +519,14 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const sprintId = 123;
       const mockError = {
         statusCode: 400,
-        message: 'Agile functionality is not enabled'
+        message: 'Agile functionality is not enabled',
       };
       mockJiraClient.searchJira.mockRejectedValue(mockError);
 
       // Act & Assert
-      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(ApiError);
+      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(
+        ApiError
+      );
     });
 
     it('should handle invalid sprint state errors', async () => {
@@ -491,12 +534,14 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       const sprintId = 123;
       const mockError = {
         statusCode: 400,
-        message: 'Invalid JQL query for sprint'
+        message: 'Invalid JQL query for sprint',
       };
       mockJiraClient.searchJira.mockRejectedValue(mockError);
 
       // Act & Assert
-      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(ApiError);
+      await expect(jiraClient.getSprintIssues(sprintId)).rejects.toThrow(
+        ApiError
+      );
     });
   });
 
@@ -509,14 +554,17 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       });
 
       // Act
       await jiraClient.getSprintIssues(sprintId);
 
       // Assert
-      expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 12345', {});
+      expect(mockJiraClient.searchJira).toHaveBeenCalledWith(
+        'sprint = 12345',
+        {}
+      );
     });
 
     it('should handle default values for optional parameters', async () => {
@@ -527,28 +575,31 @@ describe('JiraClientWrapper.getSprintIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       });
 
       // Act
       await jiraClient.getSprintIssues(sprintId, {});
 
       // Assert
-      expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 888', {});
+      expect(mockJiraClient.searchJira).toHaveBeenCalledWith(
+        'sprint = 888',
+        {}
+      );
     });
 
     it('should handle special field values (*all, *navigable)', async () => {
       // Arrange
       const sprintId = 999;
       const options: SearchOptions = {
-        fields: ['*all', '*navigable', 'summary']
+        fields: ['*all', '*navigable', 'summary'],
       };
       mockJiraClient.searchJira.mockResolvedValue({
         expand: '',
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       });
 
       // Act
@@ -556,7 +607,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
 
       // Assert
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 999', {
-        fields: ['*all', '*navigable', 'summary']
+        fields: ['*all', '*navigable', 'summary'],
       });
     });
   });

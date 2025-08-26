@@ -7,7 +7,7 @@ import { logger } from '../../src/utils/logger.js';
 const mockGetIssueWorklogs = jest.fn();
 jest.mock('jira-client', () => {
   return jest.fn().mockImplementation(() => ({
-    getIssueWorklogs: mockGetIssueWorklogs
+    getIssueWorklogs: mockGetIssueWorklogs,
   }));
 });
 
@@ -15,15 +15,15 @@ jest.mock('jira-client', () => {
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('JiraClientWrapper.getIssueWorklogs', () => {
   let jiraWrapper: JiraClientWrapper;
   const testConfig = {
     url: 'https://test.atlassian.net',
-    bearer: 'test-token'
+    bearer: 'test-token',
   };
 
   beforeEach(() => {
@@ -49,15 +49,16 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
             active: true,
             timeZone: 'America/New_York',
             avatarUrls: {
-              '48x48': 'https://test.atlassian.net/secure/useravatar?size=large&ownerId=testuser'
-            }
+              '48x48':
+                'https://test.atlassian.net/secure/useravatar?size=large&ownerId=testuser',
+            },
           },
           created: '2024-01-15T10:30:00.000+0000',
           updated: '2024-01-15T10:30:00.000+0000',
           started: '2024-01-15T09:00:00.000+0000',
           timeSpent: '2h',
           timeSpentSeconds: 7200,
-          comment: 'Fixed the bug in authentication module'
+          comment: 'Fixed the bug in authentication module',
         },
         {
           self: 'https://test.atlassian.net/rest/api/2/issue/10000/worklog/10002',
@@ -72,8 +73,9 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://test.atlassian.net/secure/useravatar?size=large&ownerId=developer'
-            }
+              '48x48':
+                'https://test.atlassian.net/secure/useravatar?size=large&ownerId=developer',
+            },
           },
           updateAuthor: {
             self: 'https://test.atlassian.net/rest/api/2/user?username=manager',
@@ -84,8 +86,9 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://test.atlassian.net/secure/useravatar?size=large&ownerId=manager'
-            }
+              '48x48':
+                'https://test.atlassian.net/secure/useravatar?size=large&ownerId=manager',
+            },
           },
           created: '2024-01-16T14:15:00.000+0000',
           updated: '2024-01-16T15:00:00.000+0000',
@@ -95,13 +98,13 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
           comment: 'Added unit tests',
           visibility: {
             type: 'group',
-            value: 'developers'
-          }
-        }
+            value: 'developers',
+          },
+        },
       ];
 
       mockGetIssueWorklogs.mockResolvedValue({
-        worklogs: mockWorklogs
+        worklogs: mockWorklogs,
       });
 
       // Act
@@ -110,16 +113,20 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
       // Assert
       expect(mockGetIssueWorklogs).toHaveBeenCalledWith(issueKey);
       expect(result).toEqual(mockWorklogs);
-      expect(logger.log).toHaveBeenCalledWith(`Getting worklogs for issue: ${issueKey}`);
-      expect(logger.log).toHaveBeenCalledWith(`Successfully retrieved ${mockWorklogs.length} worklogs for issue: ${issueKey}`);
+      expect(logger.log).toHaveBeenCalledWith(
+        `Getting worklogs for issue: ${issueKey}`
+      );
+      expect(logger.log).toHaveBeenCalledWith(
+        `Successfully retrieved ${mockWorklogs.length} worklogs for issue: ${issueKey}`
+      );
     });
 
     it('should return empty array when issue has no worklogs', async () => {
       // Arrange
       const issueKey = 'TEST-456';
-      
+
       mockGetIssueWorklogs.mockResolvedValue({
-        worklogs: []
+        worklogs: [],
       });
 
       // Act
@@ -127,13 +134,15 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
 
       // Assert
       expect(result).toEqual([]);
-      expect(logger.log).toHaveBeenCalledWith(`Successfully retrieved 0 worklogs for issue: ${issueKey}`);
+      expect(logger.log).toHaveBeenCalledWith(
+        `Successfully retrieved 0 worklogs for issue: ${issueKey}`
+      );
     });
 
     it('should handle response without worklogs property', async () => {
       // Arrange
       const issueKey = 'TEST-789';
-      
+
       mockGetIssueWorklogs.mockResolvedValue({}); // Missing worklogs property
 
       // Act
@@ -141,7 +150,9 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
 
       // Assert
       expect(result).toEqual([]);
-      expect(logger.log).toHaveBeenCalledWith(`No worklogs property in response for issue: ${issueKey}`);
+      expect(logger.log).toHaveBeenCalledWith(
+        `No worklogs property in response for issue: ${issueKey}`
+      );
     });
 
     it('should handle null response', async () => {
@@ -154,7 +165,9 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
 
       // Assert
       expect(result).toEqual([]);
-      expect(logger.log).toHaveBeenCalledWith(`No response received for issue worklogs: ${issueKey}`);
+      expect(logger.log).toHaveBeenCalledWith(
+        `No response received for issue worklogs: ${issueKey}`
+      );
     });
 
     it('should handle worklogs with minimal required fields', async () => {
@@ -173,17 +186,17 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
             emailAddress: 'minimal@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-17T12:00:00.000+0000',
           timeSpent: '30m',
-          timeSpentSeconds: 1800
+          timeSpentSeconds: 1800,
           // No comment, started, updated, updateAuthor, or visibility
-        }
+        },
       ];
 
       mockGetIssueWorklogs.mockResolvedValue({
-        worklogs: mockWorklogs
+        worklogs: mockWorklogs,
       });
 
       // Act
@@ -208,8 +221,13 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
       mockGetIssueWorklogs.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith(`Failed to get worklogs for issue ${issueKey}:`, jiraError);
+      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        `Failed to get worklogs for issue ${issueKey}:`,
+        jiraError
+      );
     });
 
     it('should throw ApiError when user lacks permission', async () => {
@@ -220,8 +238,13 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
       mockGetIssueWorklogs.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith(`Failed to get worklogs for issue ${issueKey}:`, jiraError);
+      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        `Failed to get worklogs for issue ${issueKey}:`,
+        jiraError
+      );
     });
 
     it('should throw ApiError when authentication fails', async () => {
@@ -232,8 +255,13 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
       mockGetIssueWorklogs.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith(`Failed to get worklogs for issue ${issueKey}:`, jiraError);
+      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        `Failed to get worklogs for issue ${issueKey}:`,
+        jiraError
+      );
     });
 
     it('should throw ApiError for server errors', async () => {
@@ -244,8 +272,13 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
       mockGetIssueWorklogs.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith(`Failed to get worklogs for issue ${issueKey}:`, jiraError);
+      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        `Failed to get worklogs for issue ${issueKey}:`,
+        jiraError
+      );
     });
 
     it('should throw ApiError for network errors', async () => {
@@ -255,16 +288,26 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
       mockGetIssueWorklogs.mockRejectedValue(networkError);
 
       // Act & Assert
-      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(ApiError);
-      expect(logger.error).toHaveBeenCalledWith(`Failed to get worklogs for issue ${issueKey}:`, networkError);
+      await expect(jiraWrapper.getIssueWorklogs(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      expect(logger.error).toHaveBeenCalledWith(
+        `Failed to get worklogs for issue ${issueKey}:`,
+        networkError
+      );
     });
   });
 
   describe('input validation and edge cases', () => {
     it('should handle issue keys with different formats', async () => {
       // Test various valid issue key formats
-      const issueKeys = ['PROJECT-123', 'LONG_PROJECT_NAME-999', 'ABC-1', 'TEST123-4567'];
-      
+      const issueKeys = [
+        'PROJECT-123',
+        'LONG_PROJECT_NAME-999',
+        'ABC-1',
+        'TEST123-4567',
+      ];
+
       for (const issueKey of issueKeys) {
         mockGetIssueWorklogs.mockResolvedValue({ worklogs: [] });
 
@@ -291,17 +334,18 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
             emailAddress: 'test@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-18T10:00:00.000+0000',
           timeSpent: '1h',
           timeSpentSeconds: 3600,
-          comment: 'Fixed bug with "quotes" and <HTML> tags & special chars: àáâãäåæçèéêë'
-        }
+          comment:
+            'Fixed bug with "quotes" and <HTML> tags & special chars: àáâãäåæçèéêë',
+        },
       ];
 
       mockGetIssueWorklogs.mockResolvedValue({
-        worklogs: mockWorklogs
+        worklogs: mockWorklogs,
       });
 
       // Act
@@ -330,17 +374,17 @@ describe('JiraClientWrapper.getIssueWorklogs', () => {
             emailAddress: 'test@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           created: '2024-01-19T10:00:00.000+0000',
           timeSpent: '40h',
           timeSpentSeconds: 144000, // 40 hours in seconds
-          comment: 'Major refactoring over multiple days'
-        }
+          comment: 'Major refactoring over multiple days',
+        },
       ];
 
       mockGetIssueWorklogs.mockResolvedValue({
-        worklogs: mockWorklogs
+        worklogs: mockWorklogs,
       });
 
       // Act

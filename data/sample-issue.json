@@ -1,0 +1,1025 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "617448",
+  "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448",
+  "key": "DSCWA-373",
+  "fields": {
+    "customfield_11960": null,
+    "resolution": null,
+    "customfield_11962": null,
+    "customfield_11961": null,
+    "customfield_10500": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@22f3d1ed[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@406a40c0[overall=PullRequestOverallBean{stateCount=0, state='OPEN', details=PullRequestOverallDetails{openCount=0, mergedCount=0, declinedCount=0}},byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@dd24e15[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@1fac632f[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@137ed589[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@36a2bb00[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@299fe927[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@55564220[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@30e1079e[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@1338c039[count=3,lastUpdated=2025-08-25T05:14:18.000+0200,lastUpdatedTimestamp=2025-08-25T05:14:18.000+02:00],byInstanceType={stash=com.atlassian.jira.plugin.devstatus.summary.beans.ObjectByInstanceTypeBean@4538d5a8[count=3,name=Bitbucket]}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@2298d86d[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@1a7de657[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"details\":{\"openCount\":0,\"mergedCount\":0,\"declinedCount\":0,\"total\":0},\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":3,\"lastUpdated\":\"2025-08-25T05:14:18.000+0200\"},\"byInstanceType\":{\"stash\":{\"count\":3,\"name\":\"Bitbucket\"}}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+    "customfield_11953": null,
+    "customfield_11952": null,
+    "customfield_11955": null,
+    "customfield_11954": null,
+    "customfield_11957": null,
+    "customfield_11956": null,
+    "customfield_11959": null,
+    "customfield_11958": null,
+    "lastViewed": "2025-08-23T05:41:09.834+0200",
+    "customfield_11951": null,
+    "labels": [],
+    "customfield_10852": null,
+    "customfield_10610": null,
+    "customfield_11942": null,
+    "customfield_10611": null,
+    "customfield_11941": null,
+    "customfield_10854": null,
+    "customfield_11944": null,
+    "customfield_10855": null,
+    "customfield_11943": null,
+    "customfield_11946": null,
+    "aggregatetimeoriginalestimate": null,
+    "customfield_10615": null,
+    "customfield_11948": null,
+    "customfield_11947": null,
+    "customfield_11949": null,
+    "issuelinks": [
+      {
+        "id": "551493",
+        "self": "https://jira.dentsplysirona.com/rest/api/2/issueLink/551493",
+        "type": {
+          "id": "10500",
+          "name": "Cloners",
+          "inward": "is cloned by",
+          "outward": "Clones",
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issueLinkType/10500"
+        },
+        "outwardIssue": {
+          "id": "617447",
+          "key": "DSCWA-372",
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617447",
+          "fields": {
+            "summary": "[Application Design] Support different Tooth Numbering system",
+            "status": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/status/1",
+              "description": "The issue is open and ready for the assignee to start work on it.",
+              "iconUrl": "https://jira.dentsplysirona.com/images/icons/statuses/open.png",
+              "name": "Open",
+              "id": "1",
+              "statusCategory": {
+                "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "default",
+                "name": "To Do"
+              }
+            },
+            "priority": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/priority/3",
+              "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10001",
+              "id": "10001",
+              "description": "Created by Jira Software - do not edit or delete. Issue type for a user story.",
+              "iconUrl": "https://jira.dentsplysirona.com/images/icons/issuetypes/story.svg",
+              "name": "Story",
+              "subtask": false
+            }
+          }
+        }
+      },
+      {
+        "id": "593679",
+        "self": "https://jira.dentsplysirona.com/rest/api/2/issueLink/593679",
+        "type": {
+          "id": "10500",
+          "name": "Cloners",
+          "inward": "is cloned by",
+          "outward": "Clones",
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issueLinkType/10500"
+        },
+        "inwardIssue": {
+          "id": "626117",
+          "key": "DSCWA-431",
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/626117",
+          "fields": {
+            "summary": "[Agent Design][Enhancement] - Detect Tooth Numbering System with Teeth Location",
+            "status": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/status/1",
+              "description": "The issue is open and ready for the assignee to start work on it.",
+              "iconUrl": "https://jira.dentsplysirona.com/images/icons/statuses/open.png",
+              "name": "Open",
+              "id": "1",
+              "statusCategory": {
+                "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "default",
+                "name": "To Do"
+              }
+            },
+            "priority": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/priority/2",
+              "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/high.svg",
+              "name": "High",
+              "id": "2"
+            },
+            "issuetype": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10001",
+              "id": "10001",
+              "description": "Created by Jira Software - do not edit or delete. Issue type for a user story.",
+              "iconUrl": "https://jira.dentsplysirona.com/images/icons/issuetypes/story.svg",
+              "name": "Story",
+              "subtask": false
+            }
+          }
+        }
+      }
+    ],
+    "assignee": null,
+    "components": [],
+    "customfield_15500": null,
+    "customfield_11940": null,
+    "customfield_11931": null,
+    "customfield_10600": null,
+    "customfield_11930": null,
+    "customfield_10601": null,
+    "customfield_11933": null,
+    "customfield_12901": null,
+    "customfield_11932": null,
+    "customfield_12900": null,
+    "customfield_11935": null,
+    "customfield_12903": null,
+    "customfield_11934": null,
+    "customfield_12902": "1",
+    "customfield_11937": null,
+    "customfield_10848": null,
+    "customfield_11936": null,
+    "customfield_11939": null,
+    "customfield_10608": null,
+    "customfield_11938": null,
+    "customfield_10609": null,
+    "subtasks": [
+      {
+        "id": "625619",
+        "key": "DSCWA-427",
+        "self": "https://jira.dentsplysirona.com/rest/api/2/issue/625619",
+        "fields": {
+          "summary": "BE: Extract Tooth Numbering System in Conversation",
+          "status": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/status/10002",
+            "description": "",
+            "iconUrl": "https://jira.dentsplysirona.com/",
+            "name": "Done",
+            "id": "10002",
+            "statusCategory": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/3",
+              "id": 3,
+              "key": "done",
+              "colorName": "success",
+              "name": "Done"
+            }
+          },
+          "priority": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/priority/3",
+            "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/medium.svg",
+            "name": "Medium",
+            "id": "3"
+          },
+          "issuetype": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true,
+            "avatarId": 10316
+          }
+        }
+      },
+      {
+        "id": "625620",
+        "key": "DSCWA-428",
+        "self": "https://jira.dentsplysirona.com/rest/api/2/issue/625620",
+        "fields": {
+          "summary": "BE: Validate Tooth Number with Regarding to Tooth Number System",
+          "status": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/status/10002",
+            "description": "",
+            "iconUrl": "https://jira.dentsplysirona.com/",
+            "name": "Done",
+            "id": "10002",
+            "statusCategory": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/3",
+              "id": 3,
+              "key": "done",
+              "colorName": "success",
+              "name": "Done"
+            }
+          },
+          "priority": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/priority/3",
+            "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/medium.svg",
+            "name": "Medium",
+            "id": "3"
+          },
+          "issuetype": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true,
+            "avatarId": 10316
+          }
+        }
+      },
+      {
+        "id": "625623",
+        "key": "DSCWA-429",
+        "self": "https://jira.dentsplysirona.com/rest/api/2/issue/625623",
+        "fields": {
+          "summary": "FE: Convert from UNS to FDI when Submit a Order",
+          "status": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/status/10002",
+            "description": "",
+            "iconUrl": "https://jira.dentsplysirona.com/",
+            "name": "Done",
+            "id": "10002",
+            "statusCategory": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/3",
+              "id": 3,
+              "key": "done",
+              "colorName": "success",
+              "name": "Done"
+            }
+          },
+          "priority": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/priority/3",
+            "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/medium.svg",
+            "name": "Medium",
+            "id": "3"
+          },
+          "issuetype": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true,
+            "avatarId": 10316
+          }
+        }
+      },
+      {
+        "id": "625841",
+        "key": "DSCWA-430",
+        "self": "https://jira.dentsplysirona.com/rest/api/2/issue/625841",
+        "fields": {
+          "summary": "BE (ibs-order-agent): Chat API Allow User to Pass Country Code  ",
+          "status": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/status/10002",
+            "description": "",
+            "iconUrl": "https://jira.dentsplysirona.com/",
+            "name": "Done",
+            "id": "10002",
+            "statusCategory": {
+              "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/3",
+              "id": 3,
+              "key": "done",
+              "colorName": "success",
+              "name": "Done"
+            }
+          },
+          "priority": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/priority/3",
+            "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/medium.svg",
+            "name": "Medium",
+            "id": "3"
+          },
+          "issuetype": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10004",
+            "id": "10004",
+            "description": "The sub-task of the issue",
+            "iconUrl": "https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+            "name": "Sub-task",
+            "subtask": true,
+            "avatarId": 10316
+          }
+        }
+      }
+    ],
+    "reporter": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+      "name": "Xiaoyue.Zhao@dentsplysirona.com",
+      "key": "JIRAUSER23410",
+      "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+      "avatarUrls": {
+        "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+        "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+        "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+        "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+      },
+      "displayName": "Zhao, Xiaoyue (External)",
+      "active": true,
+      "timeZone": "Europe/Zurich"
+    },
+    "customfield_12101": null,
+    "customfield_12100": null,
+    "customfield_12103": null,
+    "customfield_12102": null,
+    "customfield_12104": null,
+    "customfield_11920": null,
+    "customfield_11922": null,
+    "customfield_11801": [],
+    "customfield_11800": null,
+    "customfield_11921": null,
+    "customfield_11924": null,
+    "customfield_11803": null,
+    "customfield_11802": null,
+    "customfield_11923": null,
+    "customfield_10836": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/customFieldOption/10636",
+      "value": "N/A",
+      "id": "10636",
+      "disabled": false
+    },
+    "customfield_11926": null,
+    "customfield_11805": null,
+    "customfield_11804": null,
+    "customfield_11928": null,
+    "customfield_11927": null,
+    "progress": {
+      "progress": 172800,
+      "total": 172800,
+      "percent": 100
+    },
+    "votes": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/issue/DSCWA-373/votes",
+      "votes": 0,
+      "hasVoted": false
+    },
+    "worklog": {
+      "startAt": 0,
+      "maxResults": 20,
+      "total": 7,
+      "worklogs": [
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1197950",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+            "name": "Xiaoyue.Zhao@dentsplysirona.com",
+            "key": "JIRAUSER23410",
+            "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+            },
+            "displayName": "Zhao, Xiaoyue (External)",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+            "name": "Xiaoyue.Zhao@dentsplysirona.com",
+            "key": "JIRAUSER23410",
+            "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+            },
+            "displayName": "Zhao, Xiaoyue (External)",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "test cases",
+          "created": "2025-08-06T11:21:26.736+0200",
+          "updated": "2025-08-06T11:21:26.736+0200",
+          "started": "2025-08-05T09:00:00.000+0200",
+          "timeSpent": "4h",
+          "timeSpentSeconds": 14400,
+          "id": "1197950",
+          "issueId": "617448"
+        },
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1208658",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "",
+          "created": "2025-08-19T03:25:49.271+0200",
+          "updated": "2025-08-19T03:25:49.271+0200",
+          "started": "2025-08-19T09:00:00.000+0200",
+          "timeSpent": "4h",
+          "timeSpentSeconds": 14400,
+          "id": "1208658",
+          "issueId": "617448"
+        },
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1209377",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "",
+          "created": "2025-08-19T10:12:23.598+0200",
+          "updated": "2025-08-19T10:12:23.598+0200",
+          "started": "2025-08-20T09:00:00.000+0200",
+          "timeSpent": "1d",
+          "timeSpentSeconds": 28800,
+          "id": "1209377",
+          "issueId": "617448"
+        },
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1209378",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "",
+          "created": "2025-08-19T10:12:35.632+0200",
+          "updated": "2025-08-19T10:12:35.632+0200",
+          "started": "2025-08-21T09:00:00.000+0200",
+          "timeSpent": "1d",
+          "timeSpentSeconds": 28800,
+          "id": "1209378",
+          "issueId": "617448"
+        },
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1209379",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "",
+          "created": "2025-08-19T10:12:47.251+0200",
+          "updated": "2025-08-19T10:12:47.251+0200",
+          "started": "2025-08-22T09:00:00.000+0200",
+          "timeSpent": "1d",
+          "timeSpentSeconds": 28800,
+          "id": "1209379",
+          "issueId": "617448"
+        },
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1209395",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "",
+          "created": "2025-08-19T10:27:20.626+0200",
+          "updated": "2025-08-19T10:27:38.332+0200",
+          "started": "2025-08-26T09:00:00.000+0200",
+          "timeSpent": "1d",
+          "timeSpentSeconds": 28800,
+          "id": "1209395",
+          "issueId": "617448"
+        },
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/worklog/1209396",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "comment": "",
+          "created": "2025-08-19T10:27:54.539+0200",
+          "updated": "2025-08-19T10:27:54.539+0200",
+          "started": "2025-08-27T09:00:00.000+0200",
+          "timeSpent": "1d",
+          "timeSpentSeconds": 28800,
+          "id": "1209396",
+          "issueId": "617448"
+        }
+      ]
+    },
+    "customfield_11929": null,
+    "archivedby": null,
+    "issuetype": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/issuetype/10001",
+      "id": "10001",
+      "description": "Created by Jira Software - do not edit or delete. Issue type for a user story.",
+      "iconUrl": "https://jira.dentsplysirona.com/images/icons/issuetypes/story.svg",
+      "name": "Story",
+      "subtask": false
+    },
+    "project": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/project/16305",
+      "id": "16305",
+      "key": "DSCWA",
+      "name": "Intent Based System",
+      "projectTypeKey": "software",
+      "avatarUrls": {
+        "48x48": "https://jira.dentsplysirona.com/secure/projectavatar?pid=16305&avatarId=17905",
+        "24x24": "https://jira.dentsplysirona.com/secure/projectavatar?size=small&pid=16305&avatarId=17905",
+        "16x16": "https://jira.dentsplysirona.com/secure/projectavatar?size=xsmall&pid=16305&avatarId=17905",
+        "32x32": "https://jira.dentsplysirona.com/secure/projectavatar?size=medium&pid=16305&avatarId=17905"
+      },
+      "projectCategory": {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/projectCategory/11900",
+        "id": "11900",
+        "description": "",
+        "name": "DS Core"
+      }
+    },
+    "customfield_11000": null,
+    "customfield_10820": null,
+    "customfield_11911": null,
+    "customfield_11910": null,
+    "customfield_11913": null,
+    "customfield_11912": null,
+    "customfield_11915": null,
+    "resolutiondate": null,
+    "customfield_11914": null,
+    "customfield_11917": null,
+    "customfield_11916": null,
+    "customfield_11919": null,
+    "customfield_11918": null,
+    "watches": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/issue/DSCWA-373/watchers",
+      "watchCount": 0,
+      "isWatching": false
+    },
+    "customfield_12200": null,
+    "customfield_14500": null,
+    "customfield_13405": null,
+    "customfield_13404": null,
+    "customfield_11107": null,
+    "customfield_11900": null,
+    "customfield_11902": null,
+    "customfield_11901": null,
+    "customfield_11904": null,
+    "customfield_11903": null,
+    "customfield_11906": null,
+    "customfield_11905": null,
+    "customfield_11908": null,
+    "customfield_11907": null,
+    "customfield_11909": null,
+    "updated": "2025-08-26T03:55:20.067+0200",
+    "timeoriginalestimate": null,
+    "description": "*Context*\r\n\r\nDifferent tooth numbering system are used for different region, we should accommodate this to avoid confusing users\r\n----\r\n*Application Rules*\r\n\r\n*[https://jira.dentsplysirona.com/browse/S3808-3181*]\r\n\r\nSystem shows the tooth numbers in the desired tooth numbering system of the user depending on the {*}country of the user his company{*}:\r\n * If Country = United States, use tooth numbering system = UNS\r\n * All other countries, use tooth numbering system = FDI \r\n\r\n*The difference between UNS & FDI*\r\n\r\nWhen DS Core lists selected tooth numbers always the same clock wise sorting is used (independent on in which order the teeth were selected in the dental chart):\r\n * FDI (EU/RoW): 18-11 ; 21-28 ; 38-31; 41-48\r\n\r\n!image-2025-08-04-15-59-54-302.png!\r\n * UNS = US: 1-32 \r\n\r\n!image-2025-08-04-16-01-07-977.png!\r\n----\r\nh2. {color:#00875a}*Rules (read me!!)*{color}\r\n * *Default tooth numbering system:* based on the company location of the users\r\n * {*}Agent Requirement -user intention identification{*}:  be able to identify the corresponding system through the text input instead of just sticking to the system default\r\n * {*}Conflicted scenario{*}: Agent could accept one and only one tooth numbering system at a time\r\n * *overwrite rules over default tooth system*\r\n ** User clearly command to apply the non-default tooth numbering system (FDI 11, 12 under default UNS)\r\n ** The stated tooth IDs is applicable to the non-default tooth numbering system (tooth # 1,2,3 under default  FDI)\r\n ** otherwise stick to the default system\r\n * *Attach FDI & UNS under each reply*\r\n * *The front end displays the tooth numbering system (side bar & dental card)based on identified user intention* \r\n * *The front end converts tooth numbering system into FDI when submit the order*\r\n\r\n----\r\n*Test Cases*\r\n\r\n*Scenario 1 - able to identify the UNS numbering system under UNS system*\r\n||Use scenario||use case||rounds of conversation:||\r\n|Printing|tooth number system|single|\r\n\r\n \r\n||User input||expected answer||Expected actions||\r\n|Final Resto, Crown, tooth ID 7, preferred lab, Design, Printing, Zirconium, 4M|I understand you intent to create a final restoration order for Crown with tooth ID 7 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Zirconium, with shade guide of Vita 3D Master and shade as 4M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Final Resto, Crown, tooth ID 3&4&7, preferred lab, Design, Printing, Primeprint, A3|I understand you intent to create a final restoration order for Crown with tooth ID 3&4&7 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Primeprint Temp, with shade as A3.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Final Resto, Bridge, tooth ID 1&2&3, Preferred lab, Design & Manufacturing, Printing, Resin, B1|I understand you intent to create a final restoration order for Bridge with tooth ID 1&2&3 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as preferred lab and service type as design&manufacturing, Production unit as Printing, using material class of Resin, with shade guide of Vita Classical+Bleached and shade as B1.\r\n \r\nYou are ready to proceed. If you are prepared, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit  status|\r\n|Bridge, tooth ID 4&5, DS Core Create, Design, Printing, Metal, Vita-3D, 0M|I understand you intent to create a Temporary restoration order for Bridge with tooth ID 4&5 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,   Production unit as printing, using material class of Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Bridge, tooth ID 7&8, DS Core Create, Design, Printing, Primeprint Tem, A1|I understand you intent to create a Temporary restoration order for Bridge with tooth ID 7&8 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,    Production unit as printing, using material class of Primeprint Tem, with shade as A1.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n *  Display the additional thickness selection box|\r\n|Final Resto, Bridge, tooth ID 18&17&19,  Design, Printing, Precious metal, 0M|I understand you intent to create a Final restoration order for Bridge, with tooth ID 18&17&19 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as Preferred lab and service type as design, as the only supported service provider for final restoration is preferred lab, Production unit as Printing, using material class of Precious Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n\r\n \r\n\r\n*Scenario 2 - able to identify the UNS numbering system under FDI system through directly command*\r\n\r\n*Set the company location as Europe so the default tooth numbering system is  FDI*\r\n||Use scenario||use case||rounds of conversation:||\r\n|Printing|tooth number system|single|\r\n\r\n \r\n||User input||expected answer||Expected actions||\r\n|Final Resto, Crown, UNS 11&25, preferred lab, Design, Printing, Zirconium, 4M|I understand you intent to create a final restoration order for Crown with tooth ID 11&25 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Zirconium, with shade guide of Vita 3D Master and shade as 4M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Final Resto, Crown, UNS  tooth ID 27, preferred lab, Design, Printing, Primeprint, A3|I understand you intent to create a final restoration order for Crown with tooth ID 27 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Primeprint Temp, with shade as A3.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Final Resto, Bridge, US tooth ID 11&12&13, Preferred lab, Design & Manufacturing, Printing, Resin, B1|I understand you intent to create a final restoration order for Bridge with tooth ID 11&12&13 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as preferred lab and service type as design&manufacturing, Production unit as Printing, using material class of Resin, with shade guide of Vita Classical+Bleached and shade as B1.\r\n \r\nYou are ready to proceed. If you are prepared, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit  status|\r\n|Bridge, US 25&26&27, DS Core Create, Design, Printing, Metal, Vita-3D, 0M|I understand you intent to create a Temporary restoration order for Bridge with tooth ID 25&26&27 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,   Production unit as printing, using material class of Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Bridge, universal numbering  27&28, DS Core Create, Design, Printing, Primeprint Tem, A1|I understand you intent to create a Temporary restoration order for Bridge with tooth ID 27&28 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,    Production unit as printing, using material class of Primeprint Tem, with shade as A1.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n *  Display the additional thickness selection box|\r\n|Final Resto, Bridge, universal numbering 31&32,  Design, Printing, Precious metal, 0M|I understand you intent to create a Final restoration order for Bridge, with tooth ID 31&32 {color:#de350b}under UNS tooth numbering system{color}, selecting service provider as Preferred lab and service type as design, as the only supported service provider for final restoration is preferred lab, Production unit as Printing, using material class of Precious Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n\r\n \r\n\r\n*Scenario 3 - able to identify the FDI numbering system under UNS system through directly command*\r\n\r\n*Set the company location as USA so the default tooth numbering system is  UNS*\r\n||Use scenario||use case||rounds of conversation:||\r\n|Printing|tooth number system|single|\r\n\r\n \r\n||User input||expected answer||Expected actions||\r\n|Final Resto, Crown, FDI 11&25, preferred lab, Design, Printing, Zirconium, 4M|I understand you intent to create a final restoration order for Crown with tooth ID 11&25 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Zirconium, with shade guide of Vita 3D Master and shade as 4M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Final Resto, Crown, FDI  27, preferred lab, Design, Printing, Primeprint, A3|I understand you intent to create a final restoration order for Crown with tooth ID 27 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Primeprint Temp, with shade as A3.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Final Resto, Bridge, Europe 11&12&13, Preferred lab, Design & Manufacturing, Printing, Resin, B1|I understand you intent to create a final restoration order for Bridge with tooth ID 11&12&13 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as preferred lab and service type as design&manufacturing, Production unit as Printing, using material class of Resin, with shade guide of Vita Classical+Bleached and shade as B1.\r\n \r\nYou are ready to proceed. If you are prepared, kindly upload the media file next to the text input box and proceed with placing the order.| * Ready to submit  status|\r\n|Bridge, Europe 25&26&27, DS Core Create, Design, Printing, Metal, Vita-3D, 0M|I understand you intent to create a Temporary restoration order for Bridge with tooth ID 25&26&27 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,   Production unit as printing, using material class of Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n|Bridge, Federal numbering  27&28, DS Core Create, Design, Printing, Primeprint Tem, A1|I understand you intent to create a Temporary restoration order for Bridge with tooth ID 27&28 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,    Production unit as printing, using material class of Primeprint Tem, with shade as A1.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n *  Display the additional thickness selection box|\r\n|Final Resto, Bridge, Fédération Dentaire Internationale numbering 31&32,  Design, Printing, Precious metal, 0M|I understand you intent to create a Final restoration order for Bridge, with tooth ID 31&32 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as Preferred lab and service type as design, as the only supported service provider for final restoration is preferred lab, Production unit as Printing, using material class of Precious Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\nYou could further provide the details of additional thickness for your design. But if You are ready to proceed, kindly upload the media file next to the text input box and proceed with placing the order| * Ready to submit status\r\n * Display the additional thickness selection box|\r\n\r\n \r\n\r\n \r\n\r\n*Scenario 4 - Combined FDI & UNS inputs*\r\n||Use scenario||use case||rounds of conversation:||\r\n|Printing|tooth number system conflicts|single|\r\n\r\n \r\n||User input||expected answer||Expected actions||\r\n|*Default :  Europe-  FDI*\r\nFinal Resto, Crown, 1&48, preferred lab, Design, Printing, Zirconium, 4M|I understand you intent to create a final restoration order for Crown, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Zirconium, with shade guide of Vita 3D Master and shade as 4M.\r\n{color:#de350b}\r\nHowever tooth ID 1 does not apply for the Fédération Dentaire Internationale numbering system, {color}{color:#172b4d}FDI (EU/RoW)follows 18-11 ; 21-28 ; 38-31; 41-48; \r\n\r\nCould you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}Additionally, You could further provide the details of additional thickness for your design.| * Display the FDI dental card\r\n * Display the additional thickness selection box|\r\n|*Default :* *USA - UNS*\r\nFinal Resto, Crown, 1&48, preferred lab, Design, Printing, Primeprint, A3|I understand you intent to create a final restoration order for Crown, selecting service provider as preferred lab and service type as design, Production unit as Printing, using material class of Primeprint Temp, with shade as A3.\r\n \r\n{color:#de350b}However tooth ID 48 does not apply for the Universal Numbering System, UNS follows US: 1-32 {color}{color:#172b4d}; \r\n\r\nCould you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}Additionally, You could further provide the details of additional thickness for your design.| * Display the UNS dental card\r\n *  Display the additional thickness selection box|\r\n|*Default :*  *Europe - FDI*\r\nFinal Resto, Bridge, 9&10&11&12, Preferred lab, Design & Manufacturing, Printing, Resin, B1|I understand you intent to create a final restoration order for Bridge, selecting service provider as preferred lab and service type as design&manufacturing, Production unit as Printing, using material class of Resin, with shade guide of Vita Classical+Bleached and shade as B1.\r\n{color:#de350b}\r\nHowever your provided tooth ID 9&10 does not apply for the Fédération Dentaire Internationale numbering system, {color}{color:#172b4d}FDI (EU/RoW)follows 18-11 ; 21-28 ; 38-31; 41-48; {color}\r\nYou are ready to proceed. If you are prepared, kindly upload the media file next to the text input box and proceed with placing the order.| * Display the FDI dental card|\r\n|*Default :*  *USA - UNS*\r\nBridge, 31&32&33&34, US DS Core Create, Design, Printing, Metal, Vita-3D, 0M|I understand you intent to create a Temporary restoration order for Bridge, selecting service provider as DS core Create and service type as design, as DS core create only support Temporary Restoration as its order type,   Production unit as printing, using material class of Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\n{color:#de350b}However tooth ID 33&34 does not apply for the Universal Numbering System, UNS follows US: 1-32 {color}; \r\n \r\n{color:#172b4d}Could you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}Additionally, You could further provide the details of additional thickness for your design.| * Display the UNS dental card\r\n * Display the additional thickness selection box|\r\n\r\n \r\n\r\n \r\n\r\n*Scenario 5 - FDI command with UNS unique tooth ID &  UNS* *command with FDI unique tooth ID*\r\n||Use scenario||use case||rounds of conversation:||\r\n|Milling|tooth number system conflicts|single|\r\n\r\n \r\n|User input|expected answer|Expected actions|\r\n|Final Resto, Crown, FDI 1&2, preferred lab, Design, Milling, Zirconium, 4M|I understand you intent to create a final restoration order for Crown, selecting service provider as preferred lab and service type as design, Production unit as milling, using material class of Zirconium Oxide, with shade guide of Vita 3D Master and shade as 4M.\r\n \r\n{color:#de350b}However your provided tooth ID 1&2 does not apply for the Fédération Dentaire Internationale numbering system, {color}{color:#172b4d}FDI (EU/RoW)follows 18-11 ; 21-28 ; 38-31; 41-48; {color}\r\n \r\n{color:#172b4d}Could you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}| * Display the FDI dental card|\r\n|Temp Resto, Veneer, UNS  41 &37 & 1, Preferred lab, Design & Manufacturing, Milling, Precious metal, 0M|I understand you intent to create a Temporary restoration order for Veneer, selecting service provider as preferred lab and service type as design & Manufacturing, Production unit as milling, using material class of Precious Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\n{color:#de350b}However tooth ID 41&37 does not apply for the Universal Numbering System, UNS follows US: 1-32 {color}; \r\n \r\n{color:#172b4d}Could you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}| * Display the UNS dental card|\r\n|Final Resto, Bridge, FDI 9&10&11,  Design， Milling, Precious metal, 0M|I understand you intent to create a Final restoration order for Bridge, with tooth ID 33&34&35 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as Preferred lab and service type as design, as the only supported service provider for final restoration is preferred lab, Production unit as milling, using material class of Precious Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\n{color:#de350b}However your provided tooth ID 9&10&11 does not apply for the Fédération Dentaire Internationale numbering system, {color}{color:#172b4d}FDI \r\n\r\n(EU/RoW)follows 18-11 ; 21-28 ; 38-31; 41-48; {color}\r\n \r\n{color:#172b4d}Could you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}| * Display the FDI dental card|\r\n|Final Resto, Bridge, UNS 41&42&43,  Design， Milling, Precious metal, 0M|I understand you intent to create a Final restoration order for Bridge, with tooth ID 41&42&43 {color:#de350b}under FDI tooth numbering system{color}, selecting service provider as Preferred lab and service type as design, as the only supported service provider for final restoration is preferred lab, Production unit as milling, using material class of Precious Metal, with shade guide of Vita 3D Master and shade as 0M.\r\n \r\n{color:#de350b}However tooth ID 41&42&43 does not apply for the Universal Numbering System, UNS follows US: 1-32 {color}; \r\n \r\n{color:#172b4d}Could you specific the correct tooth ID for me to create the order.{color}{color:#de350b} {color}| * Display the UNS dental card|\r\n\r\n ",
+    "customfield_11222": [],
+    "timetracking": {
+      "remainingEstimate": "0m",
+      "timeSpent": "1w 1d",
+      "remainingEstimateSeconds": 0,
+      "timeSpentSeconds": 172800
+    },
+    "customfield_10126": null,
+    "customfield_10127": null,
+    "summary": "[Agent Design] - Support different Tooth Numbering system",
+    "customfield_10120": null,
+    "customfield_10121": null,
+    "customfield_10000": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@16a4e164[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@56fb1ea1[overall=PullRequestOverallBean{stateCount=0, state='OPEN', details=PullRequestOverallDetails{openCount=0, mergedCount=0, declinedCount=0}},byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@7bd1ef27[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@7551f8ea[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@3f489f13[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@9f7c161[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@7dabbfaf[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@7479e58[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@7c0c39a4[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@4b47038d[count=3,lastUpdated=2025-08-25T05:14:18.000+0200,lastUpdatedTimestamp=2025-08-25T05:14:18.000+02:00],byInstanceType={stash=com.atlassian.jira.plugin.devstatus.summary.beans.ObjectByInstanceTypeBean@6bb18b8d[count=3,name=Bitbucket]}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@50bf6dfd[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@4d63af57[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"details\":{\"openCount\":0,\"mergedCount\":0,\"declinedCount\":0,\"total\":0},\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":3,\"lastUpdated\":\"2025-08-25T05:14:18.000+0200\"},\"byInstanceType\":{\"stash\":{\"count\":3,\"name\":\"Bitbucket\"}}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+    "customfield_10122": null,
+    "customfield_10123": null,
+    "customfield_10124": null,
+    "customfield_10116": null,
+    "customfield_10117": null,
+    "environment": null,
+    "duedate": null,
+    "comment": {
+      "comments": [
+        {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/issue/617448/comment/636331",
+          "id": "636331",
+          "author": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "body": "Tested twice, and the result is attached.\r\n\r\n[^tooth_number_system_single_round_20250825102018.csv]\r\n\r\n[^tooth_number_system_single_round_20250825104958.csv]\r\n\r\nThe system is able to identify the tooth numbering system and teeth location.\r\nIn average, pass rate is 23/26, which is around 90%. \r\n\r\nSome insights of failed cases:\r\n\r\ncurrently the extractor node seems cannot detect shade=4M, most of the failures are because of this..",
+          "updateAuthor": {
+            "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+            "name": "Xi.Yang@dentsplysirona.com",
+            "key": "JIRAUSER24001",
+            "emailAddress": "Xi.Yang@dentsplysirona.com",
+            "avatarUrls": {
+              "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+              "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+              "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+              "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+            },
+            "displayName": "Yang, Xi",
+            "active": true,
+            "timeZone": "Europe/Zurich"
+          },
+          "created": "2025-08-25T05:10:45.340+0200",
+          "updated": "2025-08-25T05:13:16.538+0200"
+        }
+      ],
+      "maxResults": 1,
+      "total": 1,
+      "startAt": 0
+    },
+    "fixVersions": [],
+    "customfield_10110": null,
+    "customfield_12532": null,
+    "customfield_10113": null,
+    "customfield_10114": null,
+    "customfield_10104": [
+      "com.atlassian.greenhopper.service.sprint.Sprint@36ce5d08[id=5572,rapidViewId=1233,state=ACTIVE,name=IBS Sprint 13,startDate=2025-08-13T10:46:00.000+02:00,endDate=2025-08-27T22:46:00.000+02:00,completeDate=<null>,activatedDate=2025-08-13T04:47:58.651+02:00,sequence=5572,goal=1. continuously working on text to order\n2. Prompt refinement after several iteration  development\n3. show me enhancement after bug shooting from DS 2.7 release,synced=false,autoStartStop=true,incompleteIssuesDestinationId=5644]"
+    ],
+    "customfield_10105": "1|hzw81i:z5u",
+    "customfield_10106": 5,
+    "customfield_10107": null,
+    "customfield_10108": null,
+    "customfield_10900": null,
+    "priority": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/priority/2",
+      "iconUrl": "https://jira.dentsplysirona.com/images/icons/priorities/high.svg",
+      "name": "High",
+      "id": "2"
+    },
+    "customfield_10100": "S3808-10637",
+    "customfield_12521": null,
+    "customfield_12520": null,
+    "customfield_12522": null,
+    "customfield_12514": null,
+    "customfield_12513": null,
+    "customfield_12516": null,
+    "customfield_12515": null,
+    "customfield_12518": null,
+    "timeestimate": 0,
+    "versions": [],
+    "customfield_12517": null,
+    "customfield_12519": null,
+    "status": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/status/3",
+      "description": "This issue is being actively worked on at the moment by the assignee.",
+      "iconUrl": "https://jira.dentsplysirona.com/images/icons/statuses/inprogress.png",
+      "name": "IN PROGRESS",
+      "id": "3",
+      "statusCategory": {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/statuscategory/4",
+        "id": 4,
+        "key": "indeterminate",
+        "colorName": "inprogress",
+        "name": "In Progress"
+      }
+    },
+    "customfield_12510": null,
+    "customfield_11300": null,
+    "customfield_12512": null,
+    "archiveddate": null,
+    "customfield_12511": null,
+    "customfield_12503": null,
+    "customfield_11413": null,
+    "customfield_10204": null,
+    "customfield_12502": null,
+    "customfield_12505": null,
+    "customfield_12504": null,
+    "customfield_12507": null,
+    "aggregatetimeestimate": 28800,
+    "customfield_12506": null,
+    "customfield_12509": null,
+    "customfield_12508": null,
+    "creator": {
+      "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+      "name": "Xiaoyue.Zhao@dentsplysirona.com",
+      "key": "JIRAUSER23410",
+      "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+      "avatarUrls": {
+        "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+        "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+        "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+        "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+      },
+      "displayName": "Zhao, Xiaoyue (External)",
+      "active": true,
+      "timeZone": "Europe/Zurich"
+    },
+    "aggregateprogress": {
+      "progress": 388800,
+      "total": 417600,
+      "percent": 93
+    },
+    "customfield_10200": null,
+    "customfield_10201": null,
+    "customfield_12501": null,
+    "customfield_10202": null,
+    "customfield_12500": null,
+    "customfield_11403": null,
+    "customfield_11402": null,
+    "customfield_11405": null,
+    "customfield_12615": null,
+    "customfield_11404": null,
+    "customfield_12614": null,
+    "customfield_11407": null,
+    "customfield_12616": null,
+    "customfield_11409": null,
+    "timespent": 172800,
+    "aggregatetimespent": 388800,
+    "customfield_11401": null,
+    "customfield_12611": null,
+    "customfield_11400": null,
+    "customfield_12610": null,
+    "workratio": -1,
+    "created": "2025-07-24T05:01:45.718+0200",
+    "customfield_11500": null,
+    "customfield_11975": null,
+    "customfield_10402": null,
+    "customfield_11974": null,
+    "attachment": [
+      {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/attachment/479011",
+        "id": "479011",
+        "filename": "image-2025-08-04-15-59-54-302.png",
+        "author": {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+          "name": "Xiaoyue.Zhao@dentsplysirona.com",
+          "key": "JIRAUSER23410",
+          "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+          "avatarUrls": {
+            "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+            "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+            "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+            "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+          },
+          "displayName": "Zhao, Xiaoyue (External)",
+          "active": true,
+          "timeZone": "Europe/Zurich"
+        },
+        "created": "2025-08-04T09:59:55.393+0200",
+        "size": 62325,
+        "mimeType": "image/png",
+        "content": "https://jira.dentsplysirona.com/secure/attachment/479011/image-2025-08-04-15-59-54-302.png",
+        "thumbnail": "https://jira.dentsplysirona.com/secure/thumbnail/479011/_thumb_479011.png"
+      },
+      {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/attachment/479012",
+        "id": "479012",
+        "filename": "image-2025-08-04-16-00-02-019.png",
+        "author": {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+          "name": "Xiaoyue.Zhao@dentsplysirona.com",
+          "key": "JIRAUSER23410",
+          "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+          "avatarUrls": {
+            "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+            "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+            "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+            "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+          },
+          "displayName": "Zhao, Xiaoyue (External)",
+          "active": true,
+          "timeZone": "Europe/Zurich"
+        },
+        "created": "2025-08-04T10:00:02.838+0200",
+        "size": 62325,
+        "mimeType": "image/png",
+        "content": "https://jira.dentsplysirona.com/secure/attachment/479012/image-2025-08-04-16-00-02-019.png",
+        "thumbnail": "https://jira.dentsplysirona.com/secure/thumbnail/479012/_thumb_479012.png"
+      },
+      {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/attachment/479013",
+        "id": "479013",
+        "filename": "image-2025-08-04-16-01-07-977.png",
+        "author": {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xiaoyue.Zhao%40dentsplysirona.com",
+          "name": "Xiaoyue.Zhao@dentsplysirona.com",
+          "key": "JIRAUSER23410",
+          "emailAddress": "Xiaoyue.Zhao@dentsplysirona.com",
+          "avatarUrls": {
+            "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23410&avatarId=17702",
+            "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23410&avatarId=17702",
+            "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23410&avatarId=17702",
+            "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23410&avatarId=17702"
+          },
+          "displayName": "Zhao, Xiaoyue (External)",
+          "active": true,
+          "timeZone": "Europe/Zurich"
+        },
+        "created": "2025-08-04T10:01:09.324+0200",
+        "size": 59940,
+        "mimeType": "image/png",
+        "content": "https://jira.dentsplysirona.com/secure/attachment/479013/image-2025-08-04-16-01-07-977.png",
+        "thumbnail": "https://jira.dentsplysirona.com/secure/thumbnail/479013/_thumb_479013.png"
+      },
+      {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/attachment/485143",
+        "id": "485143",
+        "filename": "tooth_number_system_single_round_20250825102018.csv",
+        "author": {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+          "name": "Xi.Yang@dentsplysirona.com",
+          "key": "JIRAUSER24001",
+          "emailAddress": "Xi.Yang@dentsplysirona.com",
+          "avatarUrls": {
+            "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+            "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+            "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+            "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+          },
+          "displayName": "Yang, Xi",
+          "active": true,
+          "timeZone": "Europe/Zurich"
+        },
+        "created": "2025-08-25T05:06:55.674+0200",
+        "size": 64132,
+        "mimeType": "text/csv",
+        "content": "https://jira.dentsplysirona.com/secure/attachment/485143/tooth_number_system_single_round_20250825102018.csv"
+      },
+      {
+        "self": "https://jira.dentsplysirona.com/rest/api/2/attachment/485144",
+        "id": "485144",
+        "filename": "tooth_number_system_single_round_20250825104958.csv",
+        "author": {
+          "self": "https://jira.dentsplysirona.com/rest/api/2/user?username=Xi.Yang%40dentsplysirona.com",
+          "name": "Xi.Yang@dentsplysirona.com",
+          "key": "JIRAUSER24001",
+          "emailAddress": "Xi.Yang@dentsplysirona.com",
+          "avatarUrls": {
+            "48x48": "https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER24001&avatarId=18300",
+            "24x24": "https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER24001&avatarId=18300",
+            "16x16": "https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER24001&avatarId=18300",
+            "32x32": "https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER24001&avatarId=18300"
+          },
+          "displayName": "Yang, Xi",
+          "active": true,
+          "timeZone": "Europe/Zurich"
+        },
+        "created": "2025-08-25T05:06:55.571+0200",
+        "size": 63384,
+        "mimeType": "text/csv",
+        "content": "https://jira.dentsplysirona.com/secure/attachment/485144/tooth_number_system_single_round_20250825104958.csv"
+      }
+    ],
+    "customfield_11971": null,
+    "customfield_11970": null,
+    "customfield_11973": null,
+    "customfield_11972": null,
+    "customfield_11963": null,
+    "customfield_11966": null,
+    "customfield_11965": null,
+    "customfield_11968": null,
+    "customfield_11967": null,
+    "customfield_11969": null
+  },
+  "properties": {}
+}

@@ -34,7 +34,7 @@
       "@/config/*": ["config/*"],
       "@/lib/*": ["lib/*"],
       "@/tools/*": ["tools/*"],
-      "@/resources/*": ["resources/*"],
+      "@/server/resources/*": ["server/resources/*"],
       "@/types/*": ["types/*"]
     }
   },

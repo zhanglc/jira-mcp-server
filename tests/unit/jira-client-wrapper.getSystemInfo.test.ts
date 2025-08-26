@@ -4,7 +4,7 @@ import { ApiError } from '../../src/types/api-error.js';
 
 // Mock jira-client
 const mockJiraClient = {
-  getServerInfo: jest.fn()
+  getServerInfo: jest.fn(),
 };
 
 jest.mock('jira-client', () => {
@@ -18,7 +18,7 @@ describe('JiraClientWrapper.getSystemInfo', () => {
   beforeEach(() => {
     config = {
       url: 'https://test-jira.example.com',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
     wrapper = new JiraClientWrapper(config);
     jest.clearAllMocks();
@@ -40,13 +40,13 @@ describe('JiraClientWrapper.getSystemInfo', () => {
           {
             name: 'Database Connectivity',
             description: 'Tests database connection',
-            status: 'PASS'
-          }
+            status: 'PASS',
+          },
         ],
         systemInfoService: {
           version: '9.12.5',
-          edition: 'Enterprise'
-        }
+          edition: 'Enterprise',
+        },
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockSystemInfo);
@@ -69,7 +69,7 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         deploymentType: 'Server',
         buildNumber: 800001,
         buildDate: '2023-01-15T09:00:00.000Z',
-        scmInfo: 'xyz789abc123'
+        scmInfo: 'xyz789abc123',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockMinimalSystemInfo);
@@ -93,7 +93,7 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         deploymentType: 'Server',
         buildNumber: 1000000,
         buildDate: '2024-01-01T00:00:00.000Z',
-        scmInfo: 'beta123'
+        scmInfo: 'beta123',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockSystemInfo);
@@ -125,7 +125,9 @@ describe('JiraClientWrapper.getSystemInfo', () => {
 
       // Act & Assert
       await expect(wrapper.getSystemInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getSystemInfo()).rejects.toThrow('No system information received from server');
+      await expect(wrapper.getSystemInfo()).rejects.toThrow(
+        'No system information received from server'
+      );
     });
 
     test('should throw ApiError when response is undefined', async () => {
@@ -134,14 +136,16 @@ describe('JiraClientWrapper.getSystemInfo', () => {
 
       // Act & Assert
       await expect(wrapper.getSystemInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getSystemInfo()).rejects.toThrow('No system information received from server');
+      await expect(wrapper.getSystemInfo()).rejects.toThrow(
+        'No system information received from server'
+      );
     });
 
     test('should throw ApiError when required fields are missing', async () => {
       // Arrange
       const incompleteSystemInfo = {
         baseUrl: 'https://test-jira.example.com',
-        version: '9.12.5'
+        version: '9.12.5',
         // Missing required fields: versionNumbers, deploymentType, buildNumber, buildDate, scmInfo
       };
 
@@ -149,7 +153,9 @@ describe('JiraClientWrapper.getSystemInfo', () => {
 
       // Act & Assert
       await expect(wrapper.getSystemInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getSystemInfo()).rejects.toThrow('Invalid system information received from server');
+      await expect(wrapper.getSystemInfo()).rejects.toThrow(
+        'Invalid system information received from server'
+      );
     });
 
     test('should handle network errors', async () => {
@@ -183,7 +189,7 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         deploymentType: 'Server',
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockSystemInfo);
@@ -199,7 +205,9 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         expect.stringContaining('Getting system information')
       );
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Successfully retrieved system info: Server 9.12.5')
+        expect.stringContaining(
+          'Successfully retrieved system info: Server 9.12.5'
+        )
       );
 
       consoleSpy.mockRestore();
@@ -234,14 +242,16 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         deploymentType: 'Server',
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(systemInfoWithoutBaseUrl);
 
       // Act & Assert
       await expect(wrapper.getSystemInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getSystemInfo()).rejects.toThrow('Invalid system information received from server');
+      await expect(wrapper.getSystemInfo()).rejects.toThrow(
+        'Invalid system information received from server'
+      );
     });
 
     test('should validate version field', async () => {
@@ -252,14 +262,16 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         deploymentType: 'Server',
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(systemInfoWithoutVersion);
 
       // Act & Assert
       await expect(wrapper.getSystemInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getSystemInfo()).rejects.toThrow('Invalid system information received from server');
+      await expect(wrapper.getSystemInfo()).rejects.toThrow(
+        'Invalid system information received from server'
+      );
     });
 
     test('should validate deploymentType field', async () => {
@@ -270,14 +282,18 @@ describe('JiraClientWrapper.getSystemInfo', () => {
         versionNumbers: [9, 12, 5],
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
-      mockJiraClient.getServerInfo.mockResolvedValue(systemInfoWithoutDeploymentType);
+      mockJiraClient.getServerInfo.mockResolvedValue(
+        systemInfoWithoutDeploymentType
+      );
 
       // Act & Assert
       await expect(wrapper.getSystemInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getSystemInfo()).rejects.toThrow('Invalid system information received from server');
+      await expect(wrapper.getSystemInfo()).rejects.toThrow(
+        'Invalid system information received from server'
+      );
     });
   });
 });

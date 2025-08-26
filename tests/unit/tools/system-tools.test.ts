@@ -1,22 +1,22 @@
 /**
  * System Tools Module Tests
- * 
+ *
  * Verifies the system tools module exports correct tool definitions
  * with proper schemas and functionality.
  */
 
-import { 
+import {
   searchFieldsToolDefinition,
   getSystemInfoToolDefinition,
   getServerInfoToolDefinition,
-  getSystemTools
+  getSystemTools,
 } from '../../../src/server/tools/system-tools.js';
 
 describe('System Tools Module', () => {
   describe('searchFieldsToolDefinition', () => {
     it('should return correct tool definition', () => {
       const tool = searchFieldsToolDefinition();
-      
+
       expect(tool.name).toBe('searchFields');
       expect(tool.description).toContain('Search for Jira fields');
       expect(tool.inputSchema.type).toBe('object');
@@ -26,16 +26,18 @@ describe('System Tools Module', () => {
 
     it('should have optional query parameter', () => {
       const tool = searchFieldsToolDefinition();
-      
+
       expect((tool.inputSchema as any).required).toBeUndefined();
-      expect(tool.inputSchema.properties.query.description).toContain('Optional');
+      expect(tool.inputSchema.properties.query.description).toContain(
+        'Optional'
+      );
     });
   });
 
   describe('getSystemInfoToolDefinition', () => {
     it('should return correct tool definition', () => {
       const tool = getSystemInfoToolDefinition();
-      
+
       expect(tool.name).toBe('getSystemInfo');
       expect(tool.description).toContain('Get system information');
       expect(tool.inputSchema.type).toBe('object');
@@ -45,7 +47,7 @@ describe('System Tools Module', () => {
 
     it('should not accept any parameters', () => {
       const tool = getSystemInfoToolDefinition();
-      
+
       expect((tool.inputSchema as any).required).toBeUndefined();
       expect(Object.keys(tool.inputSchema.properties)).toHaveLength(0);
     });
@@ -54,7 +56,7 @@ describe('System Tools Module', () => {
   describe('getServerInfoToolDefinition', () => {
     it('should return correct tool definition', () => {
       const tool = getServerInfoToolDefinition();
-      
+
       expect(tool.name).toBe('getServerInfo');
       expect(tool.description).toContain('Get server-specific information');
       expect(tool.inputSchema.type).toBe('object');
@@ -64,7 +66,7 @@ describe('System Tools Module', () => {
 
     it('should not accept any parameters', () => {
       const tool = getServerInfoToolDefinition();
-      
+
       expect((tool.inputSchema as any).required).toBeUndefined();
       expect(Object.keys(tool.inputSchema.properties)).toHaveLength(0);
     });
@@ -73,7 +75,7 @@ describe('System Tools Module', () => {
   describe('getSystemTools', () => {
     it('should return array of all system tools', () => {
       const tools = getSystemTools();
-      
+
       expect(Array.isArray(tools)).toBe(true);
       expect(tools).toHaveLength(3);
     });
@@ -81,17 +83,17 @@ describe('System Tools Module', () => {
     it('should return tools in correct order', () => {
       const tools = getSystemTools();
       const toolNames = tools.map(tool => tool.name);
-      
+
       expect(toolNames).toEqual([
         'searchFields',
         'getSystemInfo',
-        'getServerInfo'
+        'getServerInfo',
       ]);
     });
 
     it('should return tools with valid schemas', () => {
       const tools = getSystemTools();
-      
+
       tools.forEach(tool => {
         expect(tool).toHaveProperty('name');
         expect(tool).toHaveProperty('description');

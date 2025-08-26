@@ -5,7 +5,7 @@ import { JiraTransition } from '../../src/types/jira-types.js';
 
 // Mock the jira-client module
 const mockJiraClient = {
-  listTransitions: jest.fn() as jest.MockedFunction<any>
+  listTransitions: jest.fn() as jest.MockedFunction<any>,
 };
 
 jest.mock('jira-client', () => {
@@ -16,8 +16,8 @@ jest.mock('jira-client', () => {
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('JiraClientWrapper.getIssueTransitions', () => {
@@ -27,7 +27,7 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
     jest.clearAllMocks();
     jiraClient = new JiraClientWrapper({
       url: 'https://test.atlassian.net',
-      bearer: 'test-token'
+      bearer: 'test-token',
     });
   });
 
@@ -43,15 +43,15 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
             statusCategory: {
               id: 4,
               key: 'indeterminate',
-              name: 'In Progress'
-            }
+              name: 'In Progress',
+            },
           },
           hasScreen: false,
           isGlobal: true,
           isInitial: false,
           isAvailable: true,
           isConditional: false,
-          fields: {}
+          fields: {},
         },
         {
           id: '31',
@@ -62,8 +62,8 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
             statusCategory: {
               id: 3,
               key: 'done',
-              name: 'Done'
-            }
+              name: 'Done',
+            },
           },
           hasScreen: true,
           isGlobal: false,
@@ -71,23 +71,23 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
           isAvailable: true,
           isConditional: true,
           fields: {
-            'customfield_10001': {
+            customfield_10001: {
               required: true,
               schema: {
                 type: 'string',
-                system: 'resolution'
+                system: 'resolution',
               },
               name: 'Resolution',
               hasDefaultValue: false,
               operations: ['set'],
               allowedValues: [
                 { id: '1', name: 'Fixed' },
-                { id: '2', name: 'Duplicate' }
-              ]
-            }
-          }
-        }
-      ]
+                { id: '2', name: 'Duplicate' },
+              ],
+            },
+          },
+        },
+      ],
     };
 
     it('should return transitions for valid issue key', async () => {
@@ -95,9 +95,11 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
 
       const result = await jiraClient.getIssueTransitions('PROJECT-123');
 
-      expect(mockJiraClient.listTransitions).toHaveBeenCalledWith('PROJECT-123');
+      expect(mockJiraClient.listTransitions).toHaveBeenCalledWith(
+        'PROJECT-123'
+      );
       expect(result).toHaveLength(2);
-      
+
       // Verify first transition
       expect(result[0]).toEqual({
         id: '21',
@@ -108,15 +110,15 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
           statusCategory: {
             id: 4,
             key: 'indeterminate',
-            name: 'In Progress'
-          }
+            name: 'In Progress',
+          },
         },
         hasScreen: false,
         isGlobal: true,
         isInitial: false,
         isAvailable: true,
         isConditional: false,
-        fields: {}
+        fields: {},
       });
 
       // Verify second transition
@@ -129,8 +131,8 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
           statusCategory: {
             id: 3,
             key: 'done',
-            name: 'Done'
-          }
+            name: 'Done',
+          },
         },
         hasScreen: true,
         isGlobal: false,
@@ -138,21 +140,21 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
         isAvailable: true,
         isConditional: true,
         fields: {
-          'customfield_10001': {
+          customfield_10001: {
             required: true,
             schema: {
               type: 'string',
-              system: 'resolution'
+              system: 'resolution',
             },
             name: 'Resolution',
             hasDefaultValue: false,
             operations: ['set'],
             allowedValues: [
               { id: '1', name: 'Fixed' },
-              { id: '2', name: 'Duplicate' }
-            ]
-          }
-        }
+              { id: '2', name: 'Duplicate' },
+            ],
+          },
+        },
       });
     });
 
@@ -177,11 +179,11 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
               statusCategory: {
                 id: 2,
                 key: 'new',
-                name: 'To Do'
-              }
-            }
-          }
-        ]
+                name: 'To Do',
+              },
+            },
+          },
+        ],
       };
 
       mockJiraClient.listTransitions.mockResolvedValue(minimalTransition);
@@ -198,9 +200,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
           statusCategory: {
             id: 2,
             key: 'new',
-            name: 'To Do'
-          }
-        }
+            name: 'To Do',
+          },
+        },
       });
     });
   });
@@ -211,9 +213,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       notFoundError.statusCode = 404;
       mockJiraClient.listTransitions.mockRejectedValue(notFoundError);
 
-      await expect(jiraClient.getIssueTransitions('NOTFOUND-123'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('NOTFOUND-123')
+      ).rejects.toThrow(ApiError);
 
       try {
         await jiraClient.getIssueTransitions('NOTFOUND-123');
@@ -225,20 +227,24 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
     });
 
     it('should throw ApiError for 403 Forbidden', async () => {
-      const forbiddenError = new Error('You do not have permission to view this issue') as any;
+      const forbiddenError = new Error(
+        'You do not have permission to view this issue'
+      ) as any;
       forbiddenError.statusCode = 403;
       mockJiraClient.listTransitions.mockRejectedValue(forbiddenError);
 
-      await expect(jiraClient.getIssueTransitions('RESTRICTED-123'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('RESTRICTED-123')
+      ).rejects.toThrow(ApiError);
 
       try {
         await jiraClient.getIssueTransitions('RESTRICTED-123');
       } catch (error) {
         expect(error).toBeInstanceOf(ApiError);
         expect((error as ApiError).statusCode).toBe(403);
-        expect((error as ApiError).message).toContain('You do not have permission to view this issue');
+        expect((error as ApiError).message).toContain(
+          'You do not have permission to view this issue'
+        );
       }
     });
 
@@ -247,16 +253,18 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       unauthorizedError.statusCode = 401;
       mockJiraClient.listTransitions.mockRejectedValue(unauthorizedError);
 
-      await expect(jiraClient.getIssueTransitions('PROJECT-123'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('PROJECT-123')
+      ).rejects.toThrow(ApiError);
 
       try {
         await jiraClient.getIssueTransitions('PROJECT-123');
       } catch (error) {
         expect(error).toBeInstanceOf(ApiError);
         expect((error as ApiError).statusCode).toBe(401);
-        expect((error as ApiError).message).toContain('Authentication required');
+        expect((error as ApiError).message).toContain(
+          'Authentication required'
+        );
       }
     });
 
@@ -265,9 +273,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       serverError.statusCode = 500;
       mockJiraClient.listTransitions.mockRejectedValue(serverError);
 
-      await expect(jiraClient.getIssueTransitions('PROJECT-123'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('PROJECT-123')
+      ).rejects.toThrow(ApiError);
 
       try {
         await jiraClient.getIssueTransitions('PROJECT-123');
@@ -282,9 +290,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       const networkError = new Error('ECONNREFUSED');
       mockJiraClient.listTransitions.mockRejectedValue(networkError);
 
-      await expect(jiraClient.getIssueTransitions('PROJECT-123'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('PROJECT-123')
+      ).rejects.toThrow(ApiError);
 
       try {
         await jiraClient.getIssueTransitions('PROJECT-123');
@@ -298,9 +306,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       const unknownError = new Error('Something went wrong');
       mockJiraClient.listTransitions.mockRejectedValue(unknownError);
 
-      await expect(jiraClient.getIssueTransitions('PROJECT-123'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('PROJECT-123')
+      ).rejects.toThrow(ApiError);
 
       try {
         await jiraClient.getIssueTransitions('PROJECT-123');
@@ -317,9 +325,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       emptyKeyError.statusCode = 400;
       mockJiraClient.listTransitions.mockRejectedValue(emptyKeyError);
 
-      await expect(jiraClient.getIssueTransitions(''))
-        .rejects
-        .toThrow(ApiError);
+      await expect(jiraClient.getIssueTransitions('')).rejects.toThrow(
+        ApiError
+      );
     });
 
     it('should handle malformed issue key', async () => {
@@ -327,9 +335,9 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
       malformedError.statusCode = 400;
       mockJiraClient.listTransitions.mockRejectedValue(malformedError);
 
-      await expect(jiraClient.getIssueTransitions('INVALID_KEY'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraClient.getIssueTransitions('INVALID_KEY')
+      ).rejects.toThrow(ApiError);
     });
 
     it('should handle null/undefined in response', async () => {
@@ -362,16 +370,17 @@ describe('JiraClientWrapper.getIssueTransitions', () => {
               statusCategory: {
                 id: 4,
                 key: 'indeterminate',
-                name: 'In Progress'
-              }
-            }
-          }
-        ]
+                name: 'In Progress',
+              },
+            },
+          },
+        ],
       };
 
       mockJiraClient.listTransitions.mockResolvedValue(mockData);
 
-      const result: JiraTransition[] = await jiraClient.getIssueTransitions('TYPE-123');
+      const result: JiraTransition[] =
+        await jiraClient.getIssueTransitions('TYPE-123');
 
       expect(result).toHaveLength(1);
       expect(typeof result[0].id).toBe('string');

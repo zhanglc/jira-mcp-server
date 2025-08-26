@@ -11,7 +11,7 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
     const config: JiraConfig = {
       url: process.env.JIRA_URL!,
       username: process.env.JIRA_USERNAME!,
-      bearer: process.env.JIRA_PERSONAL_TOKEN!
+      bearer: process.env.JIRA_PERSONAL_TOKEN!,
     };
 
     wrapper = new JiraClientWrapper(config);
@@ -47,15 +47,19 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
         expect(firstIssue.fields.project.key).toBe('DSCWA');
       }
 
-      console.log(`✓ Successfully retrieved ${result.total} issues for DSCWA project`);
+      console.log(
+        `✓ Successfully retrieved ${result.total} issues for DSCWA project`
+      );
       console.log(`✓ Returned ${result.issues.length} issues in current page`);
-      console.log(`✓ First issue: ${result.issues[0]?.key} - ${result.issues[0]?.fields.summary}`);
+      console.log(
+        `✓ First issue: ${result.issues[0]?.key} - ${result.issues[0]?.fields.summary}`
+      );
     }, 10000);
 
     it('should get issues with pagination for DSCWA project', async () => {
       const options: SearchOptions = {
         startAt: 0,
-        maxResults: 10
+        maxResults: 10,
       };
 
       const result = await wrapper.getProjectIssues('DSCWA', options);
@@ -72,13 +76,15 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
         expect(issue.fields.project.key).toBe('DSCWA');
       });
 
-      console.log(`✓ Pagination test: retrieved ${result.issues.length} issues (max ${options.maxResults})`);
+      console.log(
+        `✓ Pagination test: retrieved ${result.issues.length} issues (max ${options.maxResults})`
+      );
     }, 10000);
 
     it('should get issues with field selection for DSCWA project', async () => {
       const options: SearchOptions = {
         fields: ['summary', 'status', 'assignee'],
-        maxResults: 5
+        maxResults: 5,
       };
 
       const result = await wrapper.getProjectIssues('DSCWA', options);
@@ -93,17 +99,23 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
       // assignee field should be present (might be null for unassigned issues)
       expect('assignee' in firstIssue.fields).toBe(true);
 
-      console.log(`✓ Field selection test: retrieved ${result.issues.length} issues with specific fields`);
-      console.log(`✓ Sample issue: ${firstIssue.key} - ${firstIssue.fields.summary}`);
+      console.log(
+        `✓ Field selection test: retrieved ${result.issues.length} issues with specific fields`
+      );
+      console.log(
+        `✓ Sample issue: ${firstIssue.key} - ${firstIssue.fields.summary}`
+      );
       console.log(`✓ Status: ${firstIssue.fields.status.name}`);
-      console.log(`✓ Assignee: ${firstIssue.fields.assignee?.displayName || 'Unassigned'}`);
+      console.log(
+        `✓ Assignee: ${firstIssue.fields.assignee?.displayName || 'Unassigned'}`
+      );
     }, 10000);
 
     it('should get issues with combined pagination and field options for DSCWA project', async () => {
       const options: SearchOptions = {
         startAt: 5,
         maxResults: 3,
-        fields: ['summary', 'status', 'priority']
+        fields: ['summary', 'status', 'priority'],
       };
 
       const result = await wrapper.getProjectIssues('DSCWA', options);
@@ -121,13 +133,15 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
         expect(issue.fields.priority).toBeDefined();
       }
 
-      console.log(`✓ Combined options test: retrieved ${result.issues.length} issues with pagination and field selection`);
+      console.log(
+        `✓ Combined options test: retrieved ${result.issues.length} issues with pagination and field selection`
+      );
     }, 10000);
 
     it('should handle project with no issues gracefully', async () => {
       // Create a test that might return no issues - use filtering to simulate this
       const options: SearchOptions = {
-        maxResults: 1
+        maxResults: 1,
       };
 
       const result = await wrapper.getProjectIssues('DSCWA', options);
@@ -137,21 +151,25 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
       expect(Array.isArray(result.issues)).toBe(true);
       expect(result.maxResults).toBe(1);
 
-      console.log(`✓ Handled potential empty results: total=${result.total}, returned=${result.issues.length}`);
+      console.log(
+        `✓ Handled potential empty results: total=${result.total}, returned=${result.issues.length}`
+      );
     }, 10000);
   });
 
   describe('Error Handling with Real Server', () => {
     it('should handle non-existent project correctly', async () => {
-      await expect(wrapper.getProjectIssues('NONEXISTENT_PROJECT_XYZ'))
-        .rejects.toThrow(ApiError);
+      await expect(
+        wrapper.getProjectIssues('NONEXISTENT_PROJECT_XYZ')
+      ).rejects.toThrow(ApiError);
 
       console.log('✓ Correctly handled non-existent project error');
     }, 10000);
 
     it('should handle invalid project key format', async () => {
-      await expect(wrapper.getProjectIssues('invalid-project-key!@#'))
-        .rejects.toThrow(ApiError);
+      await expect(
+        wrapper.getProjectIssues('invalid-project-key!@#')
+      ).rejects.toThrow(ApiError);
 
       console.log('✓ Correctly handled invalid project key format error');
     }, 10000);
@@ -173,7 +191,7 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
         // Validate fields object
         expect(issue.fields).toBeDefined();
         expect(typeof issue.fields.summary).toBe('string');
-        
+
         // Validate status
         expect(issue.fields.status).toBeDefined();
         expect(typeof issue.fields.status.name).toBe('string');
@@ -219,9 +237,15 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
         expect(new Date(issue.fields.updated)).toBeInstanceOf(Date);
       });
 
-      console.log(`✓ Data model validation passed for ${result.issues.length} issues`);
-      console.log(`✓ Sample issue types: ${result.issues.map(i => i.fields.issuetype.name).join(', ')}`);
-      console.log(`✓ Sample priorities: ${result.issues.map(i => i.fields.priority.name).join(', ')}`);
+      console.log(
+        `✓ Data model validation passed for ${result.issues.length} issues`
+      );
+      console.log(
+        `✓ Sample issue types: ${result.issues.map(i => i.fields.issuetype.name).join(', ')}`
+      );
+      console.log(
+        `✓ Sample priorities: ${result.issues.map(i => i.fields.priority.name).join(', ')}`
+      );
     }, 15000);
   });
 
@@ -230,14 +254,17 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
       const options: SearchOptions = {
         startAt: 0,
         maxResults: 5,
-        fields: ['summary', 'status', 'assignee']
+        fields: ['summary', 'status', 'assignee'],
       };
 
       // Get results using getProjectIssues
       const projectResult = await wrapper.getProjectIssues('DSCWA', options);
 
       // Get results using searchIssues with equivalent JQL
-      const searchResult = await wrapper.searchIssues('project = DSCWA', options);
+      const searchResult = await wrapper.searchIssues(
+        'project = DSCWA',
+        options
+      );
 
       // Results should be identical
       expect(projectResult.total).toBe(searchResult.total);
@@ -253,8 +280,12 @@ describe('JiraClientWrapper.getProjectIssues - Integration Tests', () => {
         expect(issue.fields.summary).toBe(searchIssue.fields.summary);
       });
 
-      console.log(`✓ getProjectIssues results match searchIssues: ${projectResult.total} total issues`);
-      console.log(`✓ Both methods returned ${projectResult.issues.length} issues in current page`);
+      console.log(
+        `✓ getProjectIssues results match searchIssues: ${projectResult.total} total issues`
+      );
+      console.log(
+        `✓ Both methods returned ${projectResult.issues.length} issues in current page`
+      );
     }, 15000);
   });
 });

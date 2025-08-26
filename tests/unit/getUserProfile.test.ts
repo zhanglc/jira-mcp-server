@@ -7,7 +7,7 @@ import { ApiError } from '../../src/types/api-error.js';
 jest.mock('jira-client');
 
 const mockJiraClient = {
-  searchUsers: jest.fn()
+  searchUsers: jest.fn(),
 };
 
 // Mock the jira-client module
@@ -22,7 +22,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
   beforeEach(() => {
     config = {
       url: 'https://jira.dentsplysirona.com',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
     wrapper = new JiraClientWrapper(config);
     jest.clearAllMocks();
@@ -43,20 +43,24 @@ describe('JiraClientWrapper.getUserProfile', () => {
         timeZone: 'America/New_York',
         locale: 'en_US',
         avatarUrls: {
-          '16x16': 'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23511',
-          '24x24': 'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23511',
-          '32x32': 'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23511',
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23511'
+          '16x16':
+            'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER23511',
+          '24x24':
+            'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER23511',
+          '32x32':
+            'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER23511',
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER23511',
         },
         groups: {
           size: 3,
-          items: []
+          items: [],
         },
         applicationRoles: {
           size: 1,
-          items: []
+          items: [],
         },
-        expand: 'groups,applicationRoles'
+        expand: 'groups,applicationRoles',
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -70,7 +74,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
       expect(result).toEqual(mockUser);
       expect(result.name).toBe('JIRAUSER23511');
@@ -90,8 +94,9 @@ describe('JiraClientWrapper.getUserProfile', () => {
         active: true,
         timeZone: 'UTC',
         avatarUrls: {
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER12345'
-        }
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER12345',
+        },
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -105,7 +110,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
       expect(result).toEqual(mockUser);
       expect(result.self).toBeDefined();
@@ -131,8 +136,9 @@ describe('JiraClientWrapper.getUserProfile', () => {
         active: true,
         timeZone: 'America/Los_Angeles',
         avatarUrls: {
-          '48x48': 'https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png'
-        }
+          '48x48':
+            'https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png',
+        },
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -146,7 +152,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
       expect(result).toEqual(mockUser);
       expect(result.accountId).toBe('123456:abcd-efgh');
@@ -165,8 +171,9 @@ describe('JiraClientWrapper.getUserProfile', () => {
         deleted: true,
         timeZone: 'UTC',
         avatarUrls: {
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER99999'
-        }
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER99999',
+        },
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -180,7 +187,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
       expect(result).toEqual(mockUser);
       expect(result.active).toBe(false);
@@ -199,8 +206,9 @@ describe('JiraClientWrapper.getUserProfile', () => {
         active: true,
         timeZone: 'America/New_York',
         avatarUrls: {
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER56789'
-        }
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER56789',
+        },
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -214,7 +222,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
       expect(result).toEqual(mockUser);
       expect(result.name).toBe('user.name@dentsplysirona.com');
@@ -234,7 +242,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -252,7 +260,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -270,7 +278,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -288,7 +296,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -306,7 +314,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -322,7 +330,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -338,7 +346,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -354,7 +362,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -370,8 +378,9 @@ describe('JiraClientWrapper.getUserProfile', () => {
         active: true,
         timeZone: 'America/New_York',
         avatarUrls: {
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER11111'
-        }
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER11111',
+        },
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -388,7 +397,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
       expect(result).toHaveProperty('active');
       expect(result).toHaveProperty('timeZone');
       expect(result).toHaveProperty('avatarUrls');
-      
+
       expect(typeof result.self).toBe('string');
       expect(typeof result.key).toBe('string');
       expect(typeof result.name).toBe('string');
@@ -413,21 +422,25 @@ describe('JiraClientWrapper.getUserProfile', () => {
         timeZone: 'America/New_York',
         locale: 'en_US',
         avatarUrls: {
-          '16x16': 'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER22222',
-          '24x24': 'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER22222',
-          '32x32': 'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER22222',
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER22222'
+          '16x16':
+            'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER22222',
+          '24x24':
+            'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=JIRAUSER22222',
+          '32x32':
+            'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=JIRAUSER22222',
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER22222',
         },
         groups: {
           size: 5,
-          items: []
+          items: [],
         },
         applicationRoles: {
           size: 2,
-          items: []
+          items: [],
         },
         expand: 'groups,applicationRoles',
-        accountId: 'cloud-account-id'
+        accountId: 'cloud-account-id',
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -458,7 +471,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
 
@@ -474,8 +487,9 @@ describe('JiraClientWrapper.getUserProfile', () => {
         active: true,
         timeZone: 'UTC',
         avatarUrls: {
-          '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER77777'
-        }
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/useravatar?ownerId=JIRAUSER77777',
+        },
       };
 
       mockJiraClient.searchUsers.mockResolvedValue([mockUser]);
@@ -489,7 +503,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
       expect(result).toEqual(mockUser);
       expect(result.displayName).toBe('Special User');
@@ -502,7 +516,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         self: 'https://jira.dentsplysirona.com/rest/api/2/user?username=invalid.user',
         // Missing key, name, emailAddress, displayName
         active: true,
-        timeZone: 'UTC'
+        timeZone: 'UTC',
       };
 
       mockJiraClient.searchUsers.mockResolvedValue(invalidUser);
@@ -514,7 +528,7 @@ describe('JiraClientWrapper.getUserProfile', () => {
         username: username,
         maxResults: 1,
         includeActive: true,
-        includeInactive: true
+        includeInactive: true,
       });
     });
   });

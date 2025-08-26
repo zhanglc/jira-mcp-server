@@ -7,8 +7,8 @@ import { loadConfig } from '../../src/utils/config.js';
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
@@ -27,8 +27,10 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
 
       // Assert - Basic structure validation
       expect(Array.isArray(versions)).toBe(true);
-      console.log(`\n=== DSCWA Project Versions (${versions.length} found) ===`);
-      
+      console.log(
+        `\n=== DSCWA Project Versions (${versions.length} found) ===`
+      );
+
       if (versions.length > 0) {
         // Validate that each version has required fields
         versions.forEach((version, index) => {
@@ -95,7 +97,9 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
         const releasedCount = versions.filter(v => v.released).length;
         const archivedCount = versions.filter(v => v.archived).length;
         const overdueCount = versions.filter(v => v.overdue).length;
-        const activeCount = versions.filter(v => !v.archived && !v.released).length;
+        const activeCount = versions.filter(
+          v => !v.archived && !v.released
+        ).length;
 
         console.log(`Total versions: ${versions.length}`);
         console.log(`Released: ${releasedCount}`);
@@ -106,13 +110,17 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
         // Data integrity checks
         expect(releasedCount + activeCount).toBeGreaterThanOrEqual(0);
         expect(archivedCount).toBeGreaterThanOrEqual(0);
-        
+
         // Test that we can find at least some logical version data
-        const hasVersionsWithNames = versions.every(v => v.name && v.name.trim().length > 0);
+        const hasVersionsWithNames = versions.every(
+          v => v.name && v.name.trim().length > 0
+        );
         expect(hasVersionsWithNames).toBe(true);
 
         // Validate self URLs point to the correct Jira instance
-        const hasSelfUrls = versions.every(v => v.self && v.self.includes('/rest/api/'));
+        const hasSelfUrls = versions.every(
+          v => v.self && v.self.includes('/rest/api/')
+        );
         expect(hasSelfUrls).toBe(true);
       } else {
         console.log('DSCWA project has no versions defined');
@@ -121,9 +129,9 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
 
     it('should handle non-existent project gracefully', async () => {
       // Act & Assert
-      await expect(jiraWrapper.getProjectVersions('NONEXISTENT'))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        jiraWrapper.getProjectVersions('NONEXISTENT')
+      ).rejects.toThrow(ApiError);
     }, 10000);
 
     it('should handle project with special characters in key', async () => {
@@ -144,7 +152,9 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
       // Assert
       if (versions.length > 1) {
         const firstProjectId = versions[0].projectId;
-        const allSameProjectId = versions.every(v => v.projectId === firstProjectId);
+        const allSameProjectId = versions.every(
+          v => v.projectId === firstProjectId
+        );
         expect(allSameProjectId).toBe(true);
         console.log(`All versions belong to project ID: ${firstProjectId}`);
       }
@@ -159,13 +169,17 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
         if (version.startDate) {
           // Check if it's a valid date format (YYYY-MM-DD expected)
           const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-          const isValidDate = dateRegex.test(version.startDate) || !isNaN(Date.parse(version.startDate));
+          const isValidDate =
+            dateRegex.test(version.startDate) ||
+            !isNaN(Date.parse(version.startDate));
           expect(isValidDate).toBe(true);
         }
 
         if (version.releaseDate) {
           const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-          const isValidDate = dateRegex.test(version.releaseDate) || !isNaN(Date.parse(version.releaseDate));
+          const isValidDate =
+            dateRegex.test(version.releaseDate) ||
+            !isNaN(Date.parse(version.releaseDate));
           expect(isValidDate).toBe(true);
         }
 
@@ -188,7 +202,7 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
 
       // Assert - Same project should return same versions in same order
       expect(versions1.length).toBe(versions2.length);
-      
+
       for (let i = 0; i < versions1.length; i++) {
         expect(versions1[i].id).toBe(versions2[i].id);
         expect(versions1[i].name).toBe(versions2[i].name);
@@ -204,18 +218,27 @@ describe('JiraClientWrapper.getProjectVersions - Integration Tests', () => {
       if (versions.length > 0) {
         console.log('\n=== Model Validation: JiraVersion Interface ===');
         const sampleVersion = versions[0];
-        
+
         console.log('Sample version object:');
         console.log(JSON.stringify(sampleVersion, null, 2));
 
         // Test interface compliance
         const interfaceFields = [
-          'self', 'id', 'name', 'archived', 'released', 'projectId'
+          'self',
+          'id',
+          'name',
+          'archived',
+          'released',
+          'projectId',
         ];
-        
+
         const optionalFields = [
-          'description', 'startDate', 'releaseDate', 'overdue', 
-          'userStartDate', 'userReleaseDate'
+          'description',
+          'startDate',
+          'releaseDate',
+          'overdue',
+          'userStartDate',
+          'userReleaseDate',
         ];
 
         // Required fields must be present

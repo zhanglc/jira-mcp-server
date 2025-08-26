@@ -4,7 +4,7 @@ import { ApiError } from '../../src/types/api-error.js';
 
 // Mock the jira-client module
 const mockJiraClient = {
-  findIssue: jest.fn()
+  findIssue: jest.fn(),
 };
 
 jest.mock('jira-client', () => {
@@ -15,8 +15,8 @@ jest.mock('jira-client', () => {
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('getIssue Method - TDD Implementation', () => {
@@ -26,12 +26,12 @@ describe('getIssue Method - TDD Implementation', () => {
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();
-    
+
     mockConfig = {
       url: 'https://test.atlassian.net',
-      bearer: 'test-bearer-token'
+      bearer: 'test-bearer-token',
     };
-    
+
     jiraClientWrapper = new JiraClientWrapper(mockConfig);
   });
 
@@ -40,9 +40,9 @@ describe('getIssue Method - TDD Implementation', () => {
       const basicAuthConfig: JiraConfig = {
         url: 'https://test.atlassian.net',
         username: 'testuser',
-        password: 'testpass'
+        password: 'testpass',
       };
-      
+
       const wrapper = new JiraClientWrapper(basicAuthConfig);
       expect(wrapper).toBeInstanceOf(JiraClientWrapper);
     });
@@ -62,8 +62,8 @@ describe('getIssue Method - TDD Implementation', () => {
             name: 'To Do',
             statusCategory: {
               key: 'new',
-              name: 'New'
-            }
+              name: 'New',
+            },
           },
           assignee: null,
           reporter: {
@@ -75,8 +75,8 @@ describe('getIssue Method - TDD Implementation', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://avatar.url'
-            }
+              '48x48': 'https://avatar.url',
+            },
           },
           creator: {
             self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
@@ -87,25 +87,25 @@ describe('getIssue Method - TDD Implementation', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://avatar.url'
-            }
+              '48x48': 'https://avatar.url',
+            },
           },
           project: {
             key: 'TEST',
-            name: 'Test Project'
+            name: 'Test Project',
           },
           issuetype: {
             name: 'Story',
-            subtask: false
+            subtask: false,
           },
           priority: {
             name: 'Medium',
-            id: '3'
+            id: '3',
           },
           created: '2024-01-01T10:00:00.000Z',
           updated: '2024-01-02T10:00:00.000Z',
-          description: 'Test issue description'
-        }
+          description: 'Test issue description',
+        },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
@@ -134,11 +134,11 @@ describe('getIssue Method - TDD Implementation', () => {
             name: 'To Do',
             statusCategory: {
               key: 'new',
-              name: 'New'
-            }
+              name: 'New',
+            },
           },
-          assignee: null
-        }
+          assignee: null,
+        },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
@@ -147,7 +147,11 @@ describe('getIssue Method - TDD Implementation', () => {
       const result = await jiraClientWrapper.getIssue(issueKey, fields);
 
       // Assert
-      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(issueKey, '', fields.join(','));
+      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        '',
+        fields.join(',')
+      );
       expect(result).toEqual(mockIssueResponse);
       expect(result.fields).toHaveProperty('summary');
       expect(result.fields).toHaveProperty('status');
@@ -162,7 +166,7 @@ describe('getIssue Method - TDD Implementation', () => {
         id: '12345',
         key: 'TEST-123',
         self: 'https://test.atlassian.net/rest/api/2/issue/12345',
-        fields: {}
+        fields: {},
       };
 
       mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
@@ -182,15 +186,19 @@ describe('getIssue Method - TDD Implementation', () => {
       const issueKey = 'NONEXISTENT-123';
       const jiraError = {
         statusCode: 404,
-        message: 'Issue Does Not Exist'
+        message: 'Issue Does Not Exist',
       };
 
       mockJiraClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow('Jira API Error: Issue Does Not Exist');
-      
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        'Jira API Error: Issue Does Not Exist'
+      );
+
       expect(mockJiraClient.findIssue).toHaveBeenCalledWith(issueKey);
     });
 
@@ -199,14 +207,18 @@ describe('getIssue Method - TDD Implementation', () => {
       const issueKey = 'SECRET-123';
       const jiraError = {
         statusCode: 403,
-        message: 'Forbidden'
+        message: 'Forbidden',
       };
 
       mockJiraClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow('Jira API Error: Forbidden');
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        'Jira API Error: Forbidden'
+      );
     });
 
     test('should throw ApiError when authentication fails (401)', async () => {
@@ -214,14 +226,18 @@ describe('getIssue Method - TDD Implementation', () => {
       const issueKey = 'TEST-123';
       const jiraError = {
         statusCode: 401,
-        message: 'Unauthorized'
+        message: 'Unauthorized',
       };
 
       mockJiraClient.findIssue.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow('Jira API Error: Unauthorized');
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        'Jira API Error: Unauthorized'
+      );
     });
 
     test('should throw ApiError for network errors', async () => {
@@ -232,8 +248,12 @@ describe('getIssue Method - TDD Implementation', () => {
       mockJiraClient.findIssue.mockRejectedValue(networkError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow('Jira API Error: Network Error');
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        'Jira API Error: Network Error'
+      );
     });
 
     test('should throw ApiError for server errors (500)', async () => {
@@ -241,31 +261,33 @@ describe('getIssue Method - TDD Implementation', () => {
       const issueKey = 'TEST-123';
       const serverError = {
         statusCode: 500,
-        message: 'Internal Server Error'
+        message: 'Internal Server Error',
       };
 
       mockJiraClient.findIssue.mockRejectedValue(serverError);
 
       // Act & Assert
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(ApiError);
-      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow('Jira API Error: Internal Server Error');
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        ApiError
+      );
+      await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow(
+        'Jira API Error: Internal Server Error'
+      );
     });
   });
 
   describe('Input validation and edge cases', () => {
     test('should handle issue keys with different formats', async () => {
       // Arrange
-      const testCases = [
-        'PROJ-1',
-        'MYPROJECT-999',
-        'ABC-12345',
-        'X-1'
-      ];
+      const testCases = ['PROJ-1', 'MYPROJECT-999', 'ABC-12345', 'X-1'];
 
       const mockResponse = { id: '1', key: '', fields: {} };
 
       for (const issueKey of testCases) {
-        mockJiraClient.findIssue.mockResolvedValue({ ...mockResponse, key: issueKey });
+        mockJiraClient.findIssue.mockResolvedValue({
+          ...mockResponse,
+          key: issueKey,
+        });
 
         // Act
         const result = await jiraClientWrapper.getIssue(issueKey);
@@ -282,7 +304,7 @@ describe('getIssue Method - TDD Implementation', () => {
       const mockResponse = {
         id: '1',
         key: issueKey,
-        fields: { summary: 'Test' }
+        fields: { summary: 'Test' },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(mockResponse);
@@ -309,7 +331,7 @@ describe('getIssue Method - TDD Implementation', () => {
         'created',
         'updated',
         'description',
-        'customfield_10001'
+        'customfield_10001',
       ];
 
       const mockResponse = {
@@ -317,8 +339,8 @@ describe('getIssue Method - TDD Implementation', () => {
         key: issueKey,
         fields: {
           summary: 'Test',
-          customfield_10001: 'Custom Value'
-        }
+          customfield_10001: 'Custom Value',
+        },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(mockResponse);
@@ -350,8 +372,8 @@ describe('getIssue Method - TDD Implementation', () => {
             name: 'In Progress',
             statusCategory: {
               key: 'indeterminate',
-              name: 'In Progress'
-            }
+              name: 'In Progress',
+            },
           },
           assignee: {
             self: 'https://test.atlassian.net/rest/api/2/user?username=assignee',
@@ -362,8 +384,8 @@ describe('getIssue Method - TDD Implementation', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://assignee-avatar.url'
-            }
+              '48x48': 'https://assignee-avatar.url',
+            },
           },
           reporter: {
             self: 'https://test.atlassian.net/rest/api/2/user?username=reporter',
@@ -374,8 +396,8 @@ describe('getIssue Method - TDD Implementation', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://reporter-avatar.url'
-            }
+              '48x48': 'https://reporter-avatar.url',
+            },
           },
           creator: {
             self: 'https://test.atlassian.net/rest/api/2/user?username=creator',
@@ -386,32 +408,33 @@ describe('getIssue Method - TDD Implementation', () => {
             active: true,
             timeZone: 'UTC',
             avatarUrls: {
-              '48x48': 'https://creator-avatar.url'
-            }
+              '48x48': 'https://creator-avatar.url',
+            },
           },
           project: {
             key: 'TEST',
-            name: 'Test Project'
+            name: 'Test Project',
           },
           issuetype: {
             name: 'Bug',
-            subtask: false
+            subtask: false,
           },
           priority: {
             name: 'High',
-            id: '2'
+            id: '2',
           },
           created: '2024-01-01T10:00:00.000Z',
           updated: '2024-01-02T15:30:00.000Z',
-          description: 'Detailed bug description with multiple lines\nand formatting.',
+          description:
+            'Detailed bug description with multiple lines\nand formatting.',
           parent: {
             key: 'TEST-100',
             fields: {
-              summary: 'Parent Epic'
-            }
+              summary: 'Parent Epic',
+            },
           },
-          customfield_10001: 'Custom Field Value'
-        }
+          customfield_10001: 'Custom Field Value',
+        },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(completeIssueResponse);
@@ -430,8 +453,8 @@ describe('getIssue Method - TDD Implementation', () => {
             name: expect.any(String),
             statusCategory: expect.objectContaining({
               key: expect.any(String),
-              name: expect.any(String)
-            })
+              name: expect.any(String),
+            }),
           }),
           reporter: expect.objectContaining({
             name: expect.any(String),
@@ -440,7 +463,7 @@ describe('getIssue Method - TDD Implementation', () => {
             emailAddress: expect.any(String),
             active: expect.any(Boolean),
             timeZone: expect.any(String),
-            avatarUrls: expect.any(Object)
+            avatarUrls: expect.any(Object),
           }),
           creator: expect.objectContaining({
             name: expect.any(String),
@@ -449,23 +472,23 @@ describe('getIssue Method - TDD Implementation', () => {
             emailAddress: expect.any(String),
             active: expect.any(Boolean),
             timeZone: expect.any(String),
-            avatarUrls: expect.any(Object)
+            avatarUrls: expect.any(Object),
           }),
           project: expect.objectContaining({
             key: expect.any(String),
-            name: expect.any(String)
+            name: expect.any(String),
           }),
           issuetype: expect.objectContaining({
             name: expect.any(String),
-            subtask: expect.any(Boolean)
+            subtask: expect.any(Boolean),
           }),
           priority: expect.objectContaining({
             name: expect.any(String),
-            id: expect.any(String)
+            id: expect.any(String),
           }),
           created: expect.any(String),
-          updated: expect.any(String)
-        })
+          updated: expect.any(String),
+        }),
       });
 
       // Verify specific values
@@ -489,8 +512,8 @@ describe('getIssue Method - TDD Implementation', () => {
             name: 'Open',
             statusCategory: {
               key: 'new',
-              name: 'New'
-            }
+              name: 'New',
+            },
           },
           assignee: null,
           reporter: {
@@ -501,7 +524,7 @@ describe('getIssue Method - TDD Implementation', () => {
             emailAddress: 'reporter@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           creator: {
             self: 'https://test.atlassian.net/rest/api/2/user?username=creator',
@@ -511,23 +534,23 @@ describe('getIssue Method - TDD Implementation', () => {
             emailAddress: 'creator@example.com',
             active: true,
             timeZone: 'UTC',
-            avatarUrls: {}
+            avatarUrls: {},
           },
           project: {
             key: 'TEST',
-            name: 'Test Project'
+            name: 'Test Project',
           },
           issuetype: {
             name: 'Task',
-            subtask: false
+            subtask: false,
           },
           priority: {
             name: 'Low',
-            id: '4'
+            id: '4',
           },
           created: '2024-01-01T10:00:00.000Z',
-          updated: '2024-01-01T10:00:00.000Z'
-        }
+          updated: '2024-01-01T10:00:00.000Z',
+        },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(issueWithNullAssignee);
@@ -549,7 +572,7 @@ describe('getIssue Method - TDD Implementation', () => {
       const mockResponse = {
         id: '1',
         key: issueKey,
-        fields: { summary: 'Test' }
+        fields: { summary: 'Test' },
       };
 
       mockJiraClient.findIssue.mockResolvedValue(mockResponse);
@@ -562,7 +585,9 @@ describe('getIssue Method - TDD Implementation', () => {
 
       // Assert
       expect(logger.log).toHaveBeenCalledWith(`Getting issue: ${issueKey}`);
-      expect(logger.log).toHaveBeenCalledWith(`Successfully retrieved issue: ${issueKey}`);
+      expect(logger.log).toHaveBeenCalledWith(
+        `Successfully retrieved issue: ${issueKey}`
+      );
     });
 
     test('should log errors appropriately', async () => {
@@ -577,7 +602,10 @@ describe('getIssue Method - TDD Implementation', () => {
 
       // Act & Assert
       await expect(jiraClientWrapper.getIssue(issueKey)).rejects.toThrow();
-      expect(logger.error).toHaveBeenCalledWith(`Failed to get issue ${issueKey}:`, error);
+      expect(logger.error).toHaveBeenCalledWith(
+        `Failed to get issue ${issueKey}:`,
+        error
+      );
     });
   });
 });

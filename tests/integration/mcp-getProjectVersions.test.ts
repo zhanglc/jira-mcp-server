@@ -9,7 +9,9 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
   beforeAll(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      console.log('Skipping MCP Server integration tests - JIRA_PERSONAL_TOKEN not set');
+      console.log(
+        'Skipping MCP Server integration tests - JIRA_PERSONAL_TOKEN not set'
+      );
       return;
     }
 
@@ -19,14 +21,18 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
   beforeEach(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      pending('JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test');
+      pending(
+        'JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test'
+      );
     }
   });
 
   describe('getProjectVersions MCP Tool', () => {
     it('should handle getProjectVersions tool call with valid project key', async () => {
       // Act - Test the handler directly
-      const response = await (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' });
+      const response = await (mcpServer as any).handleGetProjectVersions({
+        projectKey: 'DSCWA',
+      });
 
       // Assert
       expect(response).toBeDefined();
@@ -57,7 +63,7 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
           name: sampleVersion.name,
           archived: sampleVersion.archived,
           released: sampleVersion.released,
-          projectId: sampleVersion.projectId
+          projectId: sampleVersion.projectId,
         });
 
         // Validate all versions have required fields
@@ -74,50 +80,54 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
 
     it('should handle getProjectVersions with missing projectKey parameter', async () => {
       // Act & Assert - Test the handler directly with missing parameter
-      await expect((mcpServer as any).handleGetProjectVersions({}))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        (mcpServer as any).handleGetProjectVersions({})
+      ).rejects.toThrow(ApiError);
     }, 10000);
 
     it('should handle getProjectVersions with invalid projectKey type', async () => {
       // Act & Assert - Test the handler directly with invalid parameter
-      await expect((mcpServer as any).handleGetProjectVersions({ projectKey: 123 }))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        (mcpServer as any).handleGetProjectVersions({ projectKey: 123 })
+      ).rejects.toThrow(ApiError);
     }, 10000);
 
     it('should handle getProjectVersions with empty projectKey', async () => {
       // Act & Assert - Test the handler directly with empty parameter
-      await expect((mcpServer as any).handleGetProjectVersions({ projectKey: '' }))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        (mcpServer as any).handleGetProjectVersions({ projectKey: '' })
+      ).rejects.toThrow(ApiError);
     }, 10000);
 
     it('should handle getProjectVersions with non-existent project', async () => {
       // Act & Assert - Test the handler directly with non-existent project
-      await expect((mcpServer as any).handleGetProjectVersions({ projectKey: 'NONEXISTENT' }))
-        .rejects
-        .toThrow(ApiError);
+      await expect(
+        (mcpServer as any).handleGetProjectVersions({
+          projectKey: 'NONEXISTENT',
+        })
+      ).rejects.toThrow(ApiError);
     }, 15000);
 
     it('should validate MCP response format compliance', async () => {
       // Act - Test the handler directly
-      const response = await (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' });
+      const response = await (mcpServer as any).handleGetProjectVersions({
+        projectKey: 'DSCWA',
+      });
 
       // Assert MCP protocol compliance
       expect(response).toMatchObject({
         content: expect.arrayContaining([
           expect.objectContaining({
             type: 'text',
-            text: expect.any(String)
-          })
-        ])
+            text: expect.any(String),
+          }),
+        ]),
       });
 
       // Validate JSON structure
       const jsonText = response.content[0].text;
       expect(() => JSON.parse(jsonText)).not.toThrow();
-      
+
       const parsedData = JSON.parse(jsonText);
       expect(Array.isArray(parsedData)).toBe(true);
 
@@ -130,8 +140,12 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
 
     it('should validate version data consistency across MCP calls', async () => {
       // Act - Test the handler directly multiple times
-      const response1 = await (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' });
-      const response2 = await (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' });
+      const response1 = await (mcpServer as any).handleGetProjectVersions({
+        projectKey: 'DSCWA',
+      });
+      const response2 = await (mcpServer as any).handleGetProjectVersions({
+        projectKey: 'DSCWA',
+      });
 
       // Parse responses
       const versions1 = JSON.parse(response1.content[0].text);
@@ -139,15 +153,17 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
 
       // Assert - Same project should return same versions
       expect(versions1.length).toBe(versions2.length);
-      
+
       if (versions1.length > 0) {
         for (let i = 0; i < versions1.length; i++) {
           expect(versions1[i].id).toBe(versions2[i].id);
           expect(versions1[i].name).toBe(versions2[i].name);
           expect(versions1[i].projectId).toBe(versions2[i].projectId);
         }
-        
-        console.log(`✓ Version data consistency verified across MCP calls (${versions1.length} versions)`);
+
+        console.log(
+          `✓ Version data consistency verified across MCP calls (${versions1.length} versions)`
+        );
       }
     }, 25000);
   });
@@ -157,9 +173,13 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
       // This test verifies that the getProjectVersions tool is properly defined
       // We can test this by checking if the handler function exists
       expect((mcpServer as any).handleGetProjectVersions).toBeDefined();
-      expect(typeof (mcpServer as any).handleGetProjectVersions).toBe('function');
-      
-      console.log('getProjectVersions handler successfully defined in MCP Server');
+      expect(typeof (mcpServer as any).handleGetProjectVersions).toBe(
+        'function'
+      );
+
+      console.log(
+        'getProjectVersions handler successfully defined in MCP Server'
+      );
     });
   });
 
@@ -167,7 +187,9 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
     it('should properly propagate ApiError through MCP layer', async () => {
       try {
         // Act - Test the handler directly with invalid project
-        await (mcpServer as any).handleGetProjectVersions({ projectKey: 'INVALID_PROJECT_KEY' });
+        await (mcpServer as any).handleGetProjectVersions({
+          projectKey: 'INVALID_PROJECT_KEY',
+        });
         fail('Expected ApiError to be thrown');
       } catch (error: any) {
         // Assert
@@ -179,9 +201,11 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
 
     it('should handle concurrent requests correctly', async () => {
       // Act - Make multiple concurrent requests to the handler
-      const requests = Array(3).fill(null).map(() => 
-        (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' })
-      );
+      const requests = Array(3)
+        .fill(null)
+        .map(() =>
+          (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' })
+        );
 
       const responses = await Promise.all(requests);
 
@@ -190,37 +214,50 @@ describe('MCP Server - getProjectVersions Integration Tests', () => {
       responses.forEach((response: any) => {
         expect(response.content).toBeDefined();
         expect(response.content[0].type).toBe('text');
-        
+
         const versions = JSON.parse(response.content[0].text);
         expect(Array.isArray(versions)).toBe(true);
       });
 
       console.log('\n=== Concurrent Request Test ===');
-      console.log(`✓ Successfully handled ${responses.length} concurrent MCP requests`);
+      console.log(
+        `✓ Successfully handled ${responses.length} concurrent MCP requests`
+      );
     }, 45000);
   });
 
   describe('Model validation against real data through MCP', () => {
     it('should validate JiraVersion interface matches MCP response data', async () => {
       // Act - Test the handler directly
-      const response = await (mcpServer as any).handleGetProjectVersions({ projectKey: 'DSCWA' });
+      const response = await (mcpServer as any).handleGetProjectVersions({
+        projectKey: 'DSCWA',
+      });
       const versions = JSON.parse(response.content[0].text);
 
       if (versions.length > 0) {
         console.log('\n=== Model Validation via MCP ===');
         const sampleVersion = versions[0];
-        
+
         console.log('Sample version from MCP response:');
         console.log(JSON.stringify(sampleVersion, null, 2));
 
         // Test interface compliance via MCP
         const interfaceFields = [
-          'self', 'id', 'name', 'archived', 'released', 'projectId'
+          'self',
+          'id',
+          'name',
+          'archived',
+          'released',
+          'projectId',
         ];
-        
+
         const optionalFields = [
-          'description', 'startDate', 'releaseDate', 'overdue', 
-          'userStartDate', 'userReleaseDate'
+          'description',
+          'startDate',
+          'releaseDate',
+          'overdue',
+          'userStartDate',
+          'userReleaseDate',
         ];
 
         // Required fields must be present

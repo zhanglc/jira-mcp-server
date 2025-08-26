@@ -1,10 +1,10 @@
 /**
  * User Tools Module
- * 
+ *
  * This module contains MCP tool definitions for User-related Jira operations.
  * Extracted from the main jira-mcp-server.ts to improve code organization
  * and maintainability.
- * 
+ *
  * Tools provided:
  * - getCurrentUser: Get information about the currently authenticated user
  * - getUserProfile: Get detailed profile information for a specific user
@@ -21,12 +21,13 @@
 export function getCurrentUserToolDefinition() {
   return {
     name: 'getCurrentUser',
-    description: 'Get information about the currently authenticated user for authentication verification',
+    description:
+      'Get information about the currently authenticated user for authentication verification',
     inputSchema: {
       type: 'object',
       properties: {},
-      additionalProperties: false
-    }
+      additionalProperties: false,
+    },
   };
 }
 
@@ -41,17 +42,19 @@ export function getCurrentUserToolDefinition() {
 export function getUserProfileToolDefinition() {
   return {
     name: 'getUserProfile',
-    description: 'Get detailed profile information for a specific Jira user by username or email address',
+    description:
+      'Get detailed profile information for a specific Jira user by username or email address',
     inputSchema: {
       type: 'object',
       properties: {
         username: {
           type: 'string',
-          description: 'The username or email address of the user (e.g., JIRAUSER23511, user@domain.com)'
-        }
+          description:
+            'The username or email address of the user (e.g., JIRAUSER23511, user@domain.com)',
+        },
       },
-      required: ['username']
-    }
+      required: ['username'],
+    },
   };
 }
 
@@ -64,8 +67,5 @@ export function getUserProfileToolDefinition() {
  * @returns Array of all User-related MCP tool definitions
  */
 export function getUserTools() {
-  return [
-    getCurrentUserToolDefinition(),
-    getUserProfileToolDefinition()
-  ];
+  return [getCurrentUserToolDefinition(), getUserProfileToolDefinition()];
 }

@@ -2,10 +2,10 @@ import { ToolHandler } from './handlers/tool-handler.js';
 
 /**
  * Backward Compatibility Layer for MCP Server
- * 
+ *
  * This class provides backward compatibility methods for tests and legacy code.
  * These methods delegate to the ToolHandler for consistent behavior.
- * 
+ *
  * @deprecated Use ToolHandler.handleTool() directly for new code
  */
 export class BackwardCompatibilityLayer {

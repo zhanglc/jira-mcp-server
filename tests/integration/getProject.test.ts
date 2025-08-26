@@ -20,7 +20,9 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
       expect(project.id).toBe('16305');
       expect(project.key).toBe('DSCWA');
       expect(project.name).toBe('Intent Based System'); // Updated to match actual data
-      expect(project.self).toBe('https://jira.dentsplysirona.com/rest/api/2/project/16305');
+      expect(project.self).toBe(
+        'https://jira.dentsplysirona.com/rest/api/2/project/16305'
+      );
       expect(project.projectTypeKey).toBeDefined();
       expect(typeof project.projectTypeKey).toBe('string');
 
@@ -52,14 +54,16 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
         componentsCount: project.components?.length || 0,
         versionsCount: project.versions?.length || 0,
         rolesCount: Object.keys(project.roles || {}).length,
-        issueTypesCount: project.issueTypes?.length || 0
+        issueTypesCount: project.issueTypes?.length || 0,
       });
     }, 30000);
 
     it('should handle project not found error for non-existent project', async () => {
       // Act & Assert
-      await expect(wrapper.getProject('NONEXISTENT_PROJECT_KEY_12345')).rejects.toThrow(ApiError);
-      
+      await expect(
+        wrapper.getProject('NONEXISTENT_PROJECT_KEY_12345')
+      ).rejects.toThrow(ApiError);
+
       try {
         await wrapper.getProject('NONEXISTENT_PROJECT_KEY_12345');
         fail('Expected error to be thrown');
@@ -84,7 +88,7 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
       expect(singleProject.name).toBe(dscwaFromList!.name);
       expect(singleProject.self).toBe(dscwaFromList!.self);
       expect(singleProject.projectTypeKey).toBe(dscwaFromList!.projectTypeKey);
-      
+
       // getProject might have more detailed information
       // but basic fields should match exactly
       console.log('Consistency Check:', {
@@ -93,7 +97,7 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
         'getProject.components': singleProject.components?.length || 0,
         'getAllProjects.components': dscwaFromList!.components?.length || 0,
         'getProject.versions': singleProject.versions?.length || 0,
-        'getAllProjects.versions': dscwaFromList!.versions?.length || 0
+        'getAllProjects.versions': dscwaFromList!.versions?.length || 0,
       });
     }, 30000);
 
@@ -112,7 +116,7 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
       if (project.description !== undefined) {
         expect(typeof project.description).toBe('string');
       }
-      
+
       if (project.archived !== undefined) {
         expect(typeof project.archived).toBe('boolean');
       }
@@ -169,7 +173,13 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
       }
 
       console.log('Interface Validation Complete:', {
-        allRequiredFieldsPresent: !!(project.id && project.key && project.name && project.self && project.projectTypeKey),
+        allRequiredFieldsPresent: !!(
+          project.id &&
+          project.key &&
+          project.name &&
+          project.self &&
+          project.projectTypeKey
+        ),
         optionalFieldsPresent: {
           description: !!project.description,
           lead: !!project.lead,
@@ -179,8 +189,8 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
           components: !!project.components,
           versions: !!project.versions,
           roles: !!project.roles,
-          issueTypes: !!project.issueTypes
-        }
+          issueTypes: !!project.issueTypes,
+        },
       });
     }, 15000);
 
@@ -211,7 +221,7 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
           hasIssueTypes: !!project.issueTypes,
           issueTypesCount: project.issueTypes?.length || 0,
           hasProjectCategory: !!project.projectCategory,
-          hasLead: !!project.lead
+          hasLead: !!project.lead,
         },
         getAllProjects: {
           hasComponents: !!projectFromList!.components,
@@ -223,8 +233,8 @@ describe('JiraClientWrapper.getProject - Integration Tests', () => {
           hasIssueTypes: !!projectFromList!.issueTypes,
           issueTypesCount: projectFromList!.issueTypes?.length || 0,
           hasProjectCategory: !!projectFromList!.projectCategory,
-          hasLead: !!projectFromList!.lead
-        }
+          hasLead: !!projectFromList!.lead,
+        },
       });
     }, 30000);
 

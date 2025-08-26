@@ -1,6 +1,6 @@
 /**
  * Agile Tools Module Tests
- * 
+ *
  * Verifies the agile tools module exports correct tool definitions
  * for Jira Agile functionality including boards and sprints.
  */
@@ -11,7 +11,7 @@ import {
   getSprintsFromBoardToolDefinition,
   getSprintIssuesToolDefinition,
   getSprintToolDefinition,
-  getAgileTools
+  getAgileTools,
 } from '../../../src/server/tools/agile-tools.js';
 
 describe('Agile Tools Module', () => {
@@ -44,21 +44,23 @@ describe('Agile Tools Module', () => {
   describe('getAgileBoardsToolDefinition', () => {
     it('should return valid tool definition', () => {
       const tool = getAgileBoardsToolDefinition();
-      
+
       expect(tool.name).toBe('getAgileBoards');
       expect(tool.description).toContain('agile boards');
       expect(tool.inputSchema).toBeDefined();
       expect(tool.inputSchema.type).toBe('object');
       expect(tool.inputSchema.properties).toBeDefined();
       expect((tool.inputSchema.properties as any).projectKey).toBeDefined();
-      expect((tool.inputSchema.properties as any).projectKey.type).toBe('string');
+      expect((tool.inputSchema.properties as any).projectKey.type).toBe(
+        'string'
+      );
     });
   });
 
   describe('getBoardIssuesToolDefinition', () => {
     it('should return valid tool definition', () => {
       const tool = getBoardIssuesToolDefinition();
-      
+
       expect(tool.name).toBe('getBoardIssues');
       expect(tool.description).toContain('issues from a specific agile board');
       expect(tool.inputSchema).toBeDefined();
@@ -71,11 +73,13 @@ describe('Agile Tools Module', () => {
 
     it('should have optional pagination and fields parameters', () => {
       const tool = getBoardIssuesToolDefinition();
-      
+
       expect((tool.inputSchema.properties as any).startAt).toBeDefined();
       expect((tool.inputSchema.properties as any).startAt.type).toBe('number');
       expect((tool.inputSchema.properties as any).maxResults).toBeDefined();
-      expect((tool.inputSchema.properties as any).maxResults.type).toBe('number');
+      expect((tool.inputSchema.properties as any).maxResults.type).toBe(
+        'number'
+      );
       expect((tool.inputSchema.properties as any).fields).toBeDefined();
       expect((tool.inputSchema.properties as any).fields.type).toBe('array');
     });
@@ -84,7 +88,7 @@ describe('Agile Tools Module', () => {
   describe('getSprintsFromBoardToolDefinition', () => {
     it('should return valid tool definition', () => {
       const tool = getSprintsFromBoardToolDefinition();
-      
+
       expect(tool.name).toBe('getSprintsFromBoard');
       expect(tool.description).toContain('sprints from a specific agile board');
       expect(tool.inputSchema).toBeDefined();
@@ -99,7 +103,7 @@ describe('Agile Tools Module', () => {
   describe('getSprintIssuesToolDefinition', () => {
     it('should return valid tool definition', () => {
       const tool = getSprintIssuesToolDefinition();
-      
+
       expect(tool.name).toBe('getSprintIssues');
       expect(tool.description).toContain('issues from a specific sprint');
       expect(tool.inputSchema).toBeDefined();
@@ -112,11 +116,13 @@ describe('Agile Tools Module', () => {
 
     it('should have optional pagination and fields parameters', () => {
       const tool = getSprintIssuesToolDefinition();
-      
+
       expect((tool.inputSchema.properties as any).startAt).toBeDefined();
       expect((tool.inputSchema.properties as any).startAt.type).toBe('number');
       expect((tool.inputSchema.properties as any).maxResults).toBeDefined();
-      expect((tool.inputSchema.properties as any).maxResults.type).toBe('number');
+      expect((tool.inputSchema.properties as any).maxResults.type).toBe(
+        'number'
+      );
       expect((tool.inputSchema.properties as any).fields).toBeDefined();
       expect((tool.inputSchema.properties as any).fields.type).toBe('array');
     });
@@ -125,9 +131,11 @@ describe('Agile Tools Module', () => {
   describe('getSprintToolDefinition', () => {
     it('should return valid tool definition', () => {
       const tool = getSprintToolDefinition();
-      
+
       expect(tool.name).toBe('getSprint');
-      expect(tool.description).toContain('detailed information for a specific sprint');
+      expect(tool.description).toContain(
+        'detailed information for a specific sprint'
+      );
       expect(tool.inputSchema).toBeDefined();
       expect(tool.inputSchema.type).toBe('object');
       expect(tool.inputSchema.properties).toBeDefined();
@@ -140,7 +148,7 @@ describe('Agile Tools Module', () => {
   describe('getAgileTools', () => {
     it('should return array of all agile tools', () => {
       const tools = getAgileTools();
-      
+
       expect(Array.isArray(tools)).toBe(true);
       expect(tools).toHaveLength(5);
     });
@@ -152,15 +160,15 @@ describe('Agile Tools Module', () => {
         'getBoardIssues',
         'getSprintsFromBoard',
         'getSprintIssues',
-        'getSprint'
+        'getSprint',
       ];
-      
+
       expect(tools.map(tool => tool.name)).toEqual(expectedNames);
     });
 
     it('should return tools with valid structure', () => {
       const tools = getAgileTools();
-      
+
       tools.forEach(tool => {
         expect(tool).toHaveProperty('name');
         expect(tool).toHaveProperty('description');

@@ -11,8 +11,8 @@ const MockedJiraClient = JiraClient as jest.MockedClass<typeof JiraClient>;
 jest.mock('../../src/utils/logger.js', () => ({
   logger: {
     log: jest.fn(),
-    error: jest.fn()
-  }
+    error: jest.fn(),
+  },
 }));
 
 describe('JiraClientWrapper.getProjectVersions', () => {
@@ -21,17 +21,17 @@ describe('JiraClientWrapper.getProjectVersions', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockJiraClient = {
       getVersions: jest.fn(),
     } as any;
-    
+
     MockedJiraClient.mockImplementation(() => mockJiraClient);
-    
+
     jiraWrapper = new JiraClientWrapper({
       url: 'https://test.jira.com',
       username: 'test@example.com',
-      password: 'test-password'
+      password: 'test-password',
     });
   });
 
@@ -52,7 +52,7 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           overdue: false,
           userStartDate: '01/Jan/23',
           userReleaseDate: '31/Jan/23',
-          projectId: 10001
+          projectId: 10001,
         },
         {
           self: 'https://jira.example.com/rest/api/2/version/10001',
@@ -66,8 +66,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           overdue: true,
           userStartDate: '01/Feb/23',
           userReleaseDate: '28/Feb/23',
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -104,8 +104,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           name: 'Minimal Version',
           archived: false,
           released: false,
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -121,7 +121,7 @@ describe('JiraClientWrapper.getProjectVersions', () => {
         name: expect.any(String),
         archived: expect.any(Boolean),
         released: expect.any(Boolean),
-        projectId: expect.any(Number)
+        projectId: expect.any(Number),
       });
     });
 
@@ -141,8 +141,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           overdue: false,
           userStartDate: '01/Jan/23',
           userReleaseDate: '31/Jan/23',
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -158,7 +158,7 @@ describe('JiraClientWrapper.getProjectVersions', () => {
         releaseDate: '2023-01-31',
         overdue: false,
         userStartDate: '01/Jan/23',
-        userReleaseDate: '31/Jan/23'
+        userReleaseDate: '31/Jan/23',
       });
     });
   });
@@ -167,32 +167,36 @@ describe('JiraClientWrapper.getProjectVersions', () => {
     it('should throw ApiError when project does not exist', async () => {
       // Arrange
       const projectKey = 'NONEXISTENT';
-      const jiraError = new Error('Project does not exist or you do not have permission to view it.');
+      const jiraError = new Error(
+        'Project does not exist or you do not have permission to view it.'
+      );
       (jiraError as any).statusCode = 404;
-      
+
       mockJiraClient.getVersions.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getProjectVersions(projectKey))
-        .rejects
-        .toThrow(ApiError);
-      
+      await expect(jiraWrapper.getProjectVersions(projectKey)).rejects.toThrow(
+        ApiError
+      );
+
       expect(mockJiraClient.getVersions).toHaveBeenCalledWith(projectKey);
     });
 
     it('should throw ApiError when access is denied', async () => {
       // Arrange
       const projectKey = 'FORBIDDEN';
-      const jiraError = new Error('You do not have permission to access this project.');
+      const jiraError = new Error(
+        'You do not have permission to access this project.'
+      );
       (jiraError as any).statusCode = 403;
-      
+
       mockJiraClient.getVersions.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getProjectVersions(projectKey))
-        .rejects
-        .toThrow(ApiError);
-      
+      await expect(jiraWrapper.getProjectVersions(projectKey)).rejects.toThrow(
+        ApiError
+      );
+
       expect(mockJiraClient.getVersions).toHaveBeenCalledWith(projectKey);
     });
 
@@ -201,14 +205,14 @@ describe('JiraClientWrapper.getProjectVersions', () => {
       const projectKey = 'INVALID-KEY-FORMAT';
       const jiraError = new Error('Invalid project key format.');
       (jiraError as any).statusCode = 400;
-      
+
       mockJiraClient.getVersions.mockRejectedValue(jiraError);
 
       // Act & Assert
-      await expect(jiraWrapper.getProjectVersions(projectKey))
-        .rejects
-        .toThrow(ApiError);
-      
+      await expect(jiraWrapper.getProjectVersions(projectKey)).rejects.toThrow(
+        ApiError
+      );
+
       expect(mockJiraClient.getVersions).toHaveBeenCalledWith(projectKey);
     });
 
@@ -243,14 +247,14 @@ describe('JiraClientWrapper.getProjectVersions', () => {
       const projectKey = 'NETWORK_ERROR';
       const networkError = new Error('Network timeout');
       (networkError as any).code = 'ETIMEDOUT';
-      
+
       mockJiraClient.getVersions.mockRejectedValue(networkError);
 
       // Act & Assert
-      await expect(jiraWrapper.getProjectVersions(projectKey))
-        .rejects
-        .toThrow(ApiError);
-      
+      await expect(jiraWrapper.getProjectVersions(projectKey)).rejects.toThrow(
+        ApiError
+      );
+
       expect(mockJiraClient.getVersions).toHaveBeenCalledWith(projectKey);
     });
   });
@@ -266,8 +270,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           name: 'Released Version',
           archived: false,
           released: true,
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -290,8 +294,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           name: 'Archived Version',
           archived: true,
           released: true,
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -315,8 +319,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           archived: false,
           released: false,
           overdue: true,
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -345,8 +349,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           releaseDate: '2023-12-31',
           userStartDate: '01/Jan/23',
           userReleaseDate: '31/Dec/23',
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);
@@ -371,8 +375,8 @@ describe('JiraClientWrapper.getProjectVersions', () => {
           name: 'No Dates Version',
           archived: false,
           released: false,
-          projectId: 10001
-        }
+          projectId: 10001,
+        },
       ];
 
       mockJiraClient.getVersions.mockResolvedValue(mockVersions);

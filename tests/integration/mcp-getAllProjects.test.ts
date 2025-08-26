@@ -8,7 +8,9 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
   beforeAll(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      console.log('Skipping MCP Server integration tests - JIRA_PERSONAL_TOKEN not set');
+      console.log(
+        'Skipping MCP Server integration tests - JIRA_PERSONAL_TOKEN not set'
+      );
       return;
     }
 
@@ -18,7 +20,9 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
   beforeEach(() => {
     const token = process.env.JIRA_PERSONAL_TOKEN;
     if (!token) {
-      pending('JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test');
+      pending(
+        'JIRA_PERSONAL_TOKEN not set - skipping MCP Server integration test'
+      );
     }
   });
 
@@ -52,7 +56,9 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
 
     it('should handle getAllProjects tool call with includeArchived=false', async () => {
       // Act - Test the handler directly
-      const response = await (mcpServer as any).handleGetAllProjects({ includeArchived: false });
+      const response = await (mcpServer as any).handleGetAllProjects({
+        includeArchived: false,
+      });
 
       // Assert
       expect(response).toBeDefined();
@@ -64,15 +70,21 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
       expect(Array.isArray(projects)).toBe(true);
 
       // Check that no archived projects are included
-      const archivedProjects = projects.filter((project: any) => project.archived === true);
+      const archivedProjects = projects.filter(
+        (project: any) => project.archived === true
+      );
       expect(archivedProjects.length).toBe(0);
 
-      console.log(`MCP Server returned ${projects.length} non-archived projects`);
+      console.log(
+        `MCP Server returned ${projects.length} non-archived projects`
+      );
     }, 30000);
 
     it('should handle getAllProjects tool call with includeArchived=true', async () => {
       // Act - Test the handler directly
-      const response = await (mcpServer as any).handleGetAllProjects({ includeArchived: true });
+      const response = await (mcpServer as any).handleGetAllProjects({
+        includeArchived: true,
+      });
 
       // Assert
       expect(response).toBeDefined();
@@ -84,12 +96,16 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
       expect(Array.isArray(projects)).toBe(true);
       expect(projects.length).toBeGreaterThan(0);
 
-      console.log(`MCP Server returned ${projects.length} projects (including archived)`);
+      console.log(
+        `MCP Server returned ${projects.length} projects (including archived)`
+      );
     }, 30000);
 
     it('should validate includeArchived parameter type', async () => {
       // Act & Assert - Test the handler directly with invalid parameter
-      await expect((mcpServer as any).handleGetAllProjects({ includeArchived: 'invalid' })).rejects.toThrow();
+      await expect(
+        (mcpServer as any).handleGetAllProjects({ includeArchived: 'invalid' })
+      ).rejects.toThrow();
     }, 10000);
 
     it('should find DSCWA project in MCP Server response', async () => {
@@ -98,9 +114,11 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
 
       // Parse the JSON response
       const projects = JSON.parse(response.content[0].text);
-      
+
       // Assert
-      const dscwaProject = projects.find((project: any) => project.key === 'DSCWA');
+      const dscwaProject = projects.find(
+        (project: any) => project.key === 'DSCWA'
+      );
       expect(dscwaProject).toBeDefined();
       expect(dscwaProject.name).toBeDefined();
       expect(dscwaProject.id).toBeDefined();
@@ -108,7 +126,7 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
       console.log('Found DSCWA project via MCP Server:', {
         id: dscwaProject.id,
         key: dscwaProject.key,
-        name: dscwaProject.name
+        name: dscwaProject.name,
       });
     }, 30000);
   });
@@ -119,7 +137,7 @@ describe('MCP Server - getAllProjects Integration Tests', () => {
       // We can test this by checking if the handler function exists
       expect((mcpServer as any).handleGetAllProjects).toBeDefined();
       expect(typeof (mcpServer as any).handleGetAllProjects).toBe('function');
-      
+
       console.log('getAllProjects handler successfully defined in MCP Server');
     });
   });

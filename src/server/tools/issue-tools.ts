@@ -1,6 +1,6 @@
 /**
  * Issue Tools Module
- * 
+ *
  * This module contains MCP tool definitions for Jira Issue-related operations.
  * Extracted from jira-mcp-server.ts to improve code organization and maintainability.
  */
@@ -29,16 +29,30 @@ export function getIssueToolDefinition(): Tool {
       properties: {
         issueKey: {
           type: 'string',
-          description: 'The issue key or ID (e.g., PROJ-123)'
+          description: 'The issue key or ID (e.g., PROJ-123)',
         },
         fields: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Optional array of field names to retrieve'
-        }
+          description: `Field selection with nested access support and resource guidance.
+
+📋 Complete field reference: jira://issue/fields
+
+🔥 Enhanced capabilities:
+• System fields: Full nested structure support (status.statusCategory.key)
+• Custom fields: Pattern matching with validation
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["summary", "status.name", "assignee.displayName"]
+• Custom: ["customfield_10001", "customfield_10002.value"]
+• Mixed: ["summary", "status.statusCategory.key", "project.name", "customfield_10101"]
+
+Note: Invalid fields are filtered with suggestions provided.`,
+        },
       },
-      required: ['issueKey']
-    }
+      required: ['issueKey'],
+    },
   };
 }
 
@@ -55,11 +69,11 @@ export function getIssueTransitionsToolDefinition(): Tool {
       properties: {
         issueKey: {
           type: 'string',
-          description: 'The issue key or ID (e.g., PROJ-123)'
-        }
+          description: 'The issue key or ID (e.g., PROJ-123)',
+        },
       },
-      required: ['issueKey']
-    }
+      required: ['issueKey'],
+    },
   };
 }
 
@@ -76,24 +90,39 @@ export function searchIssuesToolDefinition(): Tool {
       properties: {
         jql: {
           type: 'string',
-          description: 'The JQL query string (e.g., "project = PROJ AND status = Open")'
+          description:
+            'The JQL query string (e.g., "project = PROJ AND status = Open")',
         },
         startAt: {
           type: 'number',
-          description: 'Starting index for pagination (default: 0)'
+          description: 'Starting index for pagination (default: 0)',
         },
         maxResults: {
           type: 'number',
-          description: 'Maximum number of results to return (default: 50)'
+          description: 'Maximum number of results to return (default: 50)',
         },
         fields: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Optional array of field names to retrieve'
-        }
+          description: `Field selection with nested access support and resource guidance.
+
+📋 Complete field reference: jira://issue/fields
+
+🔥 Enhanced capabilities:
+• System fields: Full nested structure support (status.statusCategory.key)
+• Custom fields: Pattern matching with validation
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["summary", "status.name", "assignee.displayName"]
+• Custom: ["customfield_10001", "customfield_10002.value"]
+• Mixed: ["summary", "status.statusCategory.key", "project.name", "customfield_10101"]
+
+Note: Invalid fields are filtered with suggestions provided.`,
+        },
       },
-      required: ['jql']
-    }
+      required: ['jql'],
+    },
   };
 }
 
@@ -104,17 +133,18 @@ export function searchIssuesToolDefinition(): Tool {
 export function getIssueWorklogsToolDefinition(): Tool {
   return {
     name: 'getIssueWorklogs',
-    description: 'Get work log entries for a Jira issue, including time tracking and work history',
+    description:
+      'Get work log entries for a Jira issue, including time tracking and work history',
     inputSchema: {
       type: 'object',
       properties: {
         issueKey: {
           type: 'string',
-          description: 'The issue key or ID (e.g., PROJ-123)'
-        }
+          description: 'The issue key or ID (e.g., PROJ-123)',
+        },
       },
-      required: ['issueKey']
-    }
+      required: ['issueKey'],
+    },
   };
 }
 
@@ -125,17 +155,18 @@ export function getIssueWorklogsToolDefinition(): Tool {
 export function downloadAttachmentsToolDefinition(): Tool {
   return {
     name: 'downloadAttachments',
-    description: 'Download attachment metadata for a Jira issue. Returns information about all attachments including file metadata, download URLs, and author details. Does not download actual files.',
+    description:
+      'Download attachment metadata for a Jira issue. Returns information about all attachments including file metadata, download URLs, and author details. Does not download actual files.',
     inputSchema: {
       type: 'object',
       properties: {
         issueKey: {
           type: 'string',
-          description: 'The issue key or ID (e.g., PROJ-123)'
-        }
+          description: 'The issue key or ID (e.g., PROJ-123)',
+        },
       },
-      required: ['issueKey']
-    }
+      required: ['issueKey'],
+    },
   };
 }
 
@@ -149,6 +180,6 @@ export function getIssueTools(): Tool[] {
     getIssueTransitionsToolDefinition(),
     searchIssuesToolDefinition(),
     getIssueWorklogsToolDefinition(),
-    downloadAttachmentsToolDefinition()
+    downloadAttachmentsToolDefinition(),
   ];
 }

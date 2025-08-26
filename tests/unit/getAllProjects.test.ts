@@ -7,7 +7,7 @@ import { ApiError } from '../../src/types/api-error.js';
 jest.mock('jira-client');
 
 const mockJiraClient = {
-  listProjects: jest.fn()
+  listProjects: jest.fn(),
 };
 
 // Mock the jira-client module
@@ -22,7 +22,7 @@ describe('JiraClientWrapper.getAllProjects', () => {
   beforeEach(() => {
     config = {
       url: 'https://jira.dentsplysirona.com',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
     wrapper = new JiraClientWrapper(config);
     jest.clearAllMocks();
@@ -49,12 +49,16 @@ describe('JiraClientWrapper.getAllProjects', () => {
             active: true,
             timeZone: 'America/New_York',
             avatarUrls: {
-              '16x16': 'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=john.doe',
-              '24x24': 'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=john.doe',
-              '32x32': 'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=john.doe',
-              '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=john.doe'
-            }
-          }
+              '16x16':
+                'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=john.doe',
+              '24x24':
+                'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=john.doe',
+              '32x32':
+                'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=john.doe',
+              '48x48':
+                'https://jira.dentsplysirona.com/secure/useravatar?ownerId=john.doe',
+            },
+          },
         },
         {
           id: '10001',
@@ -73,13 +77,17 @@ describe('JiraClientWrapper.getAllProjects', () => {
             active: true,
             timeZone: 'America/New_York',
             avatarUrls: {
-              '16x16': 'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=jane.smith',
-              '24x24': 'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=jane.smith',
-              '32x32': 'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=jane.smith',
-              '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=jane.smith'
-            }
-          }
-        }
+              '16x16':
+                'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=jane.smith',
+              '24x24':
+                'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=jane.smith',
+              '32x32':
+                'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=jane.smith',
+              '48x48':
+                'https://jira.dentsplysirona.com/secure/useravatar?ownerId=jane.smith',
+            },
+          },
+        },
       ];
 
       mockJiraClient.listProjects.mockResolvedValue(mockProjects);
@@ -104,7 +112,7 @@ describe('JiraClientWrapper.getAllProjects', () => {
           name: 'DS Core Web App',
           self: 'https://jira.dentsplysirona.com/rest/api/2/project/10000',
           projectTypeKey: 'software',
-          archived: false
+          archived: false,
         },
         {
           id: '10001',
@@ -112,8 +120,8 @@ describe('JiraClientWrapper.getAllProjects', () => {
           name: 'Archived Project',
           self: 'https://jira.dentsplysirona.com/rest/api/2/project/10001',
           projectTypeKey: 'business',
-          archived: true
-        }
+          archived: true,
+        },
       ];
 
       mockJiraClient.listProjects.mockResolvedValue(mockProjects);
@@ -137,7 +145,7 @@ describe('JiraClientWrapper.getAllProjects', () => {
           name: 'DS Core Web App',
           self: 'https://jira.dentsplysirona.com/rest/api/2/project/10000',
           projectTypeKey: 'software',
-          archived: false
+          archived: false,
         },
         {
           id: '10001',
@@ -145,8 +153,8 @@ describe('JiraClientWrapper.getAllProjects', () => {
           name: 'Archived Project',
           self: 'https://jira.dentsplysirona.com/rest/api/2/project/10001',
           projectTypeKey: 'business',
-          archived: true
-        }
+          archived: true,
+        },
       ];
 
       mockJiraClient.listProjects.mockResolvedValue(mockProjects);
@@ -230,8 +238,8 @@ describe('JiraClientWrapper.getAllProjects', () => {
           key: 'DSCWA',
           name: 'DS Core Web App',
           self: 'https://jira.dentsplysirona.com/rest/api/2/project/10000',
-          projectTypeKey: 'software'
-        }
+          projectTypeKey: 'software',
+        },
       ];
 
       mockJiraClient.listProjects.mockResolvedValue(mockProjects);

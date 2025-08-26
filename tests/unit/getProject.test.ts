@@ -7,7 +7,7 @@ import { ApiError } from '../../src/types/api-error.js';
 jest.mock('jira-client');
 
 const mockJiraClient = {
-  getProject: jest.fn()
+  getProject: jest.fn(),
 };
 
 // Mock the jira-client module
@@ -22,7 +22,7 @@ describe('JiraClientWrapper.getProject', () => {
   beforeEach(() => {
     config = {
       url: 'https://jira.dentsplysirona.com',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
     wrapper = new JiraClientWrapper(config);
     jest.clearAllMocks();
@@ -48,34 +48,42 @@ describe('JiraClientWrapper.getProject', () => {
           active: true,
           timeZone: 'America/New_York',
           avatarUrls: {
-            '16x16': 'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=john.doe',
-            '24x24': 'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=john.doe',
-            '32x32': 'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=john.doe',
-            '48x48': 'https://jira.dentsplysirona.com/secure/useravatar?ownerId=john.doe'
-          }
+            '16x16':
+              'https://jira.dentsplysirona.com/secure/useravatar?size=xsmall&ownerId=john.doe',
+            '24x24':
+              'https://jira.dentsplysirona.com/secure/useravatar?size=small&ownerId=john.doe',
+            '32x32':
+              'https://jira.dentsplysirona.com/secure/useravatar?size=medium&ownerId=john.doe',
+            '48x48':
+              'https://jira.dentsplysirona.com/secure/useravatar?ownerId=john.doe',
+          },
         },
         avatarUrls: {
-          '16x16': 'https://jira.dentsplysirona.com/secure/projectavatar?size=xsmall&pid=16305',
-          '24x24': 'https://jira.dentsplysirona.com/secure/projectavatar?size=small&pid=16305',
-          '32x32': 'https://jira.dentsplysirona.com/secure/projectavatar?size=medium&pid=16305',
-          '48x48': 'https://jira.dentsplysirona.com/secure/projectavatar?pid=16305'
+          '16x16':
+            'https://jira.dentsplysirona.com/secure/projectavatar?size=xsmall&pid=16305',
+          '24x24':
+            'https://jira.dentsplysirona.com/secure/projectavatar?size=small&pid=16305',
+          '32x32':
+            'https://jira.dentsplysirona.com/secure/projectavatar?size=medium&pid=16305',
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/projectavatar?pid=16305',
         },
         projectCategory: {
           id: '10100',
           name: 'Web Applications',
-          description: 'Web application projects'
+          description: 'Web application projects',
         },
         components: [
           {
             id: '10000',
             name: 'Frontend',
-            description: 'Frontend components'
+            description: 'Frontend components',
           },
           {
             id: '10001',
             name: 'Backend',
-            description: 'Backend API components'
-          }
+            description: 'Backend API components',
+          },
         ],
         versions: [
           {
@@ -84,44 +92,51 @@ describe('JiraClientWrapper.getProject', () => {
             description: 'Initial release',
             archived: false,
             released: true,
-            releaseDate: '2024-01-15'
+            releaseDate: '2024-01-15',
           },
           {
             id: '10201',
             name: 'v1.1.0',
             description: 'Feature update',
             archived: false,
-            released: false
-          }
+            released: false,
+          },
         ],
         roles: {
-          'Administrators': 'https://jira.dentsplysirona.com/rest/api/2/project/16305/role/10002',
-          'Developers': 'https://jira.dentsplysirona.com/rest/api/2/project/16305/role/10001',
-          'Users': 'https://jira.dentsplysirona.com/rest/api/2/project/16305/role/10000'
+          Administrators:
+            'https://jira.dentsplysirona.com/rest/api/2/project/16305/role/10002',
+          Developers:
+            'https://jira.dentsplysirona.com/rest/api/2/project/16305/role/10001',
+          Users:
+            'https://jira.dentsplysirona.com/rest/api/2/project/16305/role/10000',
         },
         issueTypes: [
           {
             id: '10000',
             name: 'Bug',
-            description: 'A problem which impairs or prevents the functions of the product',
-            iconUrl: 'https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype',
-            subtask: false
+            description:
+              'A problem which impairs or prevents the functions of the product',
+            iconUrl:
+              'https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype',
+            subtask: false,
           },
           {
             id: '10001',
             name: 'Story',
             description: 'A user story',
-            iconUrl: 'https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype',
-            subtask: false
+            iconUrl:
+              'https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype',
+            subtask: false,
           },
           {
             id: '10002',
             name: 'Task',
             description: 'A task that needs to be done',
-            iconUrl: 'https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype',
-            subtask: false
-          }
-        ]
+            iconUrl:
+              'https://jira.dentsplysirona.com/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype',
+            subtask: false,
+          },
+        ],
       };
 
       mockJiraClient.getProject.mockResolvedValue(mockProject);
@@ -146,7 +161,7 @@ describe('JiraClientWrapper.getProject', () => {
         key: 'DSCWA',
         name: 'DS Core Web App',
         self: 'https://jira.dentsplysirona.com/rest/api/2/project/16305',
-        projectTypeKey: 'software'
+        projectTypeKey: 'software',
       };
 
       mockJiraClient.getProject.mockResolvedValue(mockProject);
@@ -171,7 +186,7 @@ describe('JiraClientWrapper.getProject', () => {
         key: 'TEST-PROJ',
         name: 'Test Project with Dash',
         self: 'https://jira.dentsplysirona.com/rest/api/2/project/12345',
-        projectTypeKey: 'business'
+        projectTypeKey: 'business',
       };
 
       mockJiraClient.getProject.mockResolvedValue(mockProject);
@@ -192,7 +207,7 @@ describe('JiraClientWrapper.getProject', () => {
         key: 'TEST SPACE',
         name: 'Test Project with Space',
         self: 'https://jira.dentsplysirona.com/rest/api/2/project/54321',
-        projectTypeKey: 'service_desk'
+        projectTypeKey: 'service_desk',
       };
 
       mockJiraClient.getProject.mockResolvedValue(mockProject);
@@ -277,7 +292,7 @@ describe('JiraClientWrapper.getProject', () => {
         self: 'https://jira.dentsplysirona.com/rest/api/2/project/16305',
         projectTypeKey: 'software',
         description: 'Project description',
-        archived: false
+        archived: false,
       };
 
       mockJiraClient.getProject.mockResolvedValue(mockProject);
@@ -327,19 +342,20 @@ describe('JiraClientWrapper.getProject', () => {
           emailAddress: 'lead.user@dentsplysirona.com',
           active: true,
           timeZone: 'America/New_York',
-          avatarUrls: {}
+          avatarUrls: {},
         },
         avatarUrls: {
-          '48x48': 'https://jira.dentsplysirona.com/secure/projectavatar?pid=16305'
+          '48x48':
+            'https://jira.dentsplysirona.com/secure/projectavatar?pid=16305',
         },
         projectCategory: {
           id: '10100',
-          name: 'Web Applications'
+          name: 'Web Applications',
         },
         components: [],
         versions: [],
         roles: {},
-        issueTypes: []
+        issueTypes: [],
       };
 
       mockJiraClient.getProject.mockResolvedValue(mockProject);

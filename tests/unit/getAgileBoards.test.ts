@@ -9,7 +9,7 @@ const mockGetAllBoards = jest.fn();
 jest.mock('jira-client', () => {
   return jest.fn().mockImplementation(() => ({
     doRequest: mockDoRequest,
-    getAllBoards: mockGetAllBoards
+    getAllBoards: mockGetAllBoards,
   }));
 });
 
@@ -20,13 +20,13 @@ describe('JiraClientWrapper.getAgileBoards', () => {
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();
-    
+
     // Setup mock config
     mockConfig = {
       url: 'https://test.atlassian.net',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
-    
+
     wrapper = new JiraClientWrapper(mockConfig);
   });
 
@@ -43,7 +43,7 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             id: 1,
             self: 'https://test.atlassian.net/rest/agile/1.0/board/1',
             name: 'Test Board 1',
-            type: 'scrum'
+            type: 'scrum',
           },
           {
             id: 2,
@@ -55,8 +55,8 @@ describe('JiraClientWrapper.getAgileBoards', () => {
               projectKey: 'TEST',
               projectId: 10001,
               projectName: 'Test Project',
-              projectTypeKey: 'software'
-            }
+              projectTypeKey: 'software',
+            },
           },
           {
             id: 3,
@@ -65,15 +65,15 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             type: 'scrum',
             admins: {
               users: [],
-              groups: []
+              groups: [],
             },
             canEdit: true,
             isPrivate: false,
-            favourite: false
-          }
-        ]
+            favourite: false,
+          },
+        ],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -86,7 +86,7 @@ describe('JiraClientWrapper.getAgileBoards', () => {
         id: 1,
         self: 'https://test.atlassian.net/rest/agile/1.0/board/1',
         name: 'Test Board 1',
-        type: 'scrum'
+        type: 'scrum',
       });
       expect(result[1]).toEqual({
         id: 2,
@@ -98,8 +98,8 @@ describe('JiraClientWrapper.getAgileBoards', () => {
           projectKey: 'TEST',
           projectId: 10001,
           projectName: 'Test Project',
-          projectTypeKey: 'software'
-        }
+          projectTypeKey: 'software',
+        },
       });
       expect(result[2]).toMatchObject({
         id: 3,
@@ -108,7 +108,7 @@ describe('JiraClientWrapper.getAgileBoards', () => {
         admins: { users: [], groups: [] },
         canEdit: true,
         isPrivate: false,
-        favourite: false
+        favourite: false,
       });
     });
 
@@ -128,8 +128,8 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'DSCWA',
-              projectId: 10001
-            }
+              projectId: 10001,
+            },
           },
           {
             id: 2,
@@ -139,8 +139,8 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'OTHER',
-              projectId: 10002
-            }
+              projectId: 10002,
+            },
           },
           {
             id: 3,
@@ -150,14 +150,14 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'DSCWA',
-              projectId: 10001
-            }
+              projectId: 10001,
+            },
           },
           {
             id: 4,
             self: 'https://test.atlassian.net/rest/agile/1.0/board/4',
             name: 'Test Board 4',
-            type: 'kanban'
+            type: 'kanban',
             // No location - should be excluded
           },
           {
@@ -166,13 +166,13 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             name: 'Test Board 5',
             type: 'scrum',
             location: {
-              type: 'user'
+              type: 'user',
               // Not project type - should be excluded
-            }
-          }
-        ]
+            },
+          },
+        ],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -194,9 +194,9 @@ describe('JiraClientWrapper.getAgileBoards', () => {
         startAt: 0,
         total: 0,
         isLast: true,
-        values: []
+        values: [],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -223,8 +223,8 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'OTHER1',
-              projectId: 10001
-            }
+              projectId: 10001,
+            },
           },
           {
             id: 2,
@@ -234,12 +234,12 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'OTHER2',
-              projectId: 10002
-            }
-          }
-        ]
+              projectId: 10002,
+            },
+          },
+        ],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -279,10 +279,10 @@ describe('JiraClientWrapper.getAgileBoards', () => {
         maxResults: 50,
         startAt: 0,
         total: 0,
-        isLast: true
+        isLast: true,
         // Missing values property
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -299,9 +299,9 @@ describe('JiraClientWrapper.getAgileBoards', () => {
         startAt: 0,
         total: 0,
         isLast: true,
-        values: 'not-an-array'
+        values: 'not-an-array',
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -374,11 +374,11 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             id: 1,
             self: 'https://test.atlassian.net/rest/agile/1.0/board/1',
             name: 'Test Board 1',
-            type: 'scrum'
-          }
-        ]
+            type: 'scrum',
+          },
+        ],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -401,11 +401,11 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             id: 1,
             self: 'https://test.atlassian.net/rest/agile/1.0/board/1',
             name: 'Test Board 1',
-            type: 'scrum'
-          }
-        ]
+            type: 'scrum',
+          },
+        ],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -432,8 +432,8 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'DSCWA',
-              projectId: 10001
-            }
+              projectId: 10001,
+            },
           },
           {
             id: 2,
@@ -443,12 +443,12 @@ describe('JiraClientWrapper.getAgileBoards', () => {
             location: {
               type: 'project',
               projectKey: 'dscwa', // lowercase
-              projectId: 10002
-            }
-          }
-        ]
+              projectId: 10002,
+            },
+          },
+        ],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -475,10 +475,10 @@ describe('JiraClientWrapper.getAgileBoards', () => {
               self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
               name: 'testuser',
               displayName: 'Test User',
-              emailAddress: 'test@example.com'
-            }
+              emailAddress: 'test@example.com',
+            },
           ],
-          groups: []
+          groups: [],
         },
         location: {
           type: 'project',
@@ -487,21 +487,21 @@ describe('JiraClientWrapper.getAgileBoards', () => {
           projectName: 'Test Project',
           projectTypeKey: 'software',
           avatarURI: 'https://test.atlassian.net/avatar/123',
-          name: 'Test Project Board Location'
+          name: 'Test Project Board Location',
         },
         canEdit: true,
         isPrivate: false,
-        favourite: true
+        favourite: true,
       };
-      
+
       const mockResponse = {
         maxResults: 50,
         startAt: 0,
         total: 1,
         isLast: true,
-        values: [mockBoard]
+        values: [mockBoard],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act
@@ -518,17 +518,17 @@ describe('JiraClientWrapper.getAgileBoards', () => {
         id: 456,
         self: 'https://test.atlassian.net/rest/agile/1.0/board/456',
         name: 'Minimal Board',
-        type: 'scrum'
+        type: 'scrum',
       };
-      
+
       const mockResponse = {
         maxResults: 50,
         startAt: 0,
         total: 1,
         isLast: true,
-        values: [mockBoard]
+        values: [mockBoard],
       };
-      
+
       mockGetAllBoards.mockResolvedValue(mockResponse);
 
       // Act

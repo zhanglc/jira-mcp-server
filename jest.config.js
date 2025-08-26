@@ -12,11 +12,17 @@ export default {
   // Module resolution
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   moduleNameMapper: {
+    '^@/(.*)\\.(js|ts)$': '<rootDir>/src/$1',
+    '^@/config/(.*)\\.(js|ts)$': '<rootDir>/src/config/$1',
+    '^@/lib/(.*)\\.(js|ts)$': '<rootDir>/src/lib/$1',
+    '^@/tools/(.*)\\.(js|ts)$': '<rootDir>/src/tools/$1',
+    '^@/server/resources/(.*)\\.(js|ts)$': '<rootDir>/src/server/resources/$1',
+    '^@/types/(.*)\\.(js|ts)$': '<rootDir>/src/types/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/config/(.*)$': '<rootDir>/src/config/$1',
     '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
     '^@/tools/(.*)$': '<rootDir>/src/tools/$1',
-    '^@/resources/(.*)$': '<rootDir>/src/resources/$1',
+    '^@/server/resources/(.*)$': '<rootDir>/src/server/resources/$1',
     '^@/types/(.*)$': '<rootDir>/src/types/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
     '^(.*)\\.js$': '$1',

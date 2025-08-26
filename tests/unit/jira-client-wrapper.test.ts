@@ -5,13 +5,13 @@ import { ApiError } from '../../src/types/api-error.js';
 
 const mockBearerConfig: JiraConfig = {
   url: 'https://test.atlassian.net',
-  bearer: 'test-bearer-token'
+  bearer: 'test-bearer-token',
 };
 
 const mockBasicConfig: JiraConfig = {
   url: 'https://test.atlassian.net',
   username: 'test@example.com',
-  password: 'test-password'
+  password: 'test-password',
 };
 
 describe('JiraClientWrapper', () => {
@@ -27,10 +27,12 @@ describe('JiraClientWrapper', () => {
 
   test('should throw error if no authentication provided', () => {
     const invalidConfig: JiraConfig = {
-      url: 'https://test.atlassian.net'
+      url: 'https://test.atlassian.net',
     };
-    
-    expect(() => new JiraClientWrapper(invalidConfig)).toThrow('Either bearer token or username/password must be provided');
+
+    expect(() => new JiraClientWrapper(invalidConfig)).toThrow(
+      'Either bearer token or username/password must be provided'
+    );
   });
 });
 
@@ -50,63 +52,72 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 1,
-        issues: [{
-          id: '10001',
-          key: 'TEST-123',
-          self: 'https://test.atlassian.net/rest/api/2/issue/10001',
-          fields: {
-            summary: 'Test Issue from Board',
-            status: {
-              name: 'In Progress',
-              statusCategory: {
-                key: 'indeterminate',
-                name: 'In Progress'
-              }
+        issues: [
+          {
+            id: '10001',
+            key: 'TEST-123',
+            self: 'https://test.atlassian.net/rest/api/2/issue/10001',
+            fields: {
+              summary: 'Test Issue from Board',
+              status: {
+                name: 'In Progress',
+                statusCategory: {
+                  key: 'indeterminate',
+                  name: 'In Progress',
+                },
+              },
+              assignee: null,
+              reporter: {
+                self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
+                name: 'testuser',
+                key: 'testuser',
+                displayName: 'Test User',
+                emailAddress: 'test@example.com',
+                active: true,
+                timeZone: 'UTC',
+                avatarUrls: {},
+              },
+              creator: {
+                self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
+                name: 'testuser',
+                key: 'testuser',
+                displayName: 'Test User',
+                emailAddress: 'test@example.com',
+                active: true,
+                timeZone: 'UTC',
+                avatarUrls: {},
+              },
+              project: {
+                key: 'TEST',
+                name: 'Test Project',
+              },
+              issuetype: {
+                name: 'Story',
+                subtask: false,
+              },
+              priority: {
+                name: 'Medium',
+                id: '3',
+              },
+              created: '2023-01-01T12:00:00.000Z',
+              updated: '2023-01-01T12:30:00.000Z',
             },
-            assignee: null,
-            reporter: {
-              self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
-              name: 'testuser',
-              key: 'testuser',
-              displayName: 'Test User',
-              emailAddress: 'test@example.com',
-              active: true,
-              timeZone: 'UTC',
-              avatarUrls: {}
-            },
-            creator: {
-              self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
-              name: 'testuser',
-              key: 'testuser',
-              displayName: 'Test User',
-              emailAddress: 'test@example.com',
-              active: true,
-              timeZone: 'UTC',
-              avatarUrls: {}
-            },
-            project: {
-              key: 'TEST',
-              name: 'Test Project'
-            },
-            issuetype: {
-              name: 'Story',
-              subtask: false
-            },
-            priority: {
-              name: 'Medium',
-              id: '3'
-            },
-            created: '2023-01-01T12:00:00.000Z',
-            updated: '2023-01-01T12:30:00.000Z'
-          }
-        }]
+          },
+        ],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
 
       const result = await wrapper.getBoardIssues(123);
 
-      expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith('123', 0, 50, undefined, true, undefined);
+      expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith(
+        '123',
+        0,
+        50,
+        undefined,
+        true,
+        undefined
+      );
       expect(result).toEqual(mockResponse);
       expect(result.issues).toHaveLength(1);
       expect(result.issues[0].key).toBe('TEST-123');
@@ -119,17 +130,24 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 10,
         maxResults: 5,
         total: 25,
-        issues: []
+        issues: [],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
 
       const result = await wrapper.getBoardIssues(123, {
         startAt: 10,
-        maxResults: 5
+        maxResults: 5,
       });
 
-      expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith('123', 10, 5, undefined, true, undefined);
+      expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith(
+        '123',
+        10,
+        5,
+        undefined,
+        true,
+        undefined
+      );
       expect(result.startAt).toBe(10);
       expect(result.maxResults).toBe(5);
       expect(result.total).toBe(25);
@@ -141,68 +159,77 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 1,
-        issues: [{
-          id: '10001',
-          key: 'TEST-123',
-          self: 'https://test.atlassian.net/rest/api/2/issue/10001',
-          fields: {
-            summary: 'Test Issue with Limited Fields',
-            status: {
-              name: 'Open',
-              statusCategory: {
-                key: 'new',
-                name: 'To Do'
-              }
+        issues: [
+          {
+            id: '10001',
+            key: 'TEST-123',
+            self: 'https://test.atlassian.net/rest/api/2/issue/10001',
+            fields: {
+              summary: 'Test Issue with Limited Fields',
+              status: {
+                name: 'Open',
+                statusCategory: {
+                  key: 'new',
+                  name: 'To Do',
+                },
+              },
+              assignee: null,
+              reporter: {
+                self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
+                name: 'testuser',
+                key: 'testuser',
+                displayName: 'Test User',
+                emailAddress: 'test@example.com',
+                active: true,
+                timeZone: 'UTC',
+                avatarUrls: {},
+              },
+              creator: {
+                self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
+                name: 'testuser',
+                key: 'testuser',
+                displayName: 'Test User',
+                emailAddress: 'test@example.com',
+                active: true,
+                timeZone: 'UTC',
+                avatarUrls: {},
+              },
+              project: {
+                key: 'TEST',
+                name: 'Test Project',
+              },
+              issuetype: {
+                name: 'Bug',
+                subtask: false,
+              },
+              priority: {
+                name: 'High',
+                id: '2',
+              },
+              created: '2023-01-01T12:00:00.000Z',
+              updated: '2023-01-01T12:30:00.000Z',
             },
-            assignee: null,
-            reporter: {
-              self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
-              name: 'testuser',
-              key: 'testuser',
-              displayName: 'Test User',
-              emailAddress: 'test@example.com',
-              active: true,
-              timeZone: 'UTC',
-              avatarUrls: {}
-            },
-            creator: {
-              self: 'https://test.atlassian.net/rest/api/2/user?username=testuser',
-              name: 'testuser',
-              key: 'testuser',
-              displayName: 'Test User',
-              emailAddress: 'test@example.com',
-              active: true,
-              timeZone: 'UTC',
-              avatarUrls: {}
-            },
-            project: {
-              key: 'TEST',
-              name: 'Test Project'
-            },
-            issuetype: {
-              name: 'Bug',
-              subtask: false
-            },
-            priority: {
-              name: 'High',
-              id: '2'
-            },
-            created: '2023-01-01T12:00:00.000Z',
-            updated: '2023-01-01T12:30:00.000Z'
-          }
-        }]
+          },
+        ],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
 
       const result = await wrapper.getBoardIssues(123, {
-        fields: ['summary', 'status', 'assignee']
+        fields: ['summary', 'status', 'assignee'],
       });
 
       expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith(
-        '123', 0, 50, undefined, true, 'summary,status,assignee'
+        '123',
+        0,
+        50,
+        undefined,
+        true,
+        'summary,status,assignee'
       );
-      expect(result.issues[0].fields.summary).toBe('Test Issue with Limited Fields');
+      expect(result.issues[0].fields.summary).toBe(
+        'Test Issue with Limited Fields'
+      );
     });
 
     test('should filter invalid field names for security', async () => {
@@ -211,18 +238,29 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
 
       await wrapper.getBoardIssues(123, {
-        fields: ['summary', 'status', 'invalidField', 'customfield_10001', 'maliciousScript']
+        fields: [
+          'summary',
+          'status',
+          'invalidField',
+          'customfield_10001',
+          'maliciousScript',
+        ],
       });
 
       // Should filter out invalid fields but keep valid ones and custom fields
       expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith(
-        '123', 0, 50, undefined, true, 'summary,status,customfield_10001'
+        '123',
+        0,
+        50,
+        undefined,
+        true,
+        'summary,status,customfield_10001'
       );
     });
 
@@ -232,7 +270,7 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
@@ -253,7 +291,7 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 0,
         maxResults: 0,
         total: 0,
-        issues: []
+        issues: [],
       });
     });
   });
@@ -263,33 +301,38 @@ describe('JiraClientWrapper - getBoardIssues', () => {
       const jiraError = {
         statusCode: 404,
         error: 'Not Found',
-        message: 'Board does not exist or you do not have permission to view it.'
+        message:
+          'Board does not exist or you do not have permission to view it.',
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockRejectedValue(jiraError);
 
       await expect(wrapper.getBoardIssues(999)).rejects.toThrow(ApiError);
-      await expect(wrapper.getBoardIssues(999)).rejects.toThrow('Board does not exist');
+      await expect(wrapper.getBoardIssues(999)).rejects.toThrow(
+        'Board does not exist'
+      );
     });
 
     test('should throw ApiError for access denied (403)', async () => {
       const jiraError = {
         statusCode: 403,
         error: 'Forbidden',
-        message: 'You do not have permission to view this board.'
+        message: 'You do not have permission to view this board.',
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockRejectedValue(jiraError);
 
       await expect(wrapper.getBoardIssues(123)).rejects.toThrow(ApiError);
-      await expect(wrapper.getBoardIssues(123)).rejects.toThrow('You do not have permission');
+      await expect(wrapper.getBoardIssues(123)).rejects.toThrow(
+        'You do not have permission'
+      );
     });
 
     test('should throw ApiError for invalid board ID format', async () => {
       const jiraError = {
         statusCode: 400,
         error: 'Bad Request',
-        message: 'Board ID must be a number.'
+        message: 'Board ID must be a number.',
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockRejectedValue(jiraError);
@@ -301,7 +344,7 @@ describe('JiraClientWrapper - getBoardIssues', () => {
       const jiraError = {
         statusCode: 500,
         error: 'Internal Server Error',
-        message: 'Agile functionality is not available.'
+        message: 'Agile functionality is not available.',
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockRejectedValue(jiraError);
@@ -325,7 +368,7 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 0,
         maxResults: 50,
         total: 0,
-        issues: []
+        issues: [],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
@@ -335,8 +378,24 @@ describe('JiraClientWrapper - getBoardIssues', () => {
       await wrapper.getBoardIssues(999999);
 
       expect(mockClient.getIssuesForBoard).toHaveBeenCalledTimes(2);
-      expect(mockClient.getIssuesForBoard).toHaveBeenNthCalledWith(1, '1', 0, 50, undefined, true, undefined);
-      expect(mockClient.getIssuesForBoard).toHaveBeenNthCalledWith(2, '999999', 0, 50, undefined, true, undefined);
+      expect(mockClient.getIssuesForBoard).toHaveBeenNthCalledWith(
+        1,
+        '1',
+        0,
+        50,
+        undefined,
+        true,
+        undefined
+      );
+      expect(mockClient.getIssuesForBoard).toHaveBeenNthCalledWith(
+        2,
+        '999999',
+        0,
+        50,
+        undefined,
+        true,
+        undefined
+      );
     });
 
     test('should handle all search options together', async () => {
@@ -345,7 +404,7 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         startAt: 20,
         maxResults: 10,
         total: 100,
-        issues: []
+        issues: [],
       };
 
       mockClient.getIssuesForBoard = jest.fn().mockResolvedValue(mockResponse);
@@ -353,11 +412,16 @@ describe('JiraClientWrapper - getBoardIssues', () => {
       await wrapper.getBoardIssues(123, {
         startAt: 20,
         maxResults: 10,
-        fields: ['summary', 'status', 'assignee', 'customfield_10001']
+        fields: ['summary', 'status', 'assignee', 'customfield_10001'],
       });
 
       expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith(
-        '123', 20, 10, undefined, true, 'summary,status,assignee,customfield_10001'
+        '123',
+        20,
+        10,
+        undefined,
+        true,
+        'summary,status,assignee,customfield_10001'
       );
     });
   });

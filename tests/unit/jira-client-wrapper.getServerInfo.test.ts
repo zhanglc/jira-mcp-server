@@ -4,7 +4,7 @@ import { ApiError } from '../../src/types/api-error.js';
 
 // Mock jira-client
 const mockJiraClient = {
-  getServerInfo: jest.fn()
+  getServerInfo: jest.fn(),
 };
 
 jest.mock('jira-client', () => {
@@ -18,7 +18,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
   beforeEach(() => {
     config = {
       url: 'https://test-jira.example.com',
-      bearer: 'test-token'
+      bearer: 'test-token',
     };
     wrapper = new JiraClientWrapper(config);
     jest.clearAllMocks();
@@ -38,8 +38,8 @@ describe('JiraClientWrapper.getServerInfo', () => {
         scmInfo: 'abc123def456',
         serverTitle: 'Test Jira Server',
         defaultLocale: {
-          locale: 'en_US'
-        }
+          locale: 'en_US',
+        },
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -63,7 +63,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 800001,
         buildDate: '2023-01-15T09:00:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'xyz789abc123'
+        scmInfo: 'xyz789abc123',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockMinimalServerInfo);
@@ -87,7 +87,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 1000000,
         buildDate: '2024-01-01T00:00:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'beta123'
+        scmInfo: 'beta123',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -112,8 +112,8 @@ describe('JiraClientWrapper.getServerInfo', () => {
         serverTime: '2024-01-15T14:30:45.123Z',
         scmInfo: 'abc123def456',
         defaultLocale: {
-          locale: 'de_DE'
-        }
+          locale: 'de_DE',
+        },
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -135,7 +135,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123+0000',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -166,7 +166,9 @@ describe('JiraClientWrapper.getServerInfo', () => {
 
       // Act & Assert
       await expect(wrapper.getServerInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getServerInfo()).rejects.toThrow('No server information received from server');
+      await expect(wrapper.getServerInfo()).rejects.toThrow(
+        'No server information received from server'
+      );
     });
 
     test('should throw ApiError when response is undefined', async () => {
@@ -175,14 +177,16 @@ describe('JiraClientWrapper.getServerInfo', () => {
 
       // Act & Assert
       await expect(wrapper.getServerInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getServerInfo()).rejects.toThrow('No server information received from server');
+      await expect(wrapper.getServerInfo()).rejects.toThrow(
+        'No server information received from server'
+      );
     });
 
     test('should throw ApiError when required fields are missing', async () => {
       // Arrange
       const incompleteServerInfo = {
         baseUrl: 'https://test-jira.example.com',
-        version: '9.12.5'
+        version: '9.12.5',
         // Missing required fields: versionNumbers, deploymentType, buildNumber, buildDate, serverTime, scmInfo
       };
 
@@ -190,7 +194,9 @@ describe('JiraClientWrapper.getServerInfo', () => {
 
       // Act & Assert
       await expect(wrapper.getServerInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getServerInfo()).rejects.toThrow('Invalid server information received from server');
+      await expect(wrapper.getServerInfo()).rejects.toThrow(
+        'Invalid server information received from server'
+      );
     });
 
     test('should handle network errors', async () => {
@@ -236,7 +242,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -252,7 +258,9 @@ describe('JiraClientWrapper.getServerInfo', () => {
         expect.stringContaining('Getting server information')
       );
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Successfully retrieved server info: Server 9.12.5')
+        expect.stringContaining(
+          'Successfully retrieved server info: Server 9.12.5'
+        )
       );
 
       consoleSpy.mockRestore();
@@ -288,14 +296,16 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(serverInfoWithoutBaseUrl);
 
       // Act & Assert
       await expect(wrapper.getServerInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getServerInfo()).rejects.toThrow('Invalid server information received from server');
+      await expect(wrapper.getServerInfo()).rejects.toThrow(
+        'Invalid server information received from server'
+      );
     });
 
     test('should validate version field', async () => {
@@ -307,14 +317,16 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(serverInfoWithoutVersion);
 
       // Act & Assert
       await expect(wrapper.getServerInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getServerInfo()).rejects.toThrow('Invalid server information received from server');
+      await expect(wrapper.getServerInfo()).rejects.toThrow(
+        'Invalid server information received from server'
+      );
     });
 
     test('should provide current serverTime when not in API response', async () => {
@@ -326,17 +338,21 @@ describe('JiraClientWrapper.getServerInfo', () => {
         deploymentType: 'Server',
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
-      mockJiraClient.getServerInfo.mockResolvedValue(serverInfoWithoutServerTime);
+      mockJiraClient.getServerInfo.mockResolvedValue(
+        serverInfoWithoutServerTime
+      );
 
       // Act
       const result = await wrapper.getServerInfo();
 
       // Assert
       expect(result).toHaveProperty('serverTime');
-      expect(result.serverTime).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/); // ISO timestamp format
+      expect(result.serverTime).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+      ); // ISO timestamp format
       expect(new Date(result.serverTime)).toBeInstanceOf(Date);
     });
 
@@ -349,14 +365,18 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
-      mockJiraClient.getServerInfo.mockResolvedValue(serverInfoWithoutDeploymentType);
+      mockJiraClient.getServerInfo.mockResolvedValue(
+        serverInfoWithoutDeploymentType
+      );
 
       // Act & Assert
       await expect(wrapper.getServerInfo()).rejects.toThrow(ApiError);
-      await expect(wrapper.getServerInfo()).rejects.toThrow('Invalid server information received from server');
+      await expect(wrapper.getServerInfo()).rejects.toThrow(
+        'Invalid server information received from server'
+      );
     });
   });
 
@@ -371,7 +391,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -398,8 +418,8 @@ describe('JiraClientWrapper.getServerInfo', () => {
         serverTime: '2024-01-15T14:30:45.123Z',
         scmInfo: 'abc123def456',
         defaultLocale: {
-          locale: 'en_US'
-        }
+          locale: 'en_US',
+        },
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);
@@ -422,7 +442,7 @@ describe('JiraClientWrapper.getServerInfo', () => {
         buildNumber: 900000,
         buildDate: '2023-10-15T10:30:00.000Z',
         serverTime: '2024-01-15T14:30:45.123Z',
-        scmInfo: 'abc123def456'
+        scmInfo: 'abc123def456',
       };
 
       mockJiraClient.getServerInfo.mockResolvedValue(mockServerInfo);

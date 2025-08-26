@@ -18,7 +18,7 @@ async function main() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error('Unhandled error in main:', error);
     process.exit(1);
   });

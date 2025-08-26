@@ -24,5 +24,5 @@ export const logger = {
     } else {
       console.warn(`[${timestamp}] WARN: ${message}`);
     }
-  }
+  },
 };

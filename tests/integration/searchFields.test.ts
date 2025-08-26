@@ -36,7 +36,7 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
 
       // Assert - Validate at least the first field has correct structure
       expect(fields.length).toBeGreaterThan(0);
-      
+
       const firstField = fields[0];
       expect(firstField).toMatchObject({
         id: expect.any(String),
@@ -44,7 +44,7 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
         custom: expect.any(Boolean),
         orderable: expect.any(Boolean),
         navigable: expect.any(Boolean),
-        searchable: expect.any(Boolean)
+        searchable: expect.any(Boolean),
       });
 
       // Check that all fields have required properties
@@ -55,9 +55,12 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
         expect(typeof field.orderable).toBe('boolean');
         expect(typeof field.navigable).toBe('boolean');
         expect(typeof field.searchable).toBe('boolean');
-        
-        if (index < 5) { // Log first 5 fields for verification
-          console.log(`Field ${index + 1}: ${field.name} (${field.id}) - Custom: ${field.custom}`);
+
+        if (index < 5) {
+          // Log first 5 fields for verification
+          console.log(
+            `Field ${index + 1}: ${field.name} (${field.id}) - Custom: ${field.custom}`
+          );
         }
       });
     }, 10000);
@@ -71,7 +74,9 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       expect(systemFields.length).toBeGreaterThan(0);
 
       // Verify some known system fields
-      const systemFieldNames = systemFields.map(field => field.name.toLowerCase());
+      const systemFieldNames = systemFields.map(field =>
+        field.name.toLowerCase()
+      );
       expect(systemFieldNames).toContain('summary');
       expect(systemFieldNames).toContain('status');
       expect(systemFieldNames).toContain('assignee');
@@ -80,7 +85,7 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       expect(systemFieldNames).toContain('issue type');
 
       console.log(`Found ${systemFields.length} system fields`);
-      
+
       // Log some system fields for verification
       systemFields.slice(0, 5).forEach(field => {
         console.log(`System field: ${field.name} (${field.id})`);
@@ -99,7 +104,7 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
 
       // Assert
       const customFields = fields.filter(field => field.custom);
-      
+
       // May have custom fields or not, depending on Jira configuration
       console.log(`Found ${customFields.length} custom fields`);
 
@@ -108,7 +113,7 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
         customFields.forEach(field => {
           expect(field.custom).toBe(true);
           expect(field.id).toMatch(/^customfield_\d+$/);
-          
+
           if (field.schema) {
             expect(field.schema.custom).toBeDefined();
             if (field.schema.customId) {
@@ -144,7 +149,9 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
 
       // Verify all returned fields contain 'summary' in name or ID
       summaryFields.forEach(field => {
-        const nameContainsSummary = field.name.toLowerCase().includes('summary');
+        const nameContainsSummary = field.name
+          .toLowerCase()
+          .includes('summary');
         const idContainsSummary = field.id.toLowerCase().includes('summary');
         expect(nameContainsSummary || idContainsSummary).toBe(true);
       });
@@ -191,7 +198,9 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       expect(upperCaseResults).toEqual(lowerCaseResults);
       expect(lowerCaseResults).toEqual(mixedCaseResults);
 
-      console.log(`Case-insensitive search for 'assignee' found ${upperCaseResults.length} fields`);
+      console.log(
+        `Case-insensitive search for 'assignee' found ${upperCaseResults.length} fields`
+      );
     }, 10000);
 
     test('should handle search for custom fields if they exist', async () => {
@@ -200,11 +209,13 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
 
       // Assert
       expect(Array.isArray(customResults)).toBe(true);
-      
+
       if (customResults.length > 0) {
         // If custom fields are found, verify they match the query
         customResults.forEach(field => {
-          const nameContainsCustom = field.name.toLowerCase().includes('custom');
+          const nameContainsCustom = field.name
+            .toLowerCase()
+            .includes('custom');
           const idContainsCustom = field.id.toLowerCase().includes('custom');
           expect(nameContainsCustom || idContainsCustom).toBe(true);
         });
@@ -214,19 +225,23 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
           console.log(`  - ${field.name} (${field.id})`);
         });
       } else {
-        console.log('No fields found matching \'custom\' - this is acceptable');
+        console.log("No fields found matching 'custom' - this is acceptable");
       }
     }, 10000);
 
     test('should return empty array for non-existent field query', async () => {
       // Act
-      const nonExistentResults = await jiraClient.searchFields('nonexistentfieldxyz123');
+      const nonExistentResults = await jiraClient.searchFields(
+        'nonexistentfieldxyz123'
+      );
 
       // Assert
       expect(Array.isArray(nonExistentResults)).toBe(true);
       expect(nonExistentResults).toHaveLength(0);
 
-      console.log('Search for non-existent field correctly returned empty array');
+      console.log(
+        'Search for non-existent field correctly returned empty array'
+      );
     }, 10000);
 
     test('should handle empty and whitespace queries', async () => {
@@ -241,7 +256,9 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       expect(allFields).toEqual(emptyQuery);
       expect(allFields).toEqual(whitespaceQuery);
 
-      console.log(`Empty/whitespace queries correctly returned all ${allFields.length} fields`);
+      console.log(
+        `Empty/whitespace queries correctly returned all ${allFields.length} fields`
+      );
     }, 10000);
   });
 
@@ -259,13 +276,19 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       expect(searchableFields.length).toBeGreaterThan(0);
       expect(orderableFields.length).toBeGreaterThan(0);
 
-      console.log(`Searchable fields: ${searchableFields.length}/${fields.length}`);
-      console.log(`Orderable fields: ${orderableFields.length}/${fields.length}`);
+      console.log(
+        `Searchable fields: ${searchableFields.length}/${fields.length}`
+      );
+      console.log(
+        `Orderable fields: ${orderableFields.length}/${fields.length}`
+      );
 
       // Log some examples
       console.log('Sample searchable fields:');
       searchableFields.slice(0, 3).forEach(field => {
-        console.log(`  - ${field.name}: searchable=${field.searchable}, orderable=${field.orderable}`);
+        console.log(
+          `  - ${field.name}: searchable=${field.searchable}, orderable=${field.orderable}`
+        );
       });
     }, 10000);
 
@@ -274,16 +297,20 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       const fields = await jiraClient.searchFields();
 
       // Assert
-      const fieldsWithClauseNames = fields.filter(field => field.clauseNames && field.clauseNames.length > 0);
-      
+      const fieldsWithClauseNames = fields.filter(
+        field => field.clauseNames && field.clauseNames.length > 0
+      );
+
       if (fieldsWithClauseNames.length > 0) {
-        console.log(`Found ${fieldsWithClauseNames.length} fields with clause names`);
+        console.log(
+          `Found ${fieldsWithClauseNames.length} fields with clause names`
+        );
 
         // Verify clause names structure
         fieldsWithClauseNames.slice(0, 5).forEach(field => {
           expect(Array.isArray(field.clauseNames)).toBe(true);
           expect(field.clauseNames!.length).toBeGreaterThan(0);
-          
+
           field.clauseNames!.forEach(clauseName => {
             expect(typeof clauseName).toBe('string');
             expect(clauseName.length).toBeGreaterThan(0);
@@ -292,7 +319,9 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
           console.log(`  - ${field.name}: ${field.clauseNames!.join(', ')}`);
         });
       } else {
-        console.log('No fields with clause names found - this may be normal for some Jira instances');
+        console.log(
+          'No fields with clause names found - this may be normal for some Jira instances'
+        );
       }
     }, 10000);
 
@@ -302,9 +331,11 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
 
       // Assert
       const fieldsWithSchema = fields.filter(field => field.schema);
-      
+
       if (fieldsWithSchema.length > 0) {
-        console.log(`Found ${fieldsWithSchema.length} fields with schema information`);
+        console.log(
+          `Found ${fieldsWithSchema.length} fields with schema information`
+        );
 
         // Verify schema structure
         fieldsWithSchema.slice(0, 5).forEach(field => {
@@ -325,8 +356,12 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
         });
 
         // Verify system vs custom schema consistency
-        const systemFieldsWithSchema = fieldsWithSchema.filter(field => !field.custom);
-        const customFieldsWithSchema = fieldsWithSchema.filter(field => field.custom);
+        const systemFieldsWithSchema = fieldsWithSchema.filter(
+          field => !field.custom
+        );
+        const customFieldsWithSchema = fieldsWithSchema.filter(
+          field => field.custom
+        );
 
         systemFieldsWithSchema.forEach(field => {
           if (field.schema!.system) {
@@ -340,8 +375,12 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
           }
         });
 
-        console.log(`System fields with schema: ${systemFieldsWithSchema.length}`);
-        console.log(`Custom fields with schema: ${customFieldsWithSchema.length}`);
+        console.log(
+          `System fields with schema: ${systemFieldsWithSchema.length}`
+        );
+        console.log(
+          `Custom fields with schema: ${customFieldsWithSchema.length}`
+        );
       } else {
         console.log('No fields with schema information found');
       }
@@ -352,7 +391,7 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
     test('should handle server connectivity gracefully', async () => {
       // This test verifies that our error handling works with the real server
       // The test should pass assuming we have valid credentials
-      
+
       // Act & Assert
       await expect(async () => {
         const fields = await jiraClient.searchFields();
@@ -370,14 +409,14 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       const startTime = Date.now();
       const fields = await jiraClient.searchFields();
       const endTime = Date.now();
-      
+
       // Assert
       expect(fields).toBeDefined();
       expect(Array.isArray(fields)).toBe(true);
-      
+
       const duration = endTime - startTime;
       console.log(`Retrieved ${fields.length} fields in ${duration}ms`);
-      
+
       // Performance should be reasonable (under 5 seconds for field listing)
       expect(duration).toBeLessThan(5000);
     }, 10000);
@@ -389,19 +428,21 @@ describe('searchFields Integration Tests - Real Jira Server', () => {
       const midTime = Date.now();
       const filteredFields = await jiraClient.searchFields('field');
       const endTime = Date.now();
-      
+
       // Assert
       expect(allFields).toBeDefined();
       expect(filteredFields).toBeDefined();
       expect(Array.isArray(allFields)).toBe(true);
       expect(Array.isArray(filteredFields)).toBe(true);
-      
+
       const allFieldsDuration = midTime - startTime;
       const filteredFieldsDuration = endTime - midTime;
-      
+
       console.log(`All fields (${allFields.length}): ${allFieldsDuration}ms`);
-      console.log(`Filtered fields (${filteredFields.length}): ${filteredFieldsDuration}ms`);
-      
+      console.log(
+        `Filtered fields (${filteredFields.length}): ${filteredFieldsDuration}ms`
+      );
+
       // Both operations should be reasonably fast
       expect(allFieldsDuration).toBeLessThan(5000);
       expect(filteredFieldsDuration).toBeLessThan(5000);

@@ -32,7 +32,9 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
       });
 
       // Validate deployment type
-      expect(['Server', 'Cloud', 'Data Center']).toContain(serverInfo.deploymentType);
+      expect(['Server', 'Cloud', 'Data Center']).toContain(
+        serverInfo.deploymentType
+      );
 
       // Validate date formats
       expect(new Date(serverInfo.buildDate)).toBeInstanceOf(Date);
@@ -49,7 +51,9 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
       console.log(`Server Time: ${serverInfo.serverTime}`);
       console.log(`SCM Info: ${serverInfo.scmInfo}`);
       console.log(`Server Title: ${serverInfo.serverTitle || 'Not set'}`);
-      console.log(`Default Locale: ${serverInfo.defaultLocale?.locale || 'Not set'}`);
+      console.log(
+        `Default Locale: ${serverInfo.defaultLocale?.locale || 'Not set'}`
+      );
 
       // Additional validations based on expected Jira Server environment
       expect(serverInfo.baseUrl).toContain('jira.dentsplysirona.com');
@@ -63,18 +67,20 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
       // Assert - Server time should be current time, different from build date
       const buildTime = new Date(serverInfo.buildDate);
       const serverTime = new Date(serverInfo.serverTime);
-      
+
       // Server time should be more recent than build time
       expect(serverTime.getTime()).toBeGreaterThan(buildTime.getTime());
-      
+
       // Server time should be reasonably recent (within last hour)
       const now = new Date();
       const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
       expect(serverTime.getTime()).toBeGreaterThan(oneHourAgo.getTime());
-      
+
       console.log(`Build Time: ${serverInfo.buildDate}`);
       console.log(`Server Time: ${serverInfo.serverTime}`);
-      console.log(`Time Difference: ${serverTime.getTime() - buildTime.getTime()}ms`);
+      console.log(
+        `Time Difference: ${serverTime.getTime() - buildTime.getTime()}ms`
+      );
     }, 30000);
 
     test('should handle serverTime field appropriately', async () => {
@@ -82,8 +88,10 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
       const serverInfo = await client.getServerInfo();
 
       // Assert - serverTime should be a valid ISO timestamp
-      expect(serverInfo.serverTime).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
-      
+      expect(serverInfo.serverTime).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+      );
+
       // Should be parseable as a Date
       const serverTime = new Date(serverInfo.serverTime);
       expect(serverTime).toBeInstanceOf(Date);
@@ -102,13 +110,13 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
       // Assert - Environment-specific validations
       expect(serverInfo.baseUrl).toContain('https://jira.dentsplysirona.com');
       expect(serverInfo.deploymentType).toBe('Server');
-      
+
       // Jira Server version should be reasonable
       expect(serverInfo.versionNumbers[0]).toBeGreaterThanOrEqual(8);
-      
+
       // Build number should be positive
       expect(serverInfo.buildNumber).toBeGreaterThan(0);
-      
+
       // SCM info should be present
       expect(serverInfo.scmInfo).toBeTruthy();
       expect(serverInfo.scmInfo.length).toBeGreaterThan(0);
@@ -145,12 +153,12 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
       console.log('ServerInfo focus - runtime details:', {
         serverTime: serverInfo.serverTime,
         defaultLocale: serverInfo.defaultLocale?.locale || 'Not available',
-        serverTitle: serverInfo.serverTitle || 'Not set'
+        serverTitle: serverInfo.serverTitle || 'Not set',
       });
       console.log('SystemInfo focus - system monitoring:', {
         hasHealthChecks: systemInfo.healthChecks ? true : false,
         hasSystemInfoService: systemInfo.systemInfoService ? true : false,
-        buildDate: systemInfo.buildDate
+        buildDate: systemInfo.buildDate,
       });
 
       // The distinction is primarily in interface design and intended use case
@@ -164,8 +172,14 @@ describe('JiraClientWrapper.getServerInfo Integration Tests', () => {
 
       // Assert - Comprehensive structure validation
       const requiredFields = [
-        'baseUrl', 'version', 'versionNumbers', 'deploymentType',
-        'buildNumber', 'buildDate', 'serverTime', 'scmInfo'
+        'baseUrl',
+        'version',
+        'versionNumbers',
+        'deploymentType',
+        'buildNumber',
+        'buildDate',
+        'serverTime',
+        'scmInfo',
       ];
 
       requiredFields.forEach(field => {

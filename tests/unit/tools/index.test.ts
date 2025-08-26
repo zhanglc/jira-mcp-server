@@ -1,11 +1,18 @@
 /**
  * Tools Index Module Tests
- * 
+ *
  * Verifies the tools index module properly exports and aggregates
  * all tool definitions from specialized modules.
  */
 
-import { getAllTools, getIssueTools, getProjectTools, getUserTools, getAgileTools, getSystemTools } from '../../../src/server/tools/index.js';
+import {
+  getAllTools,
+  getIssueTools,
+  getProjectTools,
+  getUserTools,
+  getAgileTools,
+  getSystemTools,
+} from '../../../src/server/tools/index.js';
 
 describe('Tools Index Module', () => {
   it('should export getAllTools function', () => {
@@ -39,9 +46,15 @@ describe('Tools Index Module', () => {
     const userTools = getUserTools();
     const agileTools = getAgileTools();
     const systemTools = getSystemTools();
-    
+
     expect(allTools).toHaveLength(19); // 5 issue + 4 project + 2 user + 5 agile + 3 system tools
-    expect(allTools).toEqual([...issueTools, ...projectTools, ...userTools, ...agileTools, ...systemTools]);
+    expect(allTools).toEqual([
+      ...issueTools,
+      ...projectTools,
+      ...userTools,
+      ...agileTools,
+      ...systemTools,
+    ]);
   });
 
   it('should return tools with valid names', () => {
@@ -70,9 +83,9 @@ describe('Tools Index Module', () => {
       // System tools
       'searchFields',
       'getSystemInfo',
-      'getServerInfo'
+      'getServerInfo',
     ];
-    
+
     expect(allTools.map(tool => tool.name)).toEqual(expectedNames);
   });
 
@@ -83,9 +96,9 @@ describe('Tools Index Module', () => {
       'getIssueTransitions',
       'searchIssues',
       'getIssueWorklogs',
-      'downloadAttachments'
+      'downloadAttachments',
     ];
-    
+
     expect(issueTools).toHaveLength(5);
     expect(issueTools.map(tool => tool.name)).toEqual(expectedIssueNames);
   });
@@ -96,20 +109,17 @@ describe('Tools Index Module', () => {
       'getAllProjects',
       'getProject',
       'getProjectIssues',
-      'getProjectVersions'
+      'getProjectVersions',
     ];
-    
+
     expect(projectTools).toHaveLength(4);
     expect(projectTools.map(tool => tool.name)).toEqual(expectedProjectNames);
   });
 
   it('should return User tools only from getUserTools', () => {
     const userTools = getUserTools();
-    const expectedUserNames = [
-      'getCurrentUser',
-      'getUserProfile'
-    ];
-    
+    const expectedUserNames = ['getCurrentUser', 'getUserProfile'];
+
     expect(userTools).toHaveLength(2);
     expect(userTools.map(tool => tool.name)).toEqual(expectedUserNames);
   });
@@ -121,9 +131,9 @@ describe('Tools Index Module', () => {
       'getBoardIssues',
       'getSprintsFromBoard',
       'getSprintIssues',
-      'getSprint'
+      'getSprint',
     ];
-    
+
     expect(agileTools).toHaveLength(5);
     expect(agileTools.map(tool => tool.name)).toEqual(expectedAgileNames);
   });
@@ -133,9 +143,9 @@ describe('Tools Index Module', () => {
     const expectedSystemNames = [
       'searchFields',
       'getSystemInfo',
-      'getServerInfo'
+      'getServerInfo',
     ];
-    
+
     expect(systemTools).toHaveLength(3);
     expect(systemTools.map(tool => tool.name)).toEqual(expectedSystemNames);
   });

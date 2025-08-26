@@ -1,6 +1,6 @@
 /**
  * User Tools Module Tests
- * 
+ *
  * Verifies the User tools module provides correctly structured
  * MCP tool definitions for User-related operations.
  */
@@ -8,21 +8,24 @@
 import {
   getCurrentUserToolDefinition,
   getUserProfileToolDefinition,
-  getUserTools
+  getUserTools,
 } from '../../../src/server/tools/user-tools.js';
 
 describe('User Tools Module', () => {
   describe('getCurrentUserToolDefinition', () => {
     it('should return a valid MCP tool definition', () => {
       const tool = getCurrentUserToolDefinition();
-      
+
       expect(tool).toHaveProperty('name', 'getCurrentUser');
-      expect(tool).toHaveProperty('description', 'Get information about the currently authenticated user for authentication verification');
+      expect(tool).toHaveProperty(
+        'description',
+        'Get information about the currently authenticated user for authentication verification'
+      );
       expect(tool).toHaveProperty('inputSchema');
       expect(tool.inputSchema).toEqual({
         type: 'object',
         properties: {},
-        additionalProperties: false
+        additionalProperties: false,
       });
     });
   });
@@ -30,19 +33,23 @@ describe('User Tools Module', () => {
   describe('getUserProfileToolDefinition', () => {
     it('should return a valid MCP tool definition', () => {
       const tool = getUserProfileToolDefinition();
-      
+
       expect(tool).toHaveProperty('name', 'getUserProfile');
-      expect(tool).toHaveProperty('description', 'Get detailed profile information for a specific Jira user by username or email address');
+      expect(tool).toHaveProperty(
+        'description',
+        'Get detailed profile information for a specific Jira user by username or email address'
+      );
       expect(tool).toHaveProperty('inputSchema');
       expect(tool.inputSchema).toEqual({
         type: 'object',
         properties: {
           username: {
             type: 'string',
-            description: 'The username or email address of the user (e.g., JIRAUSER23511, user@domain.com)'
-          }
+            description:
+              'The username or email address of the user (e.g., JIRAUSER23511, user@domain.com)',
+          },
         },
-        required: ['username']
+        required: ['username'],
       });
     });
   });
@@ -50,7 +57,7 @@ describe('User Tools Module', () => {
   describe('getUserTools', () => {
     it('should return all User tool definitions', () => {
       const tools = getUserTools();
-      
+
       expect(tools).toHaveLength(2);
       expect(tools[0]).toEqual(getCurrentUserToolDefinition());
       expect(tools[1]).toEqual(getUserProfileToolDefinition());
@@ -59,11 +66,8 @@ describe('User Tools Module', () => {
     it('should return tools with correct names in order', () => {
       const tools = getUserTools();
       const toolNames = tools.map(tool => tool.name);
-      
-      expect(toolNames).toEqual([
-        'getCurrentUser',
-        'getUserProfile'
-      ]);
+
+      expect(toolNames).toEqual(['getCurrentUser', 'getUserProfile']);
     });
   });
 });

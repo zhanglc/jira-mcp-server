@@ -1,6 +1,6 @@
 /**
  * Tools Module Index
- * 
+ *
  * Central export point for all MCP tool definitions.
  * This provides a clean interface for importing tool definitions
  * from various specialized modules.
@@ -13,7 +13,7 @@ export {
   searchIssuesToolDefinition,
   getIssueWorklogsToolDefinition,
   downloadAttachmentsToolDefinition,
-  getIssueTools
+  getIssueTools,
 } from './issue-tools.js';
 
 // Project Tools
@@ -22,14 +22,14 @@ export {
   getProjectToolDefinition,
   getProjectIssuesToolDefinition,
   getProjectVersionsToolDefinition,
-  getProjectTools
+  getProjectTools,
 } from './project-tools.js';
 
 // User Tools
 export {
   getCurrentUserToolDefinition,
   getUserProfileToolDefinition,
-  getUserTools
+  getUserTools,
 } from './user-tools.js';
 
 // Agile Tools
@@ -39,7 +39,7 @@ export {
   getSprintsFromBoardToolDefinition,
   getSprintIssuesToolDefinition,
   getSprintToolDefinition,
-  getAgileTools
+  getAgileTools,
 } from './agile-tools.js';
 
 // System Tools
@@ -47,7 +47,7 @@ export {
   searchFieldsToolDefinition,
   getSystemInfoToolDefinition,
   getServerInfoToolDefinition,
-  getSystemTools
+  getSystemTools,
 } from './system-tools.js';
 
 // Import for internal use
@@ -66,12 +66,12 @@ export function getAllTools() {
   // - Agile tools (5 tools): getAgileBoards, getBoardIssues, getSprintsFromBoard, getSprintIssues, getSprint
   // - System tools (3 tools): searchFields, getSystemInfo, getServerInfo
   // Total: 19 tools (Phase 1 complete)
-  
+
   return [
     ...getIssueTools(),
     ...getProjectTools(),
     ...getUserTools(),
     ...getAgileTools(),
-    ...getSystemTools()
+    ...getSystemTools(),
   ];
 }
