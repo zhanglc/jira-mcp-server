@@ -232,7 +232,7 @@ describe('JiraClientWrapper - getBoardIssues', () => {
       );
     });
 
-    test('should filter invalid field names for security', async () => {
+    test('should pass all fields directly without filtering', async () => {
       const mockResponse: SearchResult<JiraIssue> = {
         expand: 'names,schema',
         startAt: 0,
@@ -253,14 +253,14 @@ describe('JiraClientWrapper - getBoardIssues', () => {
         ],
       });
 
-      // Should filter out invalid fields but keep valid ones and custom fields
+      // Should pass all fields directly without filtering
       expect(mockClient.getIssuesForBoard).toHaveBeenCalledWith(
         '123',
         0,
         50,
         undefined,
         true,
-        'summary,status,customfield_10001'
+        'summary,status,invalidField,customfield_10001,maliciousScript'
       );
     });
 

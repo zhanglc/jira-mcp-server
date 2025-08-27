@@ -274,7 +274,7 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       });
     });
 
-    it('should filter invalid field names for security', async () => {
+    it('should pass all fields directly without filtering', async () => {
       // Arrange
       const sprintId = 111;
       const options: SearchOptions = {
@@ -302,13 +302,10 @@ describe('JiraClientWrapper.getSprintIssues', () => {
       // Assert
       expect(result).toEqual(mockSearchResult);
 
-      // Should only include valid fields
+      // Should pass all fields directly without filtering
       expect(mockJiraClient.searchJira).toHaveBeenCalledWith('sprint = 111', {
-        fields: ['summary', 'status', 'customfield_10001'],
+        fields: ['summary', 'invalid_field', 'status', 'malicious_field', 'customfield_10001'],
       });
-      expect(logger.log).toHaveBeenCalledWith(
-        'Filtered invalid field names: invalid_field, malicious_field'
-      );
     });
 
     it('should handle empty fields array', async () => {

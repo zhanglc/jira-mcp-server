@@ -1,0 +1,180 @@
+[
+  {
+    "accountId": "user123",
+    "username": "john.doe",
+    "emailAddress": "john.doe@example.com",
+    "displayName": "John Doe",
+    "active": true,
+    "timeZone": "America/New_York",
+    "locale": "en_US",
+    "groups": {
+      "size": 3,
+      "items": [
+        {
+          "name": "jira-developers",
+          "groupId": "group1"
+        },
+        {
+          "name": "jira-administrators",
+          "groupId": "group2"
+        },
+        {
+          "name": "project-managers",
+          "groupId": "group3"
+        }
+      ]
+    },
+    "applicationRoles": {
+      "size": 2,
+      "items": [
+        {
+          "key": "jira-core",
+          "name": "Jira Core"
+        },
+        {
+          "key": "jira-software",
+          "name": "Jira Software"
+        }
+      ]
+    },
+    "avatarUrls": {
+      "48x48": "https://test.atlassian.net/secure/useravatar?ownerId=user123&avatarId=10342",
+      "24x24": "https://test.atlassian.net/secure/useravatar?size=small&ownerId=user123&avatarId=10342",
+      "16x16": "https://test.atlassian.net/secure/useravatar?size=xsmall&ownerId=user123&avatarId=10342",
+      "32x32": "https://test.atlassian.net/secure/useravatar?size=medium&ownerId=user123&avatarId=10342"
+    }
+  },
+  {
+    "accountId": "user456",
+    "username": "jane.smith",
+    "emailAddress": "jane.smith@example.com",
+    "displayName": "Jane Smith",
+    "active": true,
+    "timeZone": "Europe/London",
+    "locale": "en_GB",
+    "groups": {
+      "size": 2,
+      "items": [
+        {
+          "name": "jira-developers",
+          "groupId": "group1"
+        },
+        {
+          "name": "qa-team",
+          "groupId": "group4"
+        }
+      ]
+    },
+    "applicationRoles": {
+      "size": 1,
+      "items": [
+        {
+          "key": "jira-software",
+          "name": "Jira Software"
+        }
+      ]
+    },
+    "avatarUrls": {
+      "48x48": "https://test.atlassian.net/secure/useravatar?ownerId=user456&avatarId=10343",
+      "24x24": "https://test.atlassian.net/secure/useravatar?size=small&ownerId=user456&avatarId=10343",
+      "16x16": "https://test.atlassian.net/secure/useravatar?size=xsmall&ownerId=user456&avatarId=10343",
+      "32x32": "https://test.atlassian.net/secure/useravatar?size=medium&ownerId=user456&avatarId=10343"
+    }
+  },
+  {
+    "accountId": "user789",
+    "username": "bob.wilson",
+    "emailAddress": "bob.wilson@example.com",
+    "displayName": "Bob Wilson",
+    "active": true,
+    "timeZone": "America/Los_Angeles",
+    "locale": "en_US",
+    "groups": {
+      "size": 1,
+      "items": [
+        {
+          "name": "jira-users",
+          "groupId": "group5"
+        }
+      ]
+    },
+    "applicationRoles": {
+      "size": 1,
+      "items": [
+        {
+          "key": "jira-core",
+          "name": "Jira Core"
+        }
+      ]
+    },
+    "avatarUrls": {
+      "48x48": "https://test.atlassian.net/secure/useravatar?ownerId=user789&avatarId=10344",
+      "24x24": "https://test.atlassian.net/secure/useravatar?size=small&ownerId=user789&avatarId=10344",
+      "16x16": "https://test.atlassian.net/secure/useravatar?size=xsmall&ownerId=user789&avatarId=10344",
+      "32x32": "https://test.atlassian.net/secure/useravatar?size=medium&ownerId=user789&avatarId=10344"
+    }
+  },
+  {
+    "accountId": "user101",
+    "username": "alice.brown",
+    "emailAddress": "alice.brown@example.com",
+    "displayName": "Alice Brown",
+    "active": false,
+    "timeZone": null,
+    "locale": null,
+    "groups": {
+      "size": 0,
+      "items": []
+    },
+    "applicationRoles": {
+      "size": 0,
+      "items": []
+    },
+    "avatarUrls": {
+      "48x48": "https://test.atlassian.net/secure/useravatar?ownerId=user101&avatarId=10345",
+      "24x24": "https://test.atlassian.net/secure/useravatar?size=small&ownerId=user101&avatarId=10345",
+      "16x16": "https://test.atlassian.net/secure/useravatar?size=xsmall&ownerId=user101&avatarId=10345",
+      "32x32": "https://test.atlassian.net/secure/useravatar?size=medium&ownerId=user101&avatarId=10345"
+    }
+  },
+  {
+    "accountId": "user202",
+    "username": "charlie.davis",
+    "emailAddress": "",
+    "displayName": "Charlie Davis",
+    "active": true,
+    "timeZone": "Australia/Sydney",
+    "locale": "en_AU",
+    "groups": {
+      "size": 2,
+      "items": [
+        {
+          "name": "jira-developers",
+          "groupId": "group1"
+        },
+        {
+          "name": "architects",
+          "groupId": "group6"
+        }
+      ]
+    },
+    "applicationRoles": {
+      "size": 3,
+      "items": [
+        {
+          "key": "jira-core",
+          "name": "Jira Core"
+        },
+        {
+          "key": "jira-software",
+          "name": "Jira Software"
+        },
+        {
+          "key": "jira-servicedesk",
+          "name": "Jira Service Desk"
+        }
+      ]
+    },
+    "avatarUrls": null
+  }
+]

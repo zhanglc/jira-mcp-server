@@ -1,0 +1,225 @@
+[
+  {
+    "key": "TEST",
+    "id": "10001",
+    "name": "Test Project",
+    "description": "A comprehensive test project for development",
+    "lead": {
+      "accountId": "user123",
+      "displayName": "John Doe",
+      "emailAddress": "john.doe@example.com",
+      "active": true
+    },
+    "projectCategory": {
+      "id": "10100",
+      "name": "Development",
+      "description": "Development projects"
+    },
+    "projectTypeKey": "software",
+    "archived": false,
+    "deleted": false,
+    "assigneeType": "PROJECT_LEAD",
+    "components": [
+      {
+        "id": "10001",
+        "name": "Backend",
+        "description": "Backend components"
+      },
+      {
+        "id": "10002",
+        "name": "Frontend",
+        "description": "Frontend components"
+      }
+    ],
+    "versions": [
+      {
+        "id": "10000",
+        "name": "Version 1.0",
+        "released": true,
+        "archived": false
+      },
+      {
+        "id": "10001",
+        "name": "Version 1.1",
+        "released": false,
+        "archived": false
+      }
+    ],
+    "roles": {
+      "Administrators": "https://test.atlassian.net/rest/api/2/project/TEST/role/10002",
+      "Developers": "https://test.atlassian.net/rest/api/2/project/TEST/role/10000"
+    },
+    "issueTypes": [
+      {
+        "id": "10001",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Story",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "key": "DEMO",
+    "id": "10002",
+    "name": "Demo Project",
+    "description": "Demonstration project for showcasing features",
+    "lead": {
+      "accountId": "user456",
+      "displayName": "Jane Smith",
+      "emailAddress": "jane.smith@example.com",
+      "active": true
+    },
+    "projectCategory": null,
+    "projectTypeKey": "business",
+    "archived": false,
+    "deleted": false,
+    "assigneeType": "UNASSIGNED",
+    "components": [
+      {
+        "id": "10003",
+        "name": "Marketing",
+        "description": "Marketing related components"
+      }
+    ],
+    "versions": [
+      {
+        "id": "10002",
+        "name": "Demo 1.0",
+        "released": false,
+        "archived": false
+      }
+    ],
+    "roles": {
+      "Administrators": "https://test.atlassian.net/rest/api/2/project/DEMO/role/10002"
+    },
+    "issueTypes": [
+      {
+        "id": "10001",
+        "name": "Bug",
+        "subtask": false
+      },
+      {
+        "id": "10003",
+        "name": "Task",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "key": "ARCH",
+    "id": "10003",
+    "name": "Archived Project",
+    "description": "",
+    "lead": {
+      "accountId": "user789",
+      "displayName": "Bob Wilson",
+      "active": false
+    },
+    "projectCategory": {
+      "id": "10101",
+      "name": "Legacy",
+      "description": "Legacy projects"
+    },
+    "projectTypeKey": "software",
+    "archived": true,
+    "deleted": false,
+    "assigneeType": "PROJECT_LEAD",
+    "components": [],
+    "versions": [],
+    "roles": {},
+    "issueTypes": [
+      {
+        "id": "10001",
+        "name": "Bug",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "key": "MINI",
+    "id": "10004",
+    "name": "Minimal Project",
+    "description": null,
+    "lead": {
+      "accountId": "user456",
+      "displayName": "Jane Smith",
+      "emailAddress": "jane.smith@example.com",
+      "active": true
+    },
+    "projectCategory": {
+      "id": "10102",
+      "name": "Experimental",
+      "description": "Experimental projects"
+    },
+    "projectTypeKey": "software",
+    "archived": false,
+    "deleted": false,
+    "assigneeType": "UNASSIGNED",
+    "components": [
+      {
+        "id": "10004",
+        "name": "Core",
+        "description": null
+      }
+    ],
+    "versions": [
+      {
+        "id": "10003",
+        "name": "Alpha",
+        "released": false,
+        "archived": false
+      }
+    ],
+    "roles": {
+      "Developers": "https://test.atlassian.net/rest/api/2/project/MINI/role/10000"
+    },
+    "issueTypes": [
+      {
+        "id": "10003",
+        "name": "Task",
+        "subtask": false
+      },
+      {
+        "id": "10004",
+        "name": "Story",
+        "subtask": false
+      }
+    ]
+  },
+  {
+    "key": "EMPTY",
+    "id": "10005",
+    "name": "Empty Project",
+    "description": "Project with minimal configuration",
+    "lead": {
+      "accountId": "user123",
+      "displayName": "John Doe",
+      "emailAddress": "john.doe@example.com",
+      "active": true
+    },
+    "projectCategory": null,
+    "projectTypeKey": "software",
+    "archived": false,
+    "deleted": false,
+    "assigneeType": "PROJECT_LEAD",
+    "components": [],
+    "versions": [],
+    "roles": {},
+    "issueTypes": [
+      {
+        "id": "10001",
+        "name": "Bug",
+        "subtask": false
+      }
+    ]
+  }
+]

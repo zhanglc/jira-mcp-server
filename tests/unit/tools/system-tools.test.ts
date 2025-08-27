@@ -40,16 +40,19 @@ describe('System Tools Module', () => {
 
       expect(tool.name).toBe('getSystemInfo');
       expect(tool.description).toContain('Get system information');
+      expect(tool.description).toContain('Enhanced field access available via jira://system/fields resource');
       expect(tool.inputSchema.type).toBe('object');
-      expect(tool.inputSchema.properties).toEqual({});
+      expect(tool.inputSchema.properties).toHaveProperty('fields');
+      expect((tool.inputSchema.properties as any).fields.type).toBe('array');
       expect(tool.inputSchema.additionalProperties).toBe(false);
     });
 
-    it('should not accept any parameters', () => {
+    it('should have optional fields parameter', () => {
       const tool = getSystemInfoToolDefinition();
 
       expect((tool.inputSchema as any).required).toBeUndefined();
-      expect(Object.keys(tool.inputSchema.properties)).toHaveLength(0);
+      expect(Object.keys(tool.inputSchema.properties)).toHaveLength(1);
+      expect(Object.keys(tool.inputSchema.properties)).toContain('fields');
     });
   });
 
@@ -59,16 +62,19 @@ describe('System Tools Module', () => {
 
       expect(tool.name).toBe('getServerInfo');
       expect(tool.description).toContain('Get server-specific information');
+      expect(tool.description).toContain('Enhanced field access available via jira://system/fields resource');
       expect(tool.inputSchema.type).toBe('object');
-      expect(tool.inputSchema.properties).toEqual({});
+      expect(tool.inputSchema.properties).toHaveProperty('fields');
+      expect((tool.inputSchema.properties as any).fields.type).toBe('array');
       expect(tool.inputSchema.additionalProperties).toBe(false);
     });
 
-    it('should not accept any parameters', () => {
+    it('should have optional fields parameter', () => {
       const tool = getServerInfoToolDefinition();
 
       expect((tool.inputSchema as any).required).toBeUndefined();
-      expect(Object.keys(tool.inputSchema.properties)).toHaveLength(0);
+      expect(Object.keys(tool.inputSchema.properties)).toHaveLength(1);
+      expect(Object.keys(tool.inputSchema.properties)).toContain('fields');
     });
   });
 

@@ -107,3 +107,68 @@ export interface BatchValidationResult {
   /** Suggestions for invalid paths (path -> suggested paths) */
   suggestions?: Record<string, string[]>;
 }
+
+/**
+ * Result of analyzing access path availability in sampled data
+ */
+export interface AccessPathAnalysis {
+  /** The access path being analyzed */
+  path: string;
+  /** Rate of availability when the parent field is present (0.0 to 1.0) */
+  availabilityRate: number;
+  /** Human-readable description of the path */
+  description: string;
+  /** Expected type at this path */
+  type: string;
+  /** Usage frequency classification */
+  frequency: 'high' | 'medium' | 'low';
+}
+
+/**
+ * Result of analyzing a single field's usage patterns
+ */
+export interface FieldUsageResult {
+  /** Field identifier */
+  fieldId: string;
+  /** Business-friendly field name */
+  name: string;
+  /** Field description */
+  description: string;
+  /** Rate of field presence in samples (0.0 to 1.0) */
+  presenceRate: number;
+  /** Rate of non-empty values when field is present (0.0 to 1.0) */
+  valueFillRate: number;
+  /** Analysis of all access paths for this field */
+  accessPaths: AccessPathAnalysis[];
+  /** Source of field definition */
+  source: 'static' | 'dynamic';
+  /** Confidence level of the analysis */
+  confidence: 'high' | 'medium' | 'low';
+}
+
+/**
+ * Complete field usage analysis result for an entity type
+ */
+export interface EntityFieldUsageAnalysis {
+  /** Entity type analyzed */
+  entityType: 'issue' | 'project' | 'user' | 'agile';
+  /** ISO timestamp of analysis */
+  analyzedAt: string;
+  /** Total number of entities sampled */
+  totalSamples: number;
+  /** Field usage results keyed by field ID */
+  fields: Record<string, FieldUsageResult>;
+  /** Summary statistics */
+  summary: {
+    /** Total number of fields analyzed */
+    totalFields: number;
+    /** Average field presence rate across all fields */
+    averagePresenceRate: number;
+    /** Average value fill rate across all fields */
+    averageValueFillRate: number;
+    /** Number of fields with high presence rate (>= 0.8) */
+    highPresenceFields: number;
+    /** Number of fields with low presence rate (< 0.2) */
+    lowPresenceFields: number;
+  };
+}

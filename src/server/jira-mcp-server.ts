@@ -9,8 +9,8 @@ import { ToolHandler } from './handlers/index.js';
 import { getAllTools } from './tools/index.js';
 import { logger } from '../utils/logger.js';
 import { BackwardCompatibilityLayer } from './backward-compatibility.js';
-import { JiraResourceHandler } from '@/server/resources/resource-handler.js';
-import { HybridResourceHandler } from '@/server/resources/hybrid-resource-handler.js';
+import { JiraResourceHandler } from './resources/resource-handler.js';
+import { HybridResourceHandler } from './resources/hybrid-resource-handler.js';
 import { JiraClientWrapper } from '../client/jira-client-wrapper.js';
 import { loadHybridConfig } from '../utils/config.js';
 import type { ValidatedHybridConfig } from '../types/config-types.js';
@@ -52,9 +52,7 @@ export class JiraMcpServer {
     // Initialize hybrid resource handler with configuration
     this.resourceHandler = new HybridResourceHandler(
       this.jiraClient,
-      this.hybridConfig.enableDynamicFields,
-      this.hybridConfig.dynamicFieldCacheTtl,
-      100 // cacheMaxSize - default value
+      this.hybridConfig
     );
     
     this.toolHandler = new ToolHandler(this.jiraClient, this.resourceHandler);
@@ -187,7 +185,97 @@ export class JiraMcpServer {
     return await this.backwardCompatibility.handleGetServerInfo(args);
   }
 
+  /**
+   * Connect the server to a transport
+   */
   async connect(transport: any) {
     await this.server.connect(transport);
+  }
+
+  /**
+   * Close the server and clean up resources
+   */
+  async close() {
+    try {
+      // Clean up any pending operations
+      if (this.resourceHandler && 'cleanup' in this.resourceHandler && 
+          typeof (this.resourceHandler as any).cleanup === 'function') {
+        await (this.resourceHandler as any).cleanup();
+      }
+      
+      // Close the MCP server
+      if (this.server && typeof this.server.close === 'function') {
+        await this.server.close();
+      }
+      
+      logger.log('Jira MCP Server closed successfully');
+    } catch (error) {
+      logger.error('Error closing Jira MCP Server', { error });
+      throw error;
+    }
+  }
+
+  /**
+   * Get server information for testing and debugging
+   */
+  getServerInfo() {
+    return {
+      name: 'jira-mcp-server',
+      version: '1.0.0',
+      capabilities: {
+        tools: true,
+        resources: true,
+      }
+    };
+  }
+
+  /**
+   * Check if server is ready to handle requests
+   */
+  isReady(): boolean {
+    return Boolean(
+      this.server && 
+      this.toolHandler && 
+      this.resourceHandler && 
+      this.jiraClient
+    );
+  }
+
+  /**
+   * Handle ListTools request
+   */
+  async handleListTools(request: any) {
+    logger.log('ListTools request received');
+    return {
+      tools: getAllTools(),
+    };
+  }
+
+  /**
+   * Handle CallTool request
+   */
+  async handleCallTool(request: { name: string; arguments?: any }) {
+    const { name, arguments: args } = request;
+    logger.log(`CallTool request: ${name}`, args);
+
+    const result = await this.toolHandler.handleTool(name, args || {});
+    return result;
+  }
+
+  /**
+   * Handle ListResources request
+   */
+  async handleListResources(request: any) {
+    logger.log('ListResources request received');
+    return await this.resourceHandler.listResources();
+  }
+
+  /**
+   * Handle ReadResource request
+   */
+  async handleReadResource(request: { uri: string }) {
+    const { uri } = request;
+    logger.log(`ReadResource request: ${uri}`);
+    return await this.resourceHandler.readResource(uri);
   }
 }

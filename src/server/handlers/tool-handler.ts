@@ -2,8 +2,10 @@ import { JiraClientWrapper } from '../../client/jira-client-wrapper.js';
 import { ApiError } from '../../types/api-error.js';
 import { loadConfig } from '../../utils/config.js';
 import { logger } from '../../utils/logger.js';
+import { FieldFilter } from '../../utils/field-filter.js';
 import { ToolArgs, ToolResponse } from '../../types/mcp-types.js';
-import { JiraResourceHandler } from '@/server/resources/resource-handler.js';
+import { JiraResourceHandler } from '../resources/resource-handler.js';
+import { HybridResourceHandler } from '../resources/hybrid-resource-handler.js';
 import type { BatchValidationResult } from '../../types/field-definition.js';
 
 /**
@@ -26,6 +28,21 @@ export class ToolHandler {
     if (resourceHandler) {
       this.resourceHandler = resourceHandler;
     }
+  }
+
+  /**
+   * Check if the resource handler supports enhanced validation.
+   */
+  private isHybridResourceHandler(): boolean {
+    return this.resourceHandler !== undefined && this.resourceHandler instanceof HybridResourceHandler;
+  }
+
+  /**
+   * Get resource handler as HybridResourceHandler (with type assertion).
+   * Should only be called after isHybridResourceHandler() returns true.
+   */
+  private getHybridResourceHandler(): HybridResourceHandler {
+    return this.resourceHandler as HybridResourceHandler;
   }
 
   /**
@@ -123,23 +140,29 @@ export class ToolHandler {
 
   /**
    * Validates field paths for issue-related operations and returns filtered valid fields.
-   * Provides helpful error messages and suggestions for invalid fields.
+   * Uses enhanced validation when available, with intelligent suggestions and metadata.
    *
    * @param fields Array of field paths to validate
    * @returns Object containing valid fields and warning message if any fields were filtered
    */
-  private validateAndFilterFields(fields: string[]): {
+  private async validateAndFilterFields(fields: string[]): Promise<{
     validFields: string[];
     warningMessage?: string;
-  } {
+  }> {
     if (!this.resourceHandler) {
       // If no resource handler available, return all fields as-is (backward compatibility)
       return { validFields: fields };
     }
 
     try {
-      const validation: BatchValidationResult =
-        this.resourceHandler.validateFieldPaths('issue', fields);
+      let validation: BatchValidationResult | { isValid: boolean; validPaths: string[]; invalidPaths: string[]; suggestions: Record<string, string[]> };
+
+      // Use enhanced validation with static suggestions if available
+      if (this.isHybridResourceHandler()) {
+        validation = this.getHybridResourceHandler().validateFieldPathsWithSuggestions('issue', fields);
+      } else {
+        validation = this.resourceHandler!.validateFieldPaths('issue', fields);
+      }
 
       if (validation.isValid) {
         // All fields are valid
@@ -147,9 +170,9 @@ export class ToolHandler {
       }
 
       if (validation.validPaths.length === 0) {
-        // No valid fields - throw error with suggestions
+        // No valid fields - throw error with static suggestions
         const errorMessage = 'All provided fields are invalid.';
-        const suggestions = this.formatFieldSuggestions(validation.suggestions);
+        const suggestions = this.formatFieldSuggestions(validation);
         throw new ApiError(`${errorMessage}${suggestions}`, 400);
       }
 
@@ -171,39 +194,35 @@ export class ToolHandler {
   }
 
   /**
-   * Formats field validation warnings with suggestions
+   * Formats field validation warnings with static suggestions
    */
   private formatFieldValidationWarning(
-    validation: BatchValidationResult
+    validation: BatchValidationResult | { isValid: boolean; validPaths: string[]; invalidPaths: string[]; suggestions: Record<string, string[]> }
   ): string {
     const invalidFields = validation.invalidPaths.join(', ');
     let message = `WARNING: Some fields were invalid and filtered out.\nInvalid fields: ${invalidFields}`;
 
-    if (
-      validation.suggestions &&
-      Object.keys(validation.suggestions).length > 0
-    ) {
-      message += '\n' + this.formatFieldSuggestions(validation.suggestions);
+    if ('suggestions' in validation && validation.suggestions && Object.keys(validation.suggestions).length > 0) {
+      message += '\n' + this.formatFieldSuggestions(validation);
     }
 
     return message;
   }
 
   /**
-   * Formats field suggestions for error messages
+   * Formats field suggestions using static suggestion engine
    */
   private formatFieldSuggestions(
-    suggestions?: Record<string, string[]>
+    validation: BatchValidationResult | { isValid: boolean; validPaths: string[]; invalidPaths: string[]; suggestions: Record<string, string[]> }
   ): string {
-    if (!suggestions || Object.keys(suggestions).length === 0) {
+    if (!('suggestions' in validation) || !validation.suggestions || Object.keys(validation.suggestions).length === 0) {
       return '';
     }
 
-    const suggestionLines = Object.entries(suggestions)
-      .map(
-        ([field, fieldSuggestions]) =>
-          `Suggestions for "${field}": ${fieldSuggestions.join(', ')}`
-      )
+    const suggestionLines = Object.entries(validation.suggestions)
+      .map(([field, fieldSuggestions]) => {
+        return `Suggestions for "${field}": ${fieldSuggestions.join(', ')}`;
+      })
       .join('\n');
 
     return `\n${suggestionLines}`;
@@ -251,7 +270,7 @@ export class ToolHandler {
    */
   private async handleGetIssue(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { issueKey, fields } = args;
+      const { issueKey, fields, expand } = args;
 
       if (!issueKey || typeof issueKey !== 'string') {
         throw new ApiError('issueKey is required and must be a string', 400);
@@ -261,18 +280,48 @@ export class ToolHandler {
         throw new ApiError('fields must be an array of strings', 400);
       }
 
+      if (expand !== undefined && !Array.isArray(expand)) {
+        throw new ApiError('expand must be an array of strings', 400);
+      }
+
+      // Validate expand parameter values if provided
+      if (expand && expand.length > 0) {
+        const validExpandOptions = [
+          'changelog',
+          'renderedFields',
+          'names',
+          'schema',
+          'transitions',
+          'operations',
+          'editmeta',
+          'versionedRepresentations'
+        ];
+
+        const invalidExpandOptions = expand.filter(option => 
+          typeof option !== 'string' || !validExpandOptions.includes(option)
+        );
+
+        if (invalidExpandOptions.length > 0) {
+          throw new ApiError(
+            `Invalid expand options: ${invalidExpandOptions.join(', ')}. ` +
+            `Valid options are: ${validExpandOptions.join(', ')}`,
+            400
+          );
+        }
+      }
+
       // Validate and filter fields if provided
       let validatedFields: string[] | undefined = fields;
       let warningMessage: string | undefined;
 
       if (fields && fields.length > 0) {
-        const validation = this.validateAndFilterFields(fields);
+        const validation = await this.validateAndFilterFields(fields);
         validatedFields = validation.validFields;
         warningMessage = validation.warningMessage;
       }
 
       this.ensureJiraClient();
-      const issue = await this.jiraClient!.getIssue(issueKey, validatedFields);
+      const issue = await this.jiraClient!.getIssue(issueKey, validatedFields, expand);
 
       return this.wrapResponseWithWarnings(issue, warningMessage);
     } catch (error) {
@@ -287,20 +336,40 @@ export class ToolHandler {
     args: ToolArgs
   ): Promise<ToolResponse> {
     try {
-      const { issueKey } = args;
+      const { issueKey, fields } = args;
 
       if (!issueKey || typeof issueKey !== 'string') {
         throw new ApiError('issueKey is required and must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const transitions = await this.jiraClient!.getIssueTransitions(issueKey);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = transitions;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(transitions, fields, {
+            entityType: 'issue',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = transitions;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(transitions, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -343,7 +412,7 @@ export class ToolHandler {
       let warningMessage: string | undefined;
 
       if (fields && fields.length > 0) {
-        const validation = this.validateAndFilterFields(fields);
+        const validation = await this.validateAndFilterFields(fields);
         validatedFields = validation.validFields;
         warningMessage = validation.warningMessage;
       }
@@ -368,20 +437,40 @@ export class ToolHandler {
    */
   private async handleGetIssueWorklogs(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { issueKey } = args;
+      const { issueKey, fields } = args;
 
       if (!issueKey || typeof issueKey !== 'string') {
         throw new ApiError('issueKey is required and must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const worklogs = await this.jiraClient!.getIssueWorklogs(issueKey);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = worklogs;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(worklogs, fields, {
+            entityType: 'issue',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = worklogs;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(worklogs, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -397,20 +486,40 @@ export class ToolHandler {
     args: ToolArgs
   ): Promise<ToolResponse> {
     try {
-      const { issueKey } = args || {};
+      const { issueKey, fields } = args || {};
 
       if (!issueKey || typeof issueKey !== 'string') {
         throw new ApiError('issueKey is required and must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const attachments = await this.jiraClient!.downloadAttachments(issueKey);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = attachments;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(attachments, fields, {
+            entityType: 'issue',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = attachments;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(attachments, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -428,7 +537,7 @@ export class ToolHandler {
    */
   private async handleGetAllProjects(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { includeArchived } = args;
+      const { includeArchived, fields } = args;
 
       if (
         includeArchived !== undefined &&
@@ -437,14 +546,34 @@ export class ToolHandler {
         throw new ApiError('includeArchived must be a boolean', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const projects = await this.jiraClient!.getAllProjects(includeArchived);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = projects;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(projects, fields, {
+            entityType: 'project',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = projects;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(projects, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -458,20 +587,40 @@ export class ToolHandler {
    */
   private async handleGetProject(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { projectKey } = args;
+      const { projectKey, fields } = args;
 
       if (!projectKey || typeof projectKey !== 'string') {
         throw new ApiError('projectKey is required and must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const project = await this.jiraClient!.getProject(projectKey);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = project;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(project, fields, {
+            entityType: 'project',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = project;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(project, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -514,7 +663,7 @@ export class ToolHandler {
       let warningMessage: string | undefined;
 
       if (fields && fields.length > 0) {
-        const validation = this.validateAndFilterFields(fields);
+        const validation = await this.validateAndFilterFields(fields);
         validatedFields = validation.validFields;
         warningMessage = validation.warningMessage;
       }
@@ -544,20 +693,40 @@ export class ToolHandler {
     args: ToolArgs
   ): Promise<ToolResponse> {
     try {
-      const { projectKey } = args;
+      const { projectKey, fields } = args;
 
       if (!projectKey || typeof projectKey !== 'string') {
         throw new ApiError('projectKey is required and must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const versions = await this.jiraClient!.getProjectVersions(projectKey);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = versions;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(versions, fields, {
+            entityType: 'project',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = versions;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(versions, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -575,21 +744,48 @@ export class ToolHandler {
    */
   private async handleGetCurrentUser(args: ToolArgs): Promise<ToolResponse> {
     try {
-      if (args && Object.keys(args).length > 0) {
+      const { fields } = args || {};
+
+      // Only allow fields parameter
+      const allowedKeys = ['fields'];
+      const providedKeys = Object.keys(args || {});
+      const invalidKeys = providedKeys.filter(key => !allowedKeys.includes(key));
+      
+      if (invalidKeys.length > 0) {
         throw new ApiError(
-          'getCurrentUser does not accept any parameters',
+          `getCurrentUser only accepts 'fields' parameter. Invalid parameters: ${invalidKeys.join(', ')}`,
           400
         );
+      }
+
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
       }
 
       this.ensureJiraClient();
       const user = await this.jiraClient!.getCurrentUser();
 
+      // Apply client-side field filtering if fields specified
+      let responseData = user;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(user, fields, {
+            entityType: 'user',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = user;
+        }
+      }
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(user, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -603,20 +799,40 @@ export class ToolHandler {
    */
   private async handleGetUserProfile(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { username } = args;
+      const { username, fields } = args;
 
       if (!username || typeof username !== 'string') {
         throw new ApiError('username is required and must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const user = await this.jiraClient!.getUserProfile(username);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = user;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(user, fields, {
+            entityType: 'user',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = user;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(user, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -634,20 +850,40 @@ export class ToolHandler {
    */
   private async handleGetAgileBoards(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { projectKey } = args;
+      const { projectKey, fields } = args;
 
       if (projectKey !== undefined && typeof projectKey !== 'string') {
         throw new ApiError('projectKey must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const boards = await this.jiraClient!.getAgileBoards(projectKey);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = boards;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(boards, fields, {
+            entityType: 'agile',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = boards;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(boards, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -690,7 +926,7 @@ export class ToolHandler {
       let warningMessage: string | undefined;
 
       if (fields && fields.length > 0) {
-        const validation = this.validateAndFilterFields(fields);
+        const validation = await this.validateAndFilterFields(fields);
         validatedFields = validation.validFields;
         warningMessage = validation.warningMessage;
       }
@@ -717,20 +953,40 @@ export class ToolHandler {
     args: ToolArgs
   ): Promise<ToolResponse> {
     try {
-      const { boardId } = args;
+      const { boardId, fields } = args;
 
       if (!boardId || typeof boardId !== 'number') {
         throw new ApiError('boardId is required and must be a number', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const sprints = await this.jiraClient!.getSprintsFromBoard(boardId);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = sprints;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(sprints, fields, {
+            entityType: 'agile',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = sprints;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(sprints, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -782,7 +1038,7 @@ export class ToolHandler {
         }
 
         if (fields.length > 0) {
-          const validation = this.validateAndFilterFields(fields);
+          const validation = await this.validateAndFilterFields(fields);
           validatedFields = validation.validFields;
           warningMessage = validation.warningMessage;
         } else {
@@ -808,20 +1064,40 @@ export class ToolHandler {
    */
   private async handleGetSprint(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { sprintId } = args;
+      const { sprintId, fields } = args;
 
       if (!sprintId || typeof sprintId !== 'number') {
         throw new ApiError('sprintId is required and must be a number', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
       const sprint = await this.jiraClient!.getSprint(sprintId);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = sprint;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(sprint, fields, {
+            entityType: 'agile',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = sprint;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(sprint, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -839,20 +1115,40 @@ export class ToolHandler {
    */
   private async handleSearchFields(args: ToolArgs): Promise<ToolResponse> {
     try {
-      const { query } = args || {};
+      const { query, fields } = args || {};
 
       if (query !== undefined && typeof query !== 'string') {
         throw new ApiError('query must be a string', 400);
       }
 
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
+      }
+
       this.ensureJiraClient();
-      const fields = await this.jiraClient!.searchFields(query);
+      const fieldResults = await this.jiraClient!.searchFields(query);
+
+      // Apply client-side field filtering if fields specified
+      let responseData = fieldResults;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(fieldResults, fields, {
+            entityType: 'system',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = fieldResults;
+        }
+      }
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(fields, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -866,18 +1162,48 @@ export class ToolHandler {
    */
   private async handleGetSystemInfo(args: ToolArgs): Promise<ToolResponse> {
     try {
-      if (args && Object.keys(args).length > 0) {
-        throw new ApiError('getSystemInfo does not accept any parameters', 400);
+      const { fields } = args || {};
+
+      // Only allow fields parameter
+      const allowedKeys = ['fields'];
+      const providedKeys = Object.keys(args || {});
+      const invalidKeys = providedKeys.filter(key => !allowedKeys.includes(key));
+      
+      if (invalidKeys.length > 0) {
+        throw new ApiError(
+          `getSystemInfo only accepts 'fields' parameter. Invalid parameters: ${invalidKeys.join(', ')}`,
+          400
+        );
+      }
+
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
       }
 
       this.ensureJiraClient();
       const systemInfo = await this.jiraClient!.getSystemInfo();
 
+      // Apply client-side field filtering if fields specified
+      let responseData = systemInfo;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(systemInfo, fields, {
+            entityType: 'system',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = systemInfo;
+        }
+      }
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(systemInfo, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };
@@ -891,18 +1217,48 @@ export class ToolHandler {
    */
   private async handleGetServerInfo(args: ToolArgs): Promise<ToolResponse> {
     try {
-      if (args && Object.keys(args).length > 0) {
-        throw new ApiError('getServerInfo does not accept any parameters', 400);
+      const { fields } = args || {};
+
+      // Only allow fields parameter
+      const allowedKeys = ['fields'];
+      const providedKeys = Object.keys(args || {});
+      const invalidKeys = providedKeys.filter(key => !allowedKeys.includes(key));
+      
+      if (invalidKeys.length > 0) {
+        throw new ApiError(
+          `getServerInfo only accepts 'fields' parameter. Invalid parameters: ${invalidKeys.join(', ')}`,
+          400
+        );
+      }
+
+      if (fields !== undefined && !Array.isArray(fields)) {
+        throw new ApiError('fields must be an array of strings', 400);
       }
 
       this.ensureJiraClient();
       const serverInfo = await this.jiraClient!.getServerInfo();
 
+      // Apply client-side field filtering if fields specified
+      let responseData = serverInfo;
+      if (fields && fields.length > 0) {
+        try {
+          responseData = FieldFilter.filterFields(serverInfo, fields, {
+            entityType: 'system',
+            respectNesting: true,
+            logFiltering: true
+          });
+        } catch (filterError) {
+          logger.error('Field filtering failed:', filterError);
+          // Fall back to original response if filtering fails
+          responseData = serverInfo;
+        }
+      }
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(serverInfo, null, 2),
+            text: JSON.stringify(responseData, null, 2),
           },
         ],
       };

@@ -19,14 +19,12 @@ describe('User Tools Module', () => {
       expect(tool).toHaveProperty('name', 'getCurrentUser');
       expect(tool).toHaveProperty(
         'description',
-        'Get information about the currently authenticated user for authentication verification'
+        'Get information about the currently authenticated user for authentication verification. Enhanced field access available via jira://user/fields resource.'
       );
       expect(tool).toHaveProperty('inputSchema');
-      expect(tool.inputSchema).toEqual({
-        type: 'object',
-        properties: {},
-        additionalProperties: false,
-      });
+      expect(tool.inputSchema.type).toBe('object');
+      expect(tool.inputSchema.additionalProperties).toBe(false);
+      expect(tool.inputSchema.properties).toHaveProperty('fields');
     });
   });
 
@@ -37,19 +35,17 @@ describe('User Tools Module', () => {
       expect(tool).toHaveProperty('name', 'getUserProfile');
       expect(tool).toHaveProperty(
         'description',
-        'Get detailed profile information for a specific Jira user by username or email address'
+        'Get detailed profile information for a specific Jira user by username or email address. Enhanced field access available via jira://user/fields resource.'
       );
       expect(tool).toHaveProperty('inputSchema');
-      expect(tool.inputSchema).toEqual({
-        type: 'object',
-        properties: {
-          username: {
-            type: 'string',
-            description:
-              'The username or email address of the user (e.g., JIRAUSER23511, user@domain.com)',
-          },
-        },
-        required: ['username'],
+      expect(tool.inputSchema.type).toBe('object');
+      expect(tool.inputSchema.required).toEqual(['username']);
+      expect(tool.inputSchema.properties).toHaveProperty('username');
+      expect(tool.inputSchema.properties).toHaveProperty('fields');
+      expect(tool.inputSchema.properties.username).toEqual({
+        type: 'string',
+        description:
+          'The username or email address of the user (e.g., JIRAUSER23511, user@domain.com)',
       });
     });
   });

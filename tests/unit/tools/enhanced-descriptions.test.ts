@@ -9,6 +9,9 @@ import { describe, it, expect } from '@jest/globals';
 import {
   getIssueToolDefinition,
   searchIssuesToolDefinition,
+  getIssueTransitionsToolDefinition,
+  getIssueWorklogsToolDefinition,
+  downloadAttachmentsToolDefinition,
 } from '../../../src/server/tools/issue-tools.js';
 import {
   getProjectToolDefinition,
@@ -19,6 +22,11 @@ import {
   getSprintIssuesToolDefinition,
 } from '../../../src/server/tools/agile-tools.js';
 import { ISSUE_FIELD_DEFINITIONS } from '../../../src/server/resources/static-definitions/issue-fields.js';
+import {
+  searchFieldsToolDefinition,
+  getSystemInfoToolDefinition,
+  getServerInfoToolDefinition,
+} from '../../../src/server/tools/system-tools.js';
 
 describe('Enhanced Tool Descriptions', () => {
   describe('Issue Tools Field Guidance', () => {
@@ -91,6 +99,39 @@ describe('Enhanced Tool Descriptions', () => {
       expect(fieldsProperty).toBeDefined();
       expect(fieldsProperty.description).toContain('jira://issue/fields');
       expect(fieldsProperty.description).toContain('Enhanced capabilities');
+    });
+
+    it('getIssueTransitions should have enhanced field description', () => {
+      const tool = getIssueTransitionsToolDefinition();
+      expect(tool.description).toContain('Enhanced field access available via jira://issue/fields resource');
+      
+      const fieldsProperty = tool.inputSchema.properties?.fields;
+      expect(fieldsProperty).toBeDefined();
+      expect(fieldsProperty.description).toContain('jira://issue/fields');
+      expect(fieldsProperty.description).toContain('Enhanced capabilities');
+      expect(fieldsProperty.description).toContain('Client-side filtering');
+    });
+
+    it('getIssueWorklogs should have enhanced field description', () => {
+      const tool = getIssueWorklogsToolDefinition();
+      expect(tool.description).toContain('Enhanced field access available via jira://issue/fields resource');
+      
+      const fieldsProperty = tool.inputSchema.properties?.fields;
+      expect(fieldsProperty).toBeDefined();
+      expect(fieldsProperty.description).toContain('jira://issue/fields');
+      expect(fieldsProperty.description).toContain('Enhanced capabilities');
+      expect(fieldsProperty.description).toContain('Client-side filtering');
+    });
+
+    it('downloadAttachments should have enhanced field description', () => {
+      const tool = downloadAttachmentsToolDefinition();
+      expect(tool.description).toContain('Enhanced field access available via jira://issue/fields resource');
+      
+      const fieldsProperty = tool.inputSchema.properties?.fields;
+      expect(fieldsProperty).toBeDefined();
+      expect(fieldsProperty.description).toContain('jira://issue/fields');
+      expect(fieldsProperty.description).toContain('Enhanced capabilities');
+      expect(fieldsProperty.description).toContain('Client-side filtering');
     });
   });
 
@@ -190,6 +231,138 @@ describe('Enhanced Tool Descriptions', () => {
           fieldDef => fieldDef.accessPaths.some(ap => ap.path === field)
         );
         expect(isValidPath).toBe(true);
+      });
+    });
+  });
+
+  describe('System Tools Field Guidance', () => {
+    it('searchFields should have enhanced field description', () => {
+      const tool = searchFieldsToolDefinition();
+      expect(tool.description).toContain('Enhanced field access available via jira://system/fields resource');
+      
+      const fieldsProperty = tool.inputSchema.properties?.fields;
+      expect(fieldsProperty).toBeDefined();
+      expect(fieldsProperty.description).toContain('jira://system/fields');
+      expect(fieldsProperty.description).toContain('Enhanced capabilities');
+      expect(fieldsProperty.description).toContain('Client-side filtering');
+    });
+
+    it('getSystemInfo should have enhanced field description', () => {
+      const tool = getSystemInfoToolDefinition();
+      expect(tool.description).toContain('Enhanced field access available via jira://system/fields resource');
+      
+      const fieldsProperty = tool.inputSchema.properties?.fields;
+      expect(fieldsProperty).toBeDefined();
+      expect(fieldsProperty.description).toContain('jira://system/fields');
+      expect(fieldsProperty.description).toContain('Enhanced capabilities');
+      expect(fieldsProperty.description).toContain('Client-side filtering');
+    });
+
+    it('getServerInfo should have enhanced field description', () => {
+      const tool = getServerInfoToolDefinition();
+      expect(tool.description).toContain('Enhanced field access available via jira://system/fields resource');
+      
+      const fieldsProperty = tool.inputSchema.properties?.fields;
+      expect(fieldsProperty).toBeDefined();
+      expect(fieldsProperty.description).toContain('jira://system/fields');
+      expect(fieldsProperty.description).toContain('Enhanced capabilities');
+      expect(fieldsProperty.description).toContain('Client-side filtering');
+    });
+  });
+
+  describe('Implementation Notes Validation', () => {
+    it('native API support tools should indicate native field support', () => {
+      const nativeApiTools = [
+        getIssueToolDefinition(),
+        searchIssuesToolDefinition(),
+        getProjectIssuesToolDefinition(),
+        getBoardIssuesToolDefinition(),
+        getSprintIssuesToolDefinition(),
+      ];
+
+      nativeApiTools.forEach(tool => {
+        const fieldsProperty = tool.inputSchema.properties?.fields;
+        expect(fieldsProperty).toBeDefined();
+        // Native API tools should not mention client-side filtering
+        expect(fieldsProperty.description).not.toContain('Client-side filtering');
+        expect(fieldsProperty.description).not.toContain('client-side filtering');
+      });
+    });
+
+    it('client-side filtering tools should indicate client-side implementation', () => {
+      const clientSideTools = [
+        getIssueTransitionsToolDefinition(),
+        getIssueWorklogsToolDefinition(),
+        downloadAttachmentsToolDefinition(),
+        searchFieldsToolDefinition(),
+        getSystemInfoToolDefinition(),
+        getServerInfoToolDefinition(),
+      ];
+
+      clientSideTools.forEach(tool => {
+        const fieldsProperty = tool.inputSchema.properties?.fields;
+        expect(fieldsProperty).toBeDefined();
+        expect(fieldsProperty.description).toContain('Client-side filtering');
+      });
+    });
+
+    it('all tools with fields parameter should reference correct resource URI', () => {
+      const issueRelatedTools = [
+        getIssueToolDefinition(),
+        searchIssuesToolDefinition(),
+        getProjectIssuesToolDefinition(),
+        getBoardIssuesToolDefinition(),
+        getSprintIssuesToolDefinition(),
+        getIssueTransitionsToolDefinition(),
+        getIssueWorklogsToolDefinition(),
+        downloadAttachmentsToolDefinition(),
+      ];
+
+      const systemRelatedTools = [
+        searchFieldsToolDefinition(),
+        getSystemInfoToolDefinition(),
+        getServerInfoToolDefinition(),
+      ];
+
+      issueRelatedTools.forEach(tool => {
+        const fieldsProperty = tool.inputSchema.properties?.fields;
+        expect(fieldsProperty).toBeDefined();
+        expect(fieldsProperty.description).toContain('jira://issue/fields');
+      });
+
+      systemRelatedTools.forEach(tool => {
+        const fieldsProperty = tool.inputSchema.properties?.fields;
+        expect(fieldsProperty).toBeDefined();
+        expect(fieldsProperty.description).toContain('jira://system/fields');
+      });
+    });
+
+    it('all enhanced descriptions should follow consistent format structure', () => {
+      const allToolsWithFields = [
+        getIssueToolDefinition(),
+        searchIssuesToolDefinition(),
+        getProjectIssuesToolDefinition(),
+        getBoardIssuesToolDefinition(),
+        getSprintIssuesToolDefinition(),
+        getIssueTransitionsToolDefinition(),
+        getIssueWorklogsToolDefinition(),
+        downloadAttachmentsToolDefinition(),
+        searchFieldsToolDefinition(),
+        getSystemInfoToolDefinition(),
+        getServerInfoToolDefinition(),
+      ];
+
+      allToolsWithFields.forEach(tool => {
+        const fieldsProperty = tool.inputSchema.properties?.fields;
+        expect(fieldsProperty).toBeDefined();
+        
+        const description = fieldsProperty.description || '';
+        
+        // Check for required sections
+        expect(description).toMatch(/📋 Complete field reference:/);  
+        expect(description).toMatch(/🔥 Enhanced capabilities:/);      
+        expect(description).toMatch(/🎯 Example field combinations:/);
+        expect(description).toMatch(/Note:/);                         
       });
     });
   });

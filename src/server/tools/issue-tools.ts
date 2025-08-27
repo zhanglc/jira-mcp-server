@@ -50,6 +50,28 @@ export function getIssueToolDefinition(): Tool {
 
 Note: Invalid fields are filtered with suggestions provided.`,
         },
+        expand: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional expand parameter to include additional data in the response.
+
+🔥 Available expand options:
+• changelog - Issue change history and transitions
+• renderedFields - Rendered field values (HTML, etc.)
+• names - Field names mapping
+• schema - Field schema information  
+• transitions - Available status transitions
+• operations - Available operations on the issue
+• editmeta - Edit metadata for the issue
+• versionedRepresentations - Different field representations
+
+🎯 Common usage examples:
+• ["changelog"] - Get issue change history
+• ["changelog", "transitions"] - Get history + available transitions
+• ["renderedFields"] - Get rendered field values
+
+Note: Large expand options like 'changelog' may increase response time.`,
+        },
       },
       required: ['issueKey'],
     },
@@ -63,13 +85,32 @@ Note: Invalid fields are filtered with suggestions provided.`,
 export function getIssueTransitionsToolDefinition(): Tool {
   return {
     name: 'getIssueTransitions',
-    description: 'Get available status transitions for a Jira issue',
+    description: 'Get available status transitions for a Jira issue. Enhanced field access available via jira://issue/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
         issueKey: {
           type: 'string',
           description: 'The issue key or ID (e.g., PROJ-123)',
+        },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Field selection with nested access support and resource guidance.
+
+📋 Complete field reference: jira://issue/fields
+
+🔥 Enhanced capabilities:
+• Transition fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "name", "to.name"]
+• Detailed: ["id", "name", "to.name", "to.statusCategory.key"]
+• Custom: ["name", "to.statusCategory.name", "fields"]
+
+Note: Uses client-side filtering (API doesn't support native fields parameter)`,
         },
       },
       required: ['issueKey'],
@@ -134,13 +175,32 @@ export function getIssueWorklogsToolDefinition(): Tool {
   return {
     name: 'getIssueWorklogs',
     description:
-      'Get work log entries for a Jira issue, including time tracking and work history',
+      'Get work log entries for a Jira issue, including time tracking and work history. Enhanced field access available via jira://issue/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
         issueKey: {
           type: 'string',
           description: 'The issue key or ID (e.g., PROJ-123)',
+        },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Field selection with nested access support and resource guidance.
+
+📋 Complete field reference: jira://issue/fields
+
+🔥 Enhanced capabilities:
+• Worklog fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "timeSpent", "author.displayName"]
+• Detailed: ["id", "timeSpent", "author.displayName", "created", "comment"]
+• Custom: ["timeSpent", "author.emailAddress", "updateAuthor.displayName"]
+
+Note: Uses client-side filtering (API doesn't support native fields parameter)`,
         },
       },
       required: ['issueKey'],
@@ -156,13 +216,32 @@ export function downloadAttachmentsToolDefinition(): Tool {
   return {
     name: 'downloadAttachments',
     description:
-      'Download attachment metadata for a Jira issue. Returns information about all attachments including file metadata, download URLs, and author details. Does not download actual files.',
+      'Download attachment metadata for a Jira issue. Returns information about all attachments including file metadata, download URLs, and author details. Does not download actual files. Enhanced field access available via jira://issue/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
         issueKey: {
           type: 'string',
           description: 'The issue key or ID (e.g., PROJ-123)',
+        },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Field selection with nested access support and resource guidance.
+
+📋 Complete field reference: jira://issue/fields
+
+🔥 Enhanced capabilities:
+• Attachment fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "filename", "size"]
+• Detailed: ["id", "filename", "size", "author.displayName", "created"]
+• Custom: ["filename", "mimeType", "author.emailAddress", "content"]
+
+Note: Uses client-side filtering (API doesn't support native fields parameter)`,
         },
       },
       required: ['issueKey'],

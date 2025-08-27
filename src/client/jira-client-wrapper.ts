@@ -22,45 +22,6 @@ import { logger } from '../utils/logger.js';
 export class JiraClientWrapper {
   private client: JiraClient;
 
-  // Allowed field names for security validation
-  private static readonly ALLOWED_FIELDS = [
-    'summary',
-    'status',
-    'assignee',
-    'reporter',
-    'description',
-    'project',
-    'issuetype',
-    'priority',
-    'created',
-    'updated',
-    'creator',
-    'parent',
-    'components',
-    'versions',
-    'fixVersions',
-    'labels',
-    'environment',
-    'duedate',
-    'resolution',
-    'resolutiondate',
-    'worklog',
-    'comment',
-    'attachment',
-    'issuelinks',
-    'subtasks',
-    'watches',
-    'timeoriginalestimate',
-    'timeestimate',
-    'timespent',
-    'aggregatetimeoriginalestimate',
-    'aggregatetimeestimate',
-    'aggregatetimespent',
-    'workratio',
-    'progress',
-    'votes',
-  ];
-
   constructor(config: JiraConfig) {
     const clientConfig: any = {
       protocol: 'https',
@@ -99,7 +60,8 @@ export class JiraClientWrapper {
    * @param fields - Optional array of field names to retrieve. If omitted, all fields are returned.
    *                 Standard fields: summary, status, assignee, reporter, description, project, etc.
    *                 Custom fields: customfield_XXXXX format
-   *                 Invalid field names are filtered out for security
+   * @param expand - Optional array of expand options to include additional data in the response.
+   *                 Available options: changelog, renderedFields, names, schema, transitions, operations, editmeta, versionedRepresentations
    * @returns Promise that resolves to the Jira issue object
    * @throws {ApiError} When the issue doesn't exist, access is denied, or other API errors occur
    *
@@ -110,40 +72,33 @@ export class JiraClientWrapper {
    *
    * // Get specific fields only
    * const issue = await client.getIssue('PROJECT-123', ['summary', 'status']);
+   *
+   * // Get issue with changelog
+   * const issue = await client.getIssue('PROJECT-123', undefined, ['changelog']);
+   *
+   * // Get specific fields with changelog and transitions
+   * const issue = await client.getIssue('PROJECT-123', ['summary', 'status'], ['changelog', 'transitions']);
    * ```
    */
-  async getIssue(issueKey: string, fields?: string[]): Promise<JiraIssue> {
+  async getIssue(issueKey: string, fields?: string[], expand?: string[]): Promise<JiraIssue> {
     try {
-      logger.log(`Getting issue: ${issueKey}`);
+      logger.log(`Getting issue: ${issueKey}`, { fields, expand });
 
       let issue: JiraIssue;
-      if (fields !== undefined) {
-        // Validate and filter field names for security
-        const validFields = fields.filter(
-          field =>
-            JiraClientWrapper.ALLOWED_FIELDS.includes(field) ||
-            field.startsWith('customfield_') ||
-            field === '*all' ||
-            field === '*navigable'
-        );
-
-        if (validFields.length !== fields.length) {
-          const invalidFields = fields.filter(
-            field => !validFields.includes(field)
-          );
-          logger.log(
-            `Filtered invalid field names: ${invalidFields.join(', ')}`
-          );
-        }
-
-        // When fields parameter is provided (even if empty), use the fields-specific call
+      
+      // Prepare the expand parameter as a comma-separated string if provided
+      const expandString = expand && expand.length > 0 ? expand.join(',') : '';
+      
+      if (fields !== undefined || expandString) {
+        // When fields or expand parameters are provided, use the parameterized call
+        // The jira-client findIssue signature is: findIssue(issueKey, expand?, fields?)
         issue = (await this.client.findIssue(
           issueKey,
-          '',
-          validFields.join(',')
+          expandString,
+          fields ? fields.join(',') : undefined
         )) as JiraIssue;
       } else {
-        // Default behavior - get all fields
+        // Default behavior - get all fields without expand
         issue = (await this.client.findIssue(issueKey)) as JiraIssue;
       }
 
@@ -159,6 +114,8 @@ export class JiraClientWrapper {
    * Retrieves available transitions for a Jira issue.
    *
    * @param issueKey - The unique key of the Jira issue (e.g., 'PROJECT-123')
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, name, to.name, to.statusCategory.key
    * @returns Promise that resolves to an array of available transitions
    * @throws {ApiError} When the issue doesn't exist, access is denied, or other API errors occur
    *
@@ -166,12 +123,17 @@ export class JiraClientWrapper {
    * ```typescript
    * const transitions = await client.getIssueTransitions('PROJECT-123');
    * console.log(transitions); // [{ id: '21', name: 'In Progress', to: {...} }, ...]
+   *
+   * // Get specific fields only
+   * const transitions = await client.getIssueTransitions('PROJECT-123', ['id', 'name', 'to.name']);
    * ```
    */
-  async getIssueTransitions(issueKey: string): Promise<JiraTransition[]> {
+  async getIssueTransitions(issueKey: string, fields?: string[]): Promise<JiraTransition[]> {
     try {
-      logger.log(`Getting transitions for issue: ${issueKey}`);
+      logger.log(`Getting transitions for issue: ${issueKey}`, { fields });
 
+      // Note: Jira API doesn't support fields parameter for listTransitions
+      // Fields filtering will be handled by tool handler using FieldFilter
       const response = await this.client.listTransitions(issueKey);
 
       // Handle null or undefined response
@@ -244,25 +206,7 @@ export class JiraClientWrapper {
       }
 
       if (options?.fields !== undefined) {
-        // Validate and filter field names for security
-        const validFields = options.fields.filter(
-          field =>
-            JiraClientWrapper.ALLOWED_FIELDS.includes(field) ||
-            field.startsWith('customfield_') ||
-            field === '*all' ||
-            field === '*navigable'
-        );
-
-        if (validFields.length !== options.fields.length) {
-          const invalidFields = options.fields.filter(
-            field => !validFields.includes(field)
-          );
-          logger.log(
-            `Filtered invalid field names: ${invalidFields.join(', ')}`
-          );
-        }
-
-        searchOptions.fields = validFields;
+        searchOptions.fields = options.fields;
       }
 
       const result = await this.client.searchJira(jql, searchOptions);
@@ -293,6 +237,8 @@ export class JiraClientWrapper {
    *
    * @param includeArchived - Optional flag to include archived projects. If true, includes archived projects.
    *                          If false, filters out archived projects. If undefined, returns all projects.
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: key, name, projectCategory.name, lead.displayName, projectTypeKey
    * @returns Promise that resolves to an array of Jira projects
    * @throws {ApiError} When access is denied or other API errors occur
    *
@@ -304,13 +250,15 @@ export class JiraClientWrapper {
    * // Get only active projects
    * const activeProjects = await client.getAllProjects(false);
    *
-   * // Explicitly get all projects including archived
-   * const allProjectsExplicit = await client.getAllProjects(true);
+   * // Get projects with specific fields
+   * const projects = await client.getAllProjects(true, ['key', 'name', 'lead.displayName']);
    * ```
    */
-  async getAllProjects(includeArchived?: boolean): Promise<JiraProject[]> {
+  async getAllProjects(includeArchived?: boolean, fields?: string[]): Promise<JiraProject[]> {
     try {
-      logger.log('Getting all projects');
+      logger.log('Getting all projects', { includeArchived, fields });
+      // Note: Jira API doesn't support fields parameter for listProjects
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.listProjects();
 
@@ -351,6 +299,8 @@ export class JiraClientWrapper {
    * complete user profile information including display name, email, timezone,
    * avatar URLs, groups, and application roles.
    *
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: name, displayName, emailAddress, active, timeZone, groups.items[].name
    * @returns Promise that resolves to the current user information
    * @throws {ApiError} When authentication fails, access is denied, or other API errors occur
    *
@@ -359,14 +309,16 @@ export class JiraClientWrapper {
    * // Get current user info for authentication verification
    * const currentUser = await client.getCurrentUser();
    * console.log(`Authenticated as: ${currentUser.displayName} (${currentUser.emailAddress})`);
-   * console.log(`User key: ${currentUser.key}`);
-   * console.log(`Active: ${currentUser.active}`);
-   * console.log(`Timezone: ${currentUser.timeZone}`);
+   *
+   * // Get specific fields only
+   * const user = await client.getCurrentUser(['name', 'displayName', 'emailAddress']);
    * ```
    */
-  async getCurrentUser(): Promise<JiraUser> {
+  async getCurrentUser(fields?: string[]): Promise<JiraUser> {
     try {
-      logger.log('Getting current user information');
+      logger.log('Getting current user information', { fields });
+      // Note: Jira API doesn't support fields parameter for getCurrentUser
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const user = await this.client.getCurrentUser();
 
@@ -404,6 +356,8 @@ export class JiraClientWrapper {
    * provide a detailed history of time tracking and work performed on an issue.
    *
    * @param issueKey - The unique key of the Jira issue (e.g., 'PROJECT-123')
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, author.displayName, created, timeSpent, comment
    * @returns Promise that resolves to an array of worklog entries
    * @throws {ApiError} When the issue doesn't exist, access is denied, or other API errors occur
    *
@@ -413,21 +367,20 @@ export class JiraClientWrapper {
    * const worklogs = await client.getIssueWorklogs('PROJECT-123');
    * console.log(`Issue has ${worklogs.length} worklog entries`);
    *
+   * // Get specific fields only
+   * const worklogs = await client.getIssueWorklogs('PROJECT-123', ['id', 'author.displayName', 'timeSpent']);
+   *
    * // Analyze time tracking
    * const totalTime = worklogs.reduce((sum, log) => sum + log.timeSpentSeconds, 0);
    * console.log(`Total time logged: ${totalTime} seconds`);
-   *
-   * // Review work history
-   * worklogs.forEach(log => {
-   *   console.log(`${log.author.displayName}: ${log.timeSpent} on ${log.started}`);
-   *   if (log.comment) console.log(`Comment: ${log.comment}`);
-   * });
    * ```
    */
-  async getIssueWorklogs(issueKey: string): Promise<JiraWorklog[]> {
+  async getIssueWorklogs(issueKey: string, fields?: string[]): Promise<JiraWorklog[]> {
     try {
-      logger.log(`Getting worklogs for issue: ${issueKey}`);
+      logger.log(`Getting worklogs for issue: ${issueKey}`, { fields });
 
+      // Note: Jira API doesn't support fields parameter for getIssueWorklogs
+      // Fields filtering will be handled by tool handler using FieldFilter
       const response = await this.client.getIssueWorklogs(issueKey);
 
       // Handle null or undefined response
@@ -531,6 +484,8 @@ export class JiraClientWrapper {
    * status, and project associations.
    *
    * @param projectKey - The unique key of the Jira project (e.g., 'DSCWA', 'PROJECT-123')
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, name, released, archived, releaseDate, description
    * @returns Promise that resolves to an array of project versions
    * @throws {ApiError} When the project doesn't exist, access is denied, or other API errors occur
    *
@@ -540,26 +495,18 @@ export class JiraClientWrapper {
    * const versions = await client.getProjectVersions('DSCWA');
    * console.log(`Project has ${versions.length} versions`);
    *
-   * // Analyze version status
-   * versions.forEach(version => {
-   *   console.log(`${version.name}: ${version.released ? 'Released' : 'Unreleased'}`);
-   *   if (version.archived) console.log(`  - Archived`);
-   *   if (version.overdue) console.log(`  - Overdue`);
-   *   if (version.releaseDate) console.log(`  - Release Date: ${version.releaseDate}`);
-   * });
+   * // Get specific fields only
+   * const versions = await client.getProjectVersions('DSCWA', ['id', 'name', 'released']);
    *
    * // Filter active versions
    * const activeVersions = versions.filter(v => !v.archived && !v.released);
-   * console.log(`${activeVersions.length} active versions in development`);
-   *
-   * // Get released versions
-   * const releasedVersions = versions.filter(v => v.released);
-   * console.log(`${releasedVersions.length} versions have been released`);
    * ```
    */
-  async getProjectVersions(projectKey: string): Promise<JiraVersion[]> {
+  async getProjectVersions(projectKey: string, fields?: string[]): Promise<JiraVersion[]> {
     try {
-      logger.log(`Getting versions for project: ${projectKey}`);
+      logger.log(`Getting versions for project: ${projectKey}`, { fields });
+      // Note: Jira API doesn't support fields parameter for getVersions
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.getVersions(projectKey);
 
@@ -598,6 +545,8 @@ export class JiraClientWrapper {
    * and is essential for project-specific operations and analysis.
    *
    * @param projectKey - The unique key of the Jira project (e.g., 'DSCWA', 'PROJECT-123')
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: key, name, description, lead.displayName, components[].name, versions[].name
    * @returns Promise that resolves to the complete project information
    * @throws {ApiError} When the project doesn't exist, access is denied, or other API errors occur
    *
@@ -606,30 +555,16 @@ export class JiraClientWrapper {
    * // Get complete project details
    * const project = await client.getProject('DSCWA');
    * console.log(`Project: ${project.name} (${project.key})`);
-   * console.log(`Type: ${project.projectTypeKey}`);
-   * console.log(`Lead: ${project.lead?.displayName}`);
-   * console.log(`Components: ${project.components?.length || 0}`);
-   * console.log(`Versions: ${project.versions?.length || 0}`);
    *
-   * // Check project status
-   * if (project.archived) {
-   *   console.log('Project is archived');
-   * }
-   *
-   * // Analyze project components
-   * project.components?.forEach(component => {
-   *   console.log(`Component: ${component.name} - ${component.description || 'No description'}`);
-   * });
-   *
-   * // Review project versions
-   * project.versions?.forEach(version => {
-   *   console.log(`Version: ${version.name} (${version.released ? 'Released' : 'In Development'})`);
-   * });
+   * // Get specific fields only
+   * const project = await client.getProject('DSCWA', ['key', 'name', 'lead.displayName']);
    * ```
    */
-  async getProject(projectKey: string): Promise<JiraProject> {
+  async getProject(projectKey: string, fields?: string[]): Promise<JiraProject> {
     try {
-      logger.log(`Getting project details: ${projectKey}`);
+      logger.log(`Getting project details: ${projectKey}`, { fields });
+      // Note: Jira API doesn't support fields parameter for getProject
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.getProject(projectKey);
 
@@ -707,9 +642,54 @@ export class JiraClientWrapper {
    * console.log(`Application Roles: ${user.applicationRoles?.size || 0}`);
    * ```
    */
-  async getUserProfile(username: string): Promise<JiraUser> {
+  /**
+   * Search for users using a query string.
+   * This method supports searching by username, email, or display name.
+   *
+   * @param query - Search query string
+   * @param maxResults - Maximum number of results to return (default: 50)
+   * @returns Promise resolving to array of matching users
+   */
+  async searchUsers(query: string, maxResults: number = 50): Promise<JiraUser[]> {
     try {
-      logger.log(`Getting user profile: ${username}`);
+      logger.log(`Searching users with query: ${query}`, { maxResults });
+
+      // Use searchUsers API for Jira Server compatibility
+      const response = await this.client.searchUsers({
+        query: query,
+        username: query, // Keep for backward compatibility
+        maxResults: maxResults,
+        includeActive: true,
+        includeInactive: false, // Only active users by default
+      });
+
+      // Handle null or undefined response
+      if (!response) {
+        logger.log('No response received for user search', { query });
+        return [];
+      }
+
+      // searchUsers returns an array of users
+      const users = Array.isArray(response) ? response : [response];
+
+      logger.log(`Found ${users.length} users`, { 
+        query, 
+        maxResults, 
+        actualCount: users.length 
+      });
+
+      return users;
+    } catch (error) {
+      logger.error(`Error searching users with query: ${query}`, error);
+      throw ApiError.fromJiraClientError(error);
+    }
+  }
+
+  async getUserProfile(username: string, fields?: string[]): Promise<JiraUser> {
+    try {
+      logger.log(`Getting user profile: ${username}`, { fields });
+      // Note: Jira API doesn't support fields parameter for searchUsers
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       // Use searchUsers API for Jira Server compatibility
       // This works with both username and email address
@@ -771,6 +751,8 @@ export class JiraClientWrapper {
    * @param projectKey - Optional project key to filter boards (e.g., 'DSCWA', 'PROJECT-123')
    *                     If provided, only boards associated with this project will be returned.
    *                     If omitted, all accessible boards are returned.
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, name, type, location.projectKey, location.name
    * @returns Promise that resolves to an array of agile boards
    * @throws {ApiError} When agile functionality is not available, access is denied, or other API errors occur
    *
@@ -780,30 +762,15 @@ export class JiraClientWrapper {
    * const allBoards = await client.getAgileBoards();
    * console.log(`Found ${allBoards.length} boards`);
    *
-   * // Get boards for a specific project
-   * const projectBoards = await client.getAgileBoards('DSCWA');
-   * console.log(`DSCWA project has ${projectBoards.length} boards`);
-   *
-   * // Analyze board types
-   * allBoards.forEach(board => {
-   *   console.log(`${board.name}: ${board.type} board`);
-   *   if (board.location?.projectKey) {
-   *     console.log(`  - Associated with project: ${board.location.projectKey}`);
-   *   }
-   *   if (board.admins?.users?.length) {
-   *     console.log(`  - Admins: ${board.admins.users.map(u => u.displayName).join(', ')}`);
-   *   }
-   * });
-   *
-   * // Filter by board type
-   * const scrumBoards = allBoards.filter(board => board.type === 'scrum');
-   * const kanbanBoards = allBoards.filter(board => board.type === 'kanban');
-   * console.log(`${scrumBoards.length} Scrum boards, ${kanbanBoards.length} Kanban boards`);
+   * // Get boards with specific fields
+   * const boards = await client.getAgileBoards('DSCWA', ['id', 'name', 'type']);
    * ```
    */
-  async getAgileBoards(projectKey?: string): Promise<JiraBoard[]> {
+  async getAgileBoards(projectKey?: string, fields?: string[]): Promise<JiraBoard[]> {
     try {
-      logger.log('Getting agile boards', { projectKey });
+      logger.log('Getting agile boards', { projectKey, fields });
+      // Note: Jira API doesn't support fields parameter for getAllBoards
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.getAllBoards();
 
@@ -909,27 +876,9 @@ export class JiraClientWrapper {
       let fieldsString: string | undefined = undefined;
 
       if (options?.fields !== undefined) {
-        // Validate and filter field names for security (same as searchIssues)
-        const validFields = options.fields.filter(
-          field =>
-            JiraClientWrapper.ALLOWED_FIELDS.includes(field) ||
-            field.startsWith('customfield_') ||
-            field === '*all' ||
-            field === '*navigable'
-        );
-
-        if (validFields.length !== options.fields.length) {
-          const invalidFields = options.fields.filter(
-            field => !validFields.includes(field)
-          );
-          logger.log(
-            `Filtered invalid field names: ${invalidFields.join(', ')}`
-          );
-        }
-
         // Convert array to comma-separated string as expected by jira-client
         fieldsString =
-          validFields.length > 0 ? validFields.join(',') : undefined;
+          options.fields.length > 0 ? options.fields.join(',') : undefined;
       }
 
       // Call jira-client getIssuesForBoard method
@@ -976,6 +925,8 @@ export class JiraClientWrapper {
    * for board access, permissions, and agile functionality availability.
    *
    * @param boardId - The numeric ID of the agile board (e.g., 123, 456)
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, name, state, startDate, endDate, completeDate, goal
    * @returns Promise that resolves to an array of sprints for the board
    * @throws {ApiError} When the board doesn't exist, access is denied, agile functionality is unavailable, or other API errors occur
    *
@@ -985,32 +936,15 @@ export class JiraClientWrapper {
    * const sprints = await client.getSprintsFromBoard(123);
    * console.log(`Board has ${sprints.length} sprints`);
    *
-   * // Analyze sprint states
-   * sprints.forEach(sprint => {
-   *   console.log(`${sprint.name}: ${sprint.state}`);
-   *   if (sprint.startDate) console.log(`  - Start: ${sprint.startDate}`);
-   *   if (sprint.endDate) console.log(`  - End: ${sprint.endDate}`);
-   *   if (sprint.completeDate) console.log(`  - Completed: ${sprint.completeDate}`);
-   *   if (sprint.goal) console.log(`  - Goal: ${sprint.goal}`);
-   * });
-   *
-   * // Filter by sprint state
-   * const activeSprints = sprints.filter(sprint => sprint.state === 'active');
-   * const closedSprints = sprints.filter(sprint => sprint.state === 'closed');
-   * const futureSprints = sprints.filter(sprint => sprint.state === 'future');
-   *
-   * console.log(`Active: ${activeSprints.length}, Closed: ${closedSprints.length}, Future: ${futureSprints.length}`);
-   *
-   * // Find current active sprint
-   * const currentSprint = sprints.find(sprint => sprint.state === 'active');
-   * if (currentSprint) {
-   *   console.log(`Current active sprint: ${currentSprint.name}`);
-   * }
+   * // Get specific fields only
+   * const sprints = await client.getSprintsFromBoard(123, ['id', 'name', 'state']);
    * ```
    */
-  async getSprintsFromBoard(boardId: number): Promise<JiraSprint[]> {
+  async getSprintsFromBoard(boardId: number, fields?: string[]): Promise<JiraSprint[]> {
     try {
-      logger.log(`Getting sprints for board: ${boardId}`);
+      logger.log(`Getting sprints for board: ${boardId}`, { fields });
+      // Note: Jira API doesn't support fields parameter for getAllSprints
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       // Call jira-client getAllSprints method with board ID
       const response = await this.client.getAllSprints(boardId.toString());
@@ -1058,6 +992,8 @@ export class JiraClientWrapper {
    * and is essential for sprint-specific operations and analysis.
    *
    * @param sprintId - The numeric ID of the sprint (e.g., 123, 456)
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, name, state, startDate, endDate, completeDate, goal, originBoardId
    * @returns Promise that resolves to the complete sprint information
    * @throws {ApiError} When the sprint doesn't exist, access is denied, agile functionality is unavailable, or other API errors occur
    *
@@ -1066,33 +1002,16 @@ export class JiraClientWrapper {
    * // Get complete sprint details
    * const sprint = await client.getSprint(123);
    * console.log(`Sprint: ${sprint.name} (${sprint.state})`);
-   * console.log(`Board ID: ${sprint.originBoardId}`);
    *
-   * // Check sprint status and dates
-   * if (sprint.startDate) {
-   *   console.log(`Started: ${sprint.startDate}`);
-   * }
-   * if (sprint.endDate) {
-   *   console.log(`Ends: ${sprint.endDate}`);
-   * }
-   * if (sprint.completeDate) {
-   *   console.log(`Completed: ${sprint.completeDate}`);
-   * }
-   *
-   * // Check sprint goal
-   * if (sprint.goal) {
-   *   console.log(`Goal: ${sprint.goal}`);
-   * }
-   *
-   * // Compare with getSprintsFromBoard results
-   * const boardSprints = await client.getSprintsFromBoard(sprint.originBoardId);
-   * const matchingSprint = boardSprints.find(s => s.id === sprint.id);
-   * console.log(`Data consistency: ${JSON.stringify(sprint) === JSON.stringify(matchingSprint)}`);
+   * // Get specific fields only
+   * const sprint = await client.getSprint(123, ['id', 'name', 'state', 'goal']);
    * ```
    */
-  async getSprint(sprintId: number): Promise<JiraSprint> {
+  async getSprint(sprintId: number, fields?: string[]): Promise<JiraSprint> {
     try {
-      logger.log(`Getting sprint details: ${sprintId}`);
+      logger.log(`Getting sprint details: ${sprintId}`, { fields });
+      // Note: Jira API doesn't support fields parameter for getSprint
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.getSprint(sprintId.toString());
 
@@ -1202,6 +1121,8 @@ export class JiraClientWrapper {
    * partial matching on field names to make field discovery easier.
    *
    * @param query - Optional query string to filter fields by name (case-insensitive partial match)
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, name, custom, searchable, orderable, schema.type
    * @returns Promise that resolves to an array of matching Jira fields
    * @throws {ApiError} When access is denied, permissions are insufficient, or other API errors occur
    *
@@ -1211,39 +1132,16 @@ export class JiraClientWrapper {
    * const allFields = await client.searchFields();
    * console.log(`Found ${allFields.length} total fields`);
    *
-   * // Search for fields containing 'summary'
-   * const summaryFields = await client.searchFields('summary');
-   * console.log(`Found ${summaryFields.length} fields matching 'summary'`);
-   *
-   * // Search for custom fields
-   * const customFields = await client.searchFields('custom');
-   * console.log(`Found ${customFields.length} custom fields`);
-   *
-   * // Analyze field properties
-   * allFields.forEach(field => {
-   *   console.log(`${field.name} (${field.id}): ${field.custom ? 'Custom' : 'System'} field`);
-   *   console.log(`  - Searchable: ${field.searchable}`);
-   *   console.log(`  - Orderable: ${field.orderable}`);
-   *   if (field.clauseNames) {
-   *     console.log(`  - JQL Names: ${field.clauseNames.join(', ')}`);
-   *   }
-   * });
-   *
-   * // Find specific field by ID
-   * const specificField = await client.searchFields('customfield_10001');
-   * if (specificField.length > 0) {
-   *   console.log(`Field ${specificField[0].name} found`);
-   * }
+   * // Search with specific fields
+   * const fields = await client.searchFields('summary', ['id', 'name', 'custom']);
    * ```
    */
-  async searchFields(query?: string): Promise<JiraField[]> {
+  async searchFields(query?: string, fields?: string[]): Promise<JiraField[]> {
     try {
-      if (query !== undefined) {
-        logger.log(`Searching fields with query: ${query}`);
-      } else {
-        logger.log('Searching fields');
-      }
+      logger.log('Searching fields', { query, fields });
 
+      // Note: Jira API doesn't support fields parameter for listFields
+      // Fields filtering will be handled by tool handler using FieldFilter
       const response = await this.client.listFields();
 
       // Handle null or undefined response
@@ -1258,23 +1156,23 @@ export class JiraClientWrapper {
         return [];
       }
 
-      let fields = response as JiraField[];
-      logger.log(`Successfully retrieved ${fields.length} fields`);
+      let fieldsResponse = response as JiraField[];
+      logger.log(`Successfully retrieved ${fieldsResponse.length} fields`);
 
       // Apply query filtering if provided
       if (query !== undefined && query.trim() !== '') {
         const trimmedQuery = query.trim().toLowerCase();
-        fields = fields.filter(
+        fieldsResponse = fieldsResponse.filter(
           field =>
             field.name.toLowerCase().includes(trimmedQuery) ||
             field.id.toLowerCase().includes(trimmedQuery)
         );
         logger.log(
-          `Filtered to ${fields.length} fields matching query: ${query}`
+          `Filtered to ${fieldsResponse.length} fields matching query: ${query}`
         );
       }
 
-      return fields;
+      return fieldsResponse;
     } catch (error) {
       logger.error('Failed to search fields:', error);
       throw ApiError.fromJiraClientError(error);
@@ -1290,6 +1188,9 @@ export class JiraClientWrapper {
    * provides the URL that can be used to download the actual file.
    *
    * @param issueKey - The unique key of the Jira issue (e.g., 'PROJECT-123')
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: id, filename, size, mimeType, author.displayName
+   *                 Note: This method is already optimized to fetch only attachment field
    * @returns Promise that resolves to an array of attachment metadata
    * @throws {ApiError} When the issue doesn't exist, access is denied, or other API errors occur
    *
@@ -1299,30 +1200,15 @@ export class JiraClientWrapper {
    * const attachments = await client.downloadAttachments('PROJECT-123');
    * console.log(`Issue has ${attachments.length} attachments`);
    *
-   * // Analyze attachment types
-   * attachments.forEach(attachment => {
-   *   console.log(`${attachment.filename}: ${attachment.mimeType} (${attachment.size} bytes)`);
-   *   console.log(`Author: ${attachment.author.displayName}`);
-   *   console.log(`Created: ${attachment.created}`);
-   *   console.log(`Download URL: ${attachment.content}`);
-   *   if (attachment.thumbnail) {
-   *     console.log(`Thumbnail URL: ${attachment.thumbnail}`);
-   *   }
-   * });
-   *
-   * // Filter by file type
-   * const images = attachments.filter(att => att.mimeType.startsWith('image/'));
-   * const documents = attachments.filter(att => att.mimeType === 'application/pdf');
-   * console.log(`${images.length} images, ${documents.length} PDF documents`);
-   *
-   * // Calculate total size
-   * const totalSize = attachments.reduce((sum, att) => sum + att.size, 0);
-   * console.log(`Total attachment size: ${totalSize} bytes`);
+   * // Get specific attachment fields
+   * const attachments = await client.downloadAttachments('PROJECT-123', ['id', 'filename', 'size']);
    * ```
    */
-  async downloadAttachments(issueKey: string): Promise<JiraAttachment[]> {
+  async downloadAttachments(issueKey: string, fields?: string[]): Promise<JiraAttachment[]> {
     try {
-      logger.log(`Getting attachments for issue: ${issueKey}`);
+      logger.log(`Getting attachments for issue: ${issueKey}`, { fields });
+      // Note: This method is already optimized to fetch only attachment field
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       // Fetch issue with only attachment field to minimize data transfer
       const issue = await this.client.findIssue(issueKey, '', 'attachment');
@@ -1380,6 +1266,8 @@ export class JiraClientWrapper {
    * is essential for system monitoring, version compatibility checks, and server
    * administration tasks. Some fields may require administrative privileges.
    *
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: version, versionNumbers, deploymentType, buildNumber, buildDate, serverTitle
    * @returns Promise that resolves to the complete system information
    * @throws {ApiError} When access is denied, system info is unavailable, or other API errors occur
    *
@@ -1388,36 +1276,16 @@ export class JiraClientWrapper {
    * // Get complete system information
    * const systemInfo = await client.getSystemInfo();
    * console.log(`Jira ${systemInfo.deploymentType}: ${systemInfo.version}`);
-   * console.log(`Build: ${systemInfo.buildNumber} (${systemInfo.buildDate})`);
-   * console.log(`Base URL: ${systemInfo.baseUrl}`);
    *
-   * // Check deployment type
-   * if (systemInfo.deploymentType === 'Server') {
-   *   console.log('Running on Jira Server/DC');
-   * } else {
-   *   console.log('Running on Jira Cloud');
-   * }
-   *
-   * // Analyze version compatibility
-   * const [major, minor, patch] = systemInfo.versionNumbers;
-   * if (major >= 9) {
-   *   console.log('Modern Jira version with latest features');
-   * }
-   *
-   * // Check system health
-   * if (systemInfo.healthChecks) {
-   *   systemInfo.healthChecks.forEach(check => {
-   *     console.log(`${check.name}: ${check.status}`);
-   *     if (check.status !== 'PASS') {
-   *       console.warn(`Health check failed: ${check.description}`);
-   *     }
-   *   });
-   * }
+   * // Get specific fields only
+   * const info = await client.getSystemInfo(['version', 'deploymentType', 'buildNumber']);
    * ```
    */
-  async getSystemInfo(): Promise<JiraSystemInfo> {
+  async getSystemInfo(fields?: string[]): Promise<JiraSystemInfo> {
     try {
-      logger.log('Getting system information');
+      logger.log('Getting system information', { fields });
+      // Note: Jira API doesn't support fields parameter for getServerInfo
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.getServerInfo();
 
@@ -1467,6 +1335,8 @@ export class JiraClientWrapper {
    * It provides more server-specific details compared to getSystemInfo, focusing on
    * server runtime state and configuration rather than system health and monitoring.
    *
+   * @param fields - Optional array of field names to retrieve. Fields filtering will be handled by tool handler using FieldFilter.
+   *                 Common fields: baseUrl, version, versionNumbers, serverTime, scmInfo
    * @returns Promise that resolves to the complete server information
    * @throws {ApiError} When access is denied, server info is unavailable, or other API errors occur
    *
@@ -1475,27 +1345,16 @@ export class JiraClientWrapper {
    * // Get complete server information
    * const serverInfo = await client.getServerInfo();
    * console.log(`Jira Server: ${serverInfo.version} at ${serverInfo.baseUrl}`);
-   * console.log(`Server Time: ${serverInfo.serverTime}`);
-   * console.log(`Default Locale: ${serverInfo.defaultLocale?.locale || 'Not set'}`);
    *
-   * // Check server status
-   * if (serverInfo.deploymentType === 'Server') {
-   *   console.log('Running on Jira Server/DC');
-   * }
-   *
-   * // Compare server time vs build time
-   * console.log(`Built: ${serverInfo.buildDate}`);
-   * console.log(`Current Server Time: ${serverInfo.serverTime}`);
-   *
-   * // Analyze locale settings
-   * if (serverInfo.defaultLocale) {
-   *   console.log(`Server configured for locale: ${serverInfo.defaultLocale.locale}`);
-   * }
+   * // Get specific fields only
+   * const info = await client.getServerInfo(['baseUrl', 'version', 'serverTime']);
    * ```
    */
-  async getServerInfo(): Promise<JiraServerInfo> {
+  async getServerInfo(fields?: string[]): Promise<JiraServerInfo> {
     try {
-      logger.log('Getting server information');
+      logger.log('Getting server information', { fields });
+      // Note: Jira API doesn't support fields parameter for getServerInfo
+      // Fields filtering will be handled by tool handler using FieldFilter
 
       const response = await this.client.getServerInfo();
 

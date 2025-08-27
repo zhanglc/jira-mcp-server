@@ -1,4 +1,9 @@
-import { ISSUE_FIELD_DEFINITIONS } from './static-definitions/index.js';
+import {
+  ISSUE_FIELD_DEFINITIONS,
+  PROJECT_FIELD_DEFINITIONS,
+  USER_FIELD_DEFINITIONS,
+  AGILE_FIELD_DEFINITIONS,
+} from './static-definitions/index.js';
 import type { McpResource } from '../../types/mcp-types.js';
 import type {
   ResourceDefinition,
@@ -18,6 +23,9 @@ export class JiraResourceHandler {
     ResourceDefinition
   > = {
     'jira://issue/fields': ISSUE_FIELD_DEFINITIONS,
+    'jira://project/fields': PROJECT_FIELD_DEFINITIONS,
+    'jira://user/fields': USER_FIELD_DEFINITIONS,
+    'jira://agile/fields': AGILE_FIELD_DEFINITIONS,
   };
 
   /**
@@ -44,7 +52,7 @@ export class JiraResourceHandler {
   async readResource(
     uri: string
   ): Promise<{
-    contents: Array<{ type: 'text'; text: string; mimeType: string }>;
+    contents: Array<{ type: 'text'; text: string; mimeType: string; uri: string }>;
   }> {
     if (!uri) {
       throw new Error('Resource URI is required');
@@ -68,6 +76,7 @@ export class JiraResourceHandler {
             type: 'text',
             text: jsonContent,
             mimeType: 'application/json',
+            uri: uri,
           },
         ],
       };

@@ -23,6 +23,11 @@ export interface HybridConfig extends JiraConfig {
   dynamicFieldCacheTtl: number; // In seconds
   dynamicFieldAnalysis: boolean;
   fieldAnalysisSampleSize: number;
+  
+  // Smart suggestions configuration
+  enableSmartSuggestions?: boolean;
+  suggestionSimilarityThreshold?: number;
+  maxSuggestionsPerField?: number;
 
   // Additional Jira configuration
   sslVerify: boolean;
@@ -33,6 +38,7 @@ export interface HybridConfig extends JiraConfig {
   isDynamicFieldsEnabled(): boolean;
   getCacheTtlMs(): number;
   isFieldAnalysisEnabled(): boolean;
+  isSmartSuggestionsEnabled(): boolean;
 }
 
 /**
@@ -76,6 +82,19 @@ export const HybridConfigSchema = z.object({
     .min(1, 'Field analysis sample size must be at least 1')
     .max(100, 'Field analysis sample size must be at most 100'),
   
+  // Smart suggestions configuration
+  enableSmartSuggestions: z.boolean().optional().default(true),
+  suggestionSimilarityThreshold: z.number()
+    .min(0.1, 'Suggestion similarity threshold must be at least 0.1')
+    .max(0.9, 'Suggestion similarity threshold must be at most 0.9')
+    .optional()
+    .default(0.4),
+  maxSuggestionsPerField: z.number()
+    .min(1, 'Max suggestions per field must be at least 1')
+    .max(20, 'Max suggestions per field must be at most 20')
+    .optional()
+    .default(5),
+  
   // Additional Jira configuration
   sslVerify: z.boolean(),
   timeout: z.number()
@@ -109,6 +128,10 @@ export const HybridConfigSchema = z.object({
     return this.dynamicFieldAnalysis;
   };
   
+  config.isSmartSuggestionsEnabled = function(): boolean {
+    return this.enableSmartSuggestions ?? true;
+  };
+  
   return config as HybridConfig;
 });
 
@@ -125,6 +148,9 @@ export const DEFAULT_HYBRID_CONFIG = {
   dynamicFieldCacheTtl: 3600, // 1 hour
   dynamicFieldAnalysis: false,
   fieldAnalysisSampleSize: 5,
+  enableSmartSuggestions: true,
+  suggestionSimilarityThreshold: 0.4,
+  maxSuggestionsPerField: 5,
   sslVerify: true,
   timeout: 30000, // 30 seconds
   projectsFilter: [] as string[]

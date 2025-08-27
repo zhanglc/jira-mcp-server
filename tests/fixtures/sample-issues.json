@@ -1,0 +1,334 @@
+[
+  {
+    "key": "TEST-1",
+    "fields": {
+      "summary": "Implement user authentication feature",
+      "description": "Add OAuth2 authentication to the application",
+      "status": {
+        "id": "10001",
+        "name": "Open",
+        "statusCategory": {
+          "id": 2,
+          "key": "new",
+          "colorName": "blue-gray"
+        }
+      },
+      "assignee": {
+        "accountId": "user123",
+        "displayName": "John Doe",
+        "emailAddress": "john.doe@example.com",
+        "active": true
+      },
+      "reporter": {
+        "accountId": "user456",
+        "displayName": "Jane Smith",
+        "emailAddress": "jane.smith@example.com",
+        "active": true
+      },
+      "project": {
+        "key": "TEST",
+        "name": "Test Project",
+        "projectCategory": {
+          "id": "10100",
+          "name": "Development",
+          "description": "Development projects"
+        }
+      },
+      "issuetype": {
+        "id": "10004",
+        "name": "Story",
+        "subtask": false
+      },
+      "priority": {
+        "id": "3",
+        "name": "Medium"
+      },
+      "created": "2024-01-15T10:30:00.000+0000",
+      "updated": "2024-01-20T14:45:00.000+0000",
+      "labels": ["authentication", "security"],
+      "components": [
+        {
+          "id": "10001",
+          "name": "Backend"
+        }
+      ],
+      "versions": [
+        {
+          "id": "10000",
+          "name": "Version 1.0"
+        }
+      ],
+      "fixVersions": [
+        {
+          "id": "10001",
+          "name": "Version 1.1"
+        }
+      ],
+      "customfield_10001": "Epic-123",
+      "customfield_10002": 8,
+      "customfield_10003": {
+        "id": "option1",
+        "value": "High Priority"
+      }
+    }
+  },
+  {
+    "key": "TEST-2",
+    "fields": {
+      "summary": "Fix login bug",
+      "description": "",
+      "status": {
+        "id": "10002",
+        "name": "In Progress",
+        "statusCategory": {
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow"
+        }
+      },
+      "assignee": null,
+      "reporter": {
+        "accountId": "user789",
+        "displayName": "Bob Wilson",
+        "emailAddress": "bob.wilson@example.com",
+        "active": true
+      },
+      "project": {
+        "key": "TEST",
+        "name": "Test Project",
+        "projectCategory": {
+          "id": "10100",
+          "name": "Development",
+          "description": "Development projects"
+        }
+      },
+      "issuetype": {
+        "id": "10001",
+        "name": "Bug",
+        "subtask": false
+      },
+      "priority": {
+        "id": "2",
+        "name": "High"
+      },
+      "created": "2024-01-16T09:15:00.000+0000",
+      "updated": "2024-01-21T11:20:00.000+0000",
+      "labels": [],
+      "components": [
+        {
+          "id": "10002",
+          "name": "Frontend"
+        }
+      ],
+      "versions": [],
+      "fixVersions": [
+        {
+          "id": "10001",
+          "name": "Version 1.1"
+        }
+      ],
+      "customfield_10001": null,
+      "customfield_10002": null,
+      "customfield_10003": null
+    }
+  },
+  {
+    "key": "TEST-3",
+    "fields": {
+      "summary": "",
+      "description": "Update API documentation for new endpoints",
+      "status": {
+        "id": "10003",
+        "name": "Done",
+        "statusCategory": {
+          "id": 3,
+          "key": "done",
+          "colorName": "green"
+        }
+      },
+      "assignee": {
+        "accountId": "user456",
+        "displayName": "Jane Smith",
+        "active": true
+      },
+      "reporter": {
+        "accountId": "user123",
+        "displayName": "John Doe",
+        "emailAddress": "john.doe@example.com",
+        "active": true
+      },
+      "project": {
+        "key": "TEST",
+        "name": "Test Project"
+      },
+      "issuetype": {
+        "id": "10003",
+        "name": "Task",
+        "subtask": false
+      },
+      "priority": {
+        "id": "4",
+        "name": "Low"
+      },
+      "created": "2024-01-10T08:00:00.000+0000",
+      "updated": "2024-01-18T16:30:00.000+0000",
+      "labels": ["documentation"],
+      "components": [],
+      "versions": [
+        {
+          "id": "10000",
+          "name": "Version 1.0"
+        }
+      ],
+      "fixVersions": [],
+      "customfield_10001": "Epic-456",
+      "customfield_10002": 5,
+      "customfield_10003": {
+        "id": "option2",
+        "value": "Medium Priority"
+      }
+    }
+  },
+  {
+    "key": "TEST-4",
+    "fields": {
+      "summary": "Performance optimization",
+      "description": "Optimize database queries for better performance",
+      "status": {
+        "id": "10002",
+        "name": "In Progress",
+        "statusCategory": {
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow"
+        }
+      },
+      "assignee": {
+        "accountId": "user789",
+        "displayName": "Bob Wilson",
+        "emailAddress": "bob.wilson@example.com",
+        "active": true
+      },
+      "reporter": {
+        "accountId": "user456",
+        "displayName": "Jane Smith",
+        "emailAddress": "jane.smith@example.com",
+        "active": true
+      },
+      "project": {
+        "key": "TEST",
+        "name": "Test Project",
+        "projectCategory": {
+          "id": "10100",
+          "name": "Development",
+          "description": "Development projects"
+        }
+      },
+      "issuetype": {
+        "id": "10004",
+        "name": "Story",
+        "subtask": false
+      },
+      "priority": {
+        "id": "2",
+        "name": "High"
+      },
+      "created": "2024-01-12T14:20:00.000+0000",
+      "updated": "2024-01-22T10:15:00.000+0000",
+      "labels": ["performance", "database"],
+      "components": [
+        {
+          "id": "10001",
+          "name": "Backend"
+        },
+        {
+          "id": "10003",
+          "name": "Database"
+        }
+      ],
+      "versions": [
+        {
+          "id": "10000",
+          "name": "Version 1.0"
+        }
+      ],
+      "fixVersions": [
+        {
+          "id": "10002",
+          "name": "Version 1.2"
+        }
+      ],
+      "customfield_10001": "Epic-789",
+      "customfield_10002": 13,
+      "customfield_10003": null
+    }
+  },
+  {
+    "key": "TEST-5",
+    "fields": {
+      "summary": "Add unit tests",
+      "description": null,
+      "status": {
+        "id": "10001",
+        "name": "Open",
+        "statusCategory": {
+          "id": 2,
+          "key": "new",
+          "colorName": "blue-gray"
+        }
+      },
+      "assignee": {
+        "accountId": "user123",
+        "displayName": "John Doe",
+        "emailAddress": "john.doe@example.com",
+        "active": true
+      },
+      "reporter": {
+        "accountId": "user789",
+        "displayName": "Bob Wilson",
+        "emailAddress": "bob.wilson@example.com",
+        "active": true
+      },
+      "project": {
+        "key": "TEST",
+        "name": "Test Project",
+        "projectCategory": {
+          "id": "10100",
+          "name": "Development",
+          "description": "Development projects"
+        }
+      },
+      "issuetype": {
+        "id": "10003",
+        "name": "Task",
+        "subtask": false
+      },
+      "priority": {
+        "id": "3",
+        "name": "Medium"
+      },
+      "created": "2024-01-14T13:45:00.000+0000",
+      "updated": "2024-01-19T09:30:00.000+0000",
+      "labels": ["testing"],
+      "components": [
+        {
+          "id": "10002",
+          "name": "Frontend"
+        }
+      ],
+      "versions": [],
+      "fixVersions": [
+        {
+          "id": "10001",
+          "name": "Version 1.1"
+        }
+      ],
+      "customfield_10001": null,
+      "customfield_10002": 3,
+      "customfield_10003": {
+        "id": "option3",
+        "value": "Low Priority"
+      }
+    }
+  }
+]

@@ -1,0 +1,295 @@
+{
+  "boards": [
+    {
+      "id": 1,
+      "name": "Test Board",
+      "type": "scrum",
+      "location": {
+        "type": "project",
+        "key": "TEST",
+        "id": "10001",
+        "name": "Test Project"
+      },
+      "filter": {
+        "id": "10001",
+        "name": "Test Board Filter",
+        "query": "project = TEST",
+        "description": "Issues for the test board"
+      },
+      "columnConfig": {
+        "columns": [
+          {
+            "name": "To Do",
+            "statuses": [
+              {
+                "id": "10001",
+                "name": "Open"
+              }
+            ]
+          },
+          {
+            "name": "In Progress",
+            "statuses": [
+              {
+                "id": "10002",
+                "name": "In Progress"
+              }
+            ]
+          },
+          {
+            "name": "Done",
+            "statuses": [
+              {
+                "id": "10003",
+                "name": "Done"
+              }
+            ]
+          }
+        ]
+      },
+      "estimationConfig": {
+        "type": "story_points",
+        "field": {
+          "fieldId": "customfield_10002",
+          "displayName": "Story Points"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Demo Kanban Board",
+      "type": "kanban",
+      "location": {
+        "type": "project",
+        "key": "DEMO",
+        "id": "10002",
+        "name": "Demo Project"
+      },
+      "filter": {
+        "id": "10002",
+        "name": "Demo Board Filter",
+        "query": "project = DEMO",
+        "description": null
+      },
+      "columnConfig": {
+        "columns": [
+          {
+            "name": "Backlog",
+            "statuses": [
+              {
+                "id": "10001",
+                "name": "Open"
+              }
+            ]
+          },
+          {
+            "name": "Selected for Development",
+            "statuses": [
+              {
+                "id": "10004",
+                "name": "To Do"
+              }
+            ]
+          },
+          {
+            "name": "In Progress",
+            "statuses": [
+              {
+                "id": "10002",
+                "name": "In Progress"
+              }
+            ]
+          },
+          {
+            "name": "Done",
+            "statuses": [
+              {
+                "id": "10003",
+                "name": "Done"
+              }
+            ]
+          }
+        ]
+      },
+      "estimationConfig": null
+    },
+    {
+      "id": 3,
+      "name": "Simple Board",
+      "type": "simple",
+      "location": {
+        "type": "project",
+        "key": "MINI",
+        "id": "10004",
+        "name": "Minimal Project"
+      },
+      "filter": null,
+      "columnConfig": {
+        "columns": [
+          {
+            "name": "To Do",
+            "statuses": [
+              {
+                "id": "10001",
+                "name": "Open"
+              }
+            ]
+          },
+          {
+            "name": "Done",
+            "statuses": [
+              {
+                "id": "10003",
+                "name": "Done"
+              }
+            ]
+          }
+        ]
+      },
+      "estimationConfig": {
+        "type": "time_tracking",
+        "field": {
+          "fieldId": "timeoriginalestimate",
+          "displayName": "Original Estimate"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Mixed Project Board",
+      "type": "scrum",
+      "location": {
+        "type": "user",
+        "key": "user123",
+        "displayName": "John Doe"
+      },
+      "filter": {
+        "id": "10003",
+        "name": "Cross Project Filter",
+        "query": "project in (TEST, DEMO) AND assignee = currentUser()",
+        "description": "Issues across multiple projects for current user"
+      },
+      "columnConfig": {
+        "columns": [
+          {
+            "name": "Backlog",
+            "statuses": [
+              {
+                "id": "10001",
+                "name": "Open"
+              }
+            ]
+          },
+          {
+            "name": "Sprint",
+            "statuses": [
+              {
+                "id": "10002",
+                "name": "In Progress"
+              }
+            ]
+          },
+          {
+            "name": "Complete",
+            "statuses": [
+              {
+                "id": "10003",
+                "name": "Done"
+              }
+            ]
+          }
+        ]
+      },
+      "estimationConfig": {
+        "type": "story_points",
+        "field": {
+          "fieldId": "customfield_10002",
+          "displayName": "Story Points"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Minimal Board",
+      "type": "kanban",
+      "location": {
+        "type": "project",
+        "key": "EMPTY",
+        "id": "10005",
+        "name": "Empty Project"
+      },
+      "filter": {
+        "id": "10004",
+        "name": "Empty Board Filter",
+        "query": "project = EMPTY",
+        "description": "Filter for empty project"
+      },
+      "columnConfig": {
+        "columns": [
+          {
+            "name": "All",
+            "statuses": []
+          }
+        ]
+      },
+      "estimationConfig": null
+    }
+  ],
+  "sprints": [
+    {
+      "id": 1,
+      "name": "Sprint 1",
+      "state": "active",
+      "boardId": 1,
+      "goal": "Implement core authentication features",
+      "startDate": "2024-01-15T09:00:00.000Z",
+      "endDate": "2024-01-29T17:00:00.000Z",
+      "completeDate": null,
+      "originBoardId": 1
+    },
+    {
+      "id": 2,
+      "name": "Sprint 2",
+      "state": "future",
+      "boardId": 1,
+      "goal": "Add advanced user management",
+      "startDate": null,
+      "endDate": null,
+      "completeDate": null,
+      "originBoardId": 1
+    },
+    {
+      "id": 3,
+      "name": "Previous Sprint",
+      "state": "closed",
+      "boardId": 1,
+      "goal": "Setup project infrastructure",
+      "startDate": "2024-01-01T09:00:00.000Z",
+      "endDate": "2024-01-14T17:00:00.000Z",
+      "completeDate": "2024-01-14T16:30:00.000Z",
+      "originBoardId": 1
+    },
+    {
+      "id": 4,
+      "name": "Demo Sprint 1",
+      "state": "active",
+      "boardId": 4,
+      "goal": "",
+      "startDate": "2024-01-15T10:00:00.000Z",
+      "endDate": "2024-01-28T18:00:00.000Z",
+      "completeDate": null,
+      "originBoardId": 4
+    },
+    {
+      "id": 5,
+      "name": "Quick Sprint",
+      "state": "closed",
+      "boardId": 4,
+      "goal": null,
+      "startDate": "2024-01-08T09:00:00.000Z",
+      "endDate": "2024-01-12T17:00:00.000Z",
+      "completeDate": "2024-01-12T16:45:00.000Z",
+      "originBoardId": 4
+    }
+  ]
+}

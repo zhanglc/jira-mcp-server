@@ -31,12 +31,14 @@ describe('Issue Tools Module', () => {
       const tool = getIssueTransitionsToolDefinition();
 
       expect(tool.name).toBe('getIssueTransitions');
-      expect(tool.description).toBe(
+      expect(tool.description).toContain(
         'Get available status transitions for a Jira issue'
       );
+      expect(tool.description).toContain('Enhanced field access available via jira://issue/fields resource');
       expect(tool.inputSchema.type).toBe('object');
       expect(tool.inputSchema.required).toEqual(['issueKey']);
       expect((tool.inputSchema.properties as any).issueKey.type).toBe('string');
+      expect((tool.inputSchema.properties as any).fields.type).toBe('array');
     });
 
     it('should define searchIssues tool correctly', () => {
@@ -60,12 +62,14 @@ describe('Issue Tools Module', () => {
       const tool = getIssueWorklogsToolDefinition();
 
       expect(tool.name).toBe('getIssueWorklogs');
-      expect(tool.description).toBe(
+      expect(tool.description).toContain(
         'Get work log entries for a Jira issue, including time tracking and work history'
       );
+      expect(tool.description).toContain('Enhanced field access available via jira://issue/fields resource');
       expect(tool.inputSchema.type).toBe('object');
       expect(tool.inputSchema.required).toEqual(['issueKey']);
       expect((tool.inputSchema.properties as any).issueKey.type).toBe('string');
+      expect((tool.inputSchema.properties as any).fields.type).toBe('array');
     });
 
     it('should define downloadAttachments tool correctly', () => {

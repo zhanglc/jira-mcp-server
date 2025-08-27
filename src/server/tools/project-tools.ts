@@ -21,7 +21,7 @@ export function getAllProjectsToolDefinition() {
   return {
     name: 'getAllProjects',
     description:
-      'Get all projects from Jira with optional filtering for archived projects',
+      'Get all projects from Jira with optional filtering for archived projects. Enhanced field access available via jira://project/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -30,6 +30,25 @@ export function getAllProjectsToolDefinition() {
           description:
             'Whether to include archived projects (default: true). Set to false to exclude archived projects.',
         },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional field selection with nested access support.
+
+📋 Complete field reference: jira://project/fields
+
+🔥 Enhanced capabilities:
+• Project fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["name", "key", "projectCategory.name"]
+• Detailed: ["name", "key", "lead.displayName", "description"]
+• Custom: ["name", "projectTypeKey", "components[].name"]
+
+⚠️ Note: Uses client-side filtering (API doesn't support native fields parameter)`
+        }
       },
     },
   };
@@ -51,6 +70,25 @@ export function getProjectToolDefinition() {
           type: 'string',
           description: 'The project key (e.g., PROJ, DSCWA)',
         },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional field selection with nested access support.
+
+📋 Complete field reference: jira://project/fields
+
+🔥 Enhanced capabilities:
+• Project fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["name", "key", "description"]
+• Detailed: ["name", "key", "lead.displayName", "components[].name"]
+• Custom: ["name", "projectTypeKey", "versions[].name"]
+
+⚠️ Note: Uses client-side filtering (API doesn't support native fields parameter)`
+        }
       },
       required: ['projectKey'],
     },
@@ -126,6 +164,25 @@ export function getProjectVersionsToolDefinition() {
           type: 'string',
           description: 'The project key (e.g., PROJ, DSCWA)',
         },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional field selection with nested access support.
+
+📋 Complete field reference: jira://project/fields
+
+🔥 Enhanced capabilities:
+• Version fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "name", "released"]
+• Detailed: ["id", "name", "released", "archived", "releaseDate"]
+• Custom: ["name", "description", "userReleaseDate"]
+
+⚠️ Note: Uses client-side filtering (API doesn't support native fields parameter)`
+        }
       },
       required: ['projectKey'],
     },

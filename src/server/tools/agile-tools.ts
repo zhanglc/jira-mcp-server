@@ -22,7 +22,7 @@ export function getAgileBoardsToolDefinition(): Tool {
   return {
     name: 'getAgileBoards',
     description:
-      'Get all agile boards (Scrum, Kanban) from Jira with optional project filtering',
+      'Get all agile boards (Scrum, Kanban) from Jira with optional project filtering. Enhanced field access available via jira://agile/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -31,6 +31,25 @@ export function getAgileBoardsToolDefinition(): Tool {
           description:
             'Optional project key to filter boards (e.g., DSCWA, PROJECT-123). If provided, only boards associated with this project will be returned.',
         },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional field selection with nested access support.
+
+📋 Complete field reference: jira://agile/fields
+
+🔥 Enhanced capabilities:
+• Board fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "name", "type"]
+• Detailed: ["id", "name", "type", "location.projectKey", "location.name"]
+• Custom: ["name", "type", "admins.users[].displayName"]
+
+⚠️ Note: Uses client-side filtering (API doesn't support native fields parameter)`
+        }
       },
     },
   };
@@ -93,7 +112,7 @@ export function getSprintsFromBoardToolDefinition(): Tool {
   return {
     name: 'getSprintsFromBoard',
     description:
-      'Get all sprints from a specific agile board (primarily useful for Scrum boards)',
+      'Get all sprints from a specific agile board (primarily useful for Scrum boards). Enhanced field access available via jira://agile/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -101,6 +120,25 @@ export function getSprintsFromBoardToolDefinition(): Tool {
           type: 'number',
           description: 'The numeric ID of the agile board',
         },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional field selection with nested access support.
+
+📋 Complete field reference: jira://agile/fields
+
+🔥 Enhanced capabilities:
+• Sprint fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "name", "state"]
+• Detailed: ["id", "name", "state", "startDate", "endDate", "completeDate"]
+• Custom: ["name", "goal", "originBoardId"]
+
+⚠️ Note: Uses client-side filtering (API doesn't support native fields parameter)`
+        }
       },
       required: ['boardId'],
     },
@@ -163,7 +201,7 @@ Note: Invalid fields are filtered with suggestions provided.`,
 export function getSprintToolDefinition(): Tool {
   return {
     name: 'getSprint',
-    description: 'Get detailed information for a specific sprint by its ID',
+    description: 'Get detailed information for a specific sprint by its ID. Enhanced field access available via jira://agile/fields resource.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -171,6 +209,25 @@ export function getSprintToolDefinition(): Tool {
           type: 'number',
           description: 'The numeric ID of the sprint (e.g., 123, 456)',
         },
+        fields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: `Optional field selection with nested access support.
+
+📋 Complete field reference: jira://agile/fields
+
+🔥 Enhanced capabilities:
+• Sprint fields: Full nested structure support (field.subfield.key)
+• Client-side filtering: Efficient response filtering for performance
+• Smart validation: Real-time field validation with suggestions
+
+🎯 Example field combinations:
+• Basic: ["id", "name", "state"]
+• Detailed: ["id", "name", "state", "startDate", "endDate", "goal"]
+• Custom: ["name", "goal", "originBoardId", "completeDate"]
+
+⚠️ Note: Uses client-side filtering (API doesn't support native fields parameter)`
+        }
       },
       required: ['sprintId'],
     },

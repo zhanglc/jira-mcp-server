@@ -158,6 +158,106 @@ describe('getIssue Method - TDD Implementation', () => {
       expect(result.fields).toHaveProperty('assignee');
     });
 
+    test('should retrieve issue with expand parameter only', async () => {
+      // Arrange
+      const issueKey = 'TEST-123';
+      const expand = ['changelog', 'transitions'];
+      const mockIssueResponse = {
+        id: '12345',
+        key: 'TEST-123',
+        self: 'https://test.atlassian.net/rest/api/2/issue/12345',
+        fields: {
+          summary: 'Test Issue Summary',
+          status: { name: 'To Do' },
+        },
+        changelog: {
+          histories: [
+            {
+              id: '10001',
+              author: { displayName: 'Test User' },
+              created: '2024-01-01T10:00:00.000Z',
+              items: [
+                {
+                  field: 'status',
+                  fieldtype: 'jira',
+                  from: '1',
+                  fromString: 'Open',
+                  to: '2',
+                  toString: 'In Progress',
+                },
+              ],
+            },
+          ],
+        },
+        transitions: [
+          {
+            id: '21',
+            name: 'Done',
+            to: { name: 'Done', statusCategory: { key: 'done' } },
+          },
+        ],
+      };
+
+      mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
+
+      // Act
+      const result = await jiraClientWrapper.getIssue(issueKey, undefined, expand);
+
+      // Assert
+      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        expand.join(','),
+        undefined
+      );
+      expect(result).toEqual(mockIssueResponse);
+      expect(result).toHaveProperty('changelog');
+      expect(result).toHaveProperty('transitions');
+      expect(result.changelog.histories).toHaveLength(1);
+      expect(result.transitions).toHaveLength(1);
+    });
+
+    test('should retrieve issue with both fields and expand parameters', async () => {
+      // Arrange
+      const issueKey = 'TEST-123';
+      const fields = ['summary', 'status'];
+      const expand = ['changelog'];
+      const mockIssueResponse = {
+        id: '12345',
+        key: 'TEST-123',
+        self: 'https://test.atlassian.net/rest/api/2/issue/12345',
+        fields: {
+          summary: 'Test Issue Summary',
+          status: { name: 'To Do' },
+        },
+        changelog: {
+          histories: [
+            {
+              id: '10001',
+              author: { displayName: 'Test User' },
+              created: '2024-01-01T10:00:00.000Z',
+              items: [],
+            },
+          ],
+        },
+      };
+
+      mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
+
+      // Act
+      const result = await jiraClientWrapper.getIssue(issueKey, fields, expand);
+
+      // Assert
+      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        expand.join(','),
+        fields.join(',')
+      );
+      expect(result).toEqual(mockIssueResponse);
+      expect(result.fields).toHaveProperty('summary');
+      expect(result.fields).toHaveProperty('status');
+      expect(result).toHaveProperty('changelog');
+    });
+
     test('should handle empty fields array', async () => {
       // Arrange
       const issueKey = 'TEST-123';
@@ -177,6 +277,85 @@ describe('getIssue Method - TDD Implementation', () => {
       // Assert
       expect(mockJiraClient.findIssue).toHaveBeenCalledWith(issueKey, '', '');
       expect(result).toEqual(mockIssueResponse);
+    });
+
+    test('should handle empty expand array', async () => {
+      // Arrange
+      const issueKey = 'TEST-123';
+      const expand: string[] = [];
+      const mockIssueResponse = {
+        id: '12345',
+        key: 'TEST-123',
+        self: 'https://test.atlassian.net/rest/api/2/issue/12345',
+        fields: { summary: 'Test' },
+      };
+
+      mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
+
+      // Act
+      const result = await jiraClientWrapper.getIssue(issueKey, undefined, expand);
+
+      // Assert
+      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(issueKey);
+      expect(result).toEqual(mockIssueResponse);
+    });
+
+    test('should handle single expand option', async () => {
+      // Arrange
+      const issueKey = 'TEST-123';
+      const expand = ['changelog'];
+      const mockIssueResponse = {
+        id: '12345',
+        key: 'TEST-123',
+        self: 'https://test.atlassian.net/rest/api/2/issue/12345',
+        fields: { summary: 'Test' },
+        changelog: { histories: [] },
+      };
+
+      mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
+
+      // Act
+      const result = await jiraClientWrapper.getIssue(issueKey, undefined, expand);
+
+      // Assert
+      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        'changelog',
+        undefined
+      );
+      expect(result).toEqual(mockIssueResponse);
+      expect(result).toHaveProperty('changelog');
+    });
+
+    test('should handle multiple expand options', async () => {
+      // Arrange
+      const issueKey = 'TEST-123';
+      const expand = ['changelog', 'transitions', 'renderedFields'];
+      const mockIssueResponse = {
+        id: '12345',
+        key: 'TEST-123',
+        self: 'https://test.atlassian.net/rest/api/2/issue/12345',
+        fields: { summary: 'Test' },
+        changelog: { histories: [] },
+        transitions: [],
+        renderedFields: { summary: '<p>Test</p>' },
+      };
+
+      mockJiraClient.findIssue.mockResolvedValue(mockIssueResponse);
+
+      // Act
+      const result = await jiraClientWrapper.getIssue(issueKey, undefined, expand);
+
+      // Assert
+      expect(mockJiraClient.findIssue).toHaveBeenCalledWith(
+        issueKey,
+        'changelog,transitions,renderedFields',
+        undefined
+      );
+      expect(result).toEqual(mockIssueResponse);
+      expect(result).toHaveProperty('changelog');
+      expect(result).toHaveProperty('transitions');
+      expect(result).toHaveProperty('renderedFields');
     });
   });
 
@@ -584,7 +763,7 @@ describe('getIssue Method - TDD Implementation', () => {
       await jiraClientWrapper.getIssue(issueKey);
 
       // Assert
-      expect(logger.log).toHaveBeenCalledWith(`Getting issue: ${issueKey}`);
+      expect(logger.log).toHaveBeenCalledWith(`Getting issue: ${issueKey}`, { fields: undefined, expand: undefined });
       expect(logger.log).toHaveBeenCalledWith(
         `Successfully retrieved issue: ${issueKey}`
       );

@@ -257,7 +257,7 @@ describe('JiraClientWrapper.searchIssues', () => {
   });
 
   describe('Field Validation', () => {
-    it('should filter invalid field names for security', async () => {
+    it('should pass all fields directly without filtering', async () => {
       const mockSearchResult = {
         expand: 'names,schema',
         startAt: 0,
@@ -280,9 +280,9 @@ describe('JiraClientWrapper.searchIssues', () => {
 
       await wrapper.searchIssues('project = DSCWA', options);
 
-      // Should only pass valid fields
+      // Should pass all fields directly without filtering
       expect(mockClient.searchJira).toHaveBeenCalledWith('project = DSCWA', {
-        fields: ['summary', 'status', 'customfield_10001'],
+        fields: ['summary', 'status', 'invalidField', 'maliciousScript', 'customfield_10001'],
       });
     });
 

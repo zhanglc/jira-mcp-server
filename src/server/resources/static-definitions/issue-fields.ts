@@ -9,15 +9,37 @@ export const ISSUE_FIELD_DEFINITIONS: ResourceDefinition = {
   entityType: 'issue',
   lastUpdated: new Date().toISOString(),
   version: '1.0.0',
-  totalFields: 14, // Core system fields
+  totalFields: 15, // Core system fields
 
   fields: {
+    key: {
+      id: 'key',
+      name: 'Issue Key',
+      description: 'Unique issue identifier (e.g., PROJ-123)',
+      type: 'string',
+      accessPaths: [
+        {
+          path: 'key',
+          description: 'Issue key identifier',
+          type: 'string',
+          frequency: 'high',
+        },
+      ],
+      examples: ['key'],
+      commonUsage: [['key']],
+    },
     status: {
       id: 'status',
       name: 'Status',
       description: 'Current issue status and its category information',
       type: 'object',
       accessPaths: [
+        {
+          path: 'status',
+          description: 'Complete status object',
+          type: 'object',
+          frequency: 'high',
+        },
         {
           path: 'status.name',
           description: "Status name (e.g., 'In Progress', 'Done')",
@@ -99,6 +121,12 @@ export const ISSUE_FIELD_DEFINITIONS: ResourceDefinition = {
       description: 'Issue assignee user information',
       type: 'object',
       accessPaths: [
+        {
+          path: 'assignee',
+          description: 'Complete assignee object',
+          type: 'object',
+          frequency: 'high',
+        },
         {
           path: 'assignee.displayName',
           description: 'User display name',

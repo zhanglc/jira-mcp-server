@@ -167,7 +167,7 @@ function parseNumber(value: string | undefined, defaultValue: number, variableNa
     return defaultValue;
   }
   
-  const numValue = parseInt(value.trim(), 10);
+  const numValue = parseFloat(value.trim());
   if (isNaN(numValue)) {
     throw new Error(`Invalid numeric value for environment variable ${variableName}: ${value}`);
   }
@@ -254,6 +254,22 @@ export function loadHybridConfig(): ValidatedHybridConfig {
       process.env.FIELD_ANALYSIS_SAMPLE_SIZE, 
       DEFAULT_HYBRID_CONFIG.fieldAnalysisSampleSize,
       'FIELD_ANALYSIS_SAMPLE_SIZE'
+    ),
+    
+    // Smart suggestions configuration
+    enableSmartSuggestions: parseBoolean(
+      process.env.ENABLE_SMART_SUGGESTIONS, 
+      DEFAULT_HYBRID_CONFIG.enableSmartSuggestions
+    ),
+    suggestionSimilarityThreshold: parseNumber(
+      process.env.SUGGESTION_SIMILARITY_THRESHOLD, 
+      DEFAULT_HYBRID_CONFIG.suggestionSimilarityThreshold,
+      'SUGGESTION_SIMILARITY_THRESHOLD'
+    ),
+    maxSuggestionsPerField: parseNumber(
+      process.env.MAX_SUGGESTIONS_PER_FIELD, 
+      DEFAULT_HYBRID_CONFIG.maxSuggestionsPerField,
+      'MAX_SUGGESTIONS_PER_FIELD'
     ),
     
     // Additional Jira configuration

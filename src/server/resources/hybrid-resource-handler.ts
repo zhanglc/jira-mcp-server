@@ -1,5 +1,7 @@
 import { JiraResourceHandler } from './resource-handler.js';
+import { StaticSuggestionEngine } from './static-suggestion-engine.js';
 import type { JiraClientWrapper } from '../../client/jira-client-wrapper.js';
+import type { HybridConfig } from '../../types/config-types.js';
 import type {
   ResourceDefinition,
   FieldDefinition,
@@ -24,9 +26,11 @@ import { logger } from '../../utils/logger.js';
  */
 export class HybridResourceHandler extends JiraResourceHandler {
   private readonly jiraClient: JiraClientWrapper;
+  private readonly config: HybridConfig;
   private readonly enableDynamic: boolean;
   private readonly cacheTtl: number;
   private readonly cacheMaxSize: number;
+  private readonly staticSuggestionEngine: StaticSuggestionEngine;
   private customFieldsCache: Map<
     string,
     { data: FieldDefinition[]; timestamp: number; lastAccessed: number }
@@ -37,16 +41,12 @@ export class HybridResourceHandler extends JiraResourceHandler {
    * Create a new HybridResourceHandler instance.
    *
    * @param jiraClient - JiraClientWrapper instance for API calls
-   * @param enableDynamic - Whether to enable dynamic field discovery
-   * @param cacheTtl - Cache TTL in seconds (default: 3600 = 1 hour)
-   * @param cacheMaxSize - Maximum number of cache entries (default: 100)
-   * @throws Error if jiraClient is null/undefined, cacheTtl is invalid, or cacheMaxSize is invalid
+   * @param config - HybridConfig containing all configuration options
+   * @throws Error if jiraClient is null/undefined or config is invalid
    */
   constructor(
     jiraClient: JiraClientWrapper,
-    enableDynamic: boolean,
-    cacheTtl: number = 3600,
-    cacheMaxSize: number = 100
+    config: HybridConfig
   ) {
     super();
 
@@ -55,8 +55,13 @@ export class HybridResourceHandler extends JiraResourceHandler {
       throw new Error('JiraClientWrapper is required');
     }
 
+    // Validate config
+    if (!config) {
+      throw new Error('HybridConfig is required');
+    }
+
     // Only validate methods when dynamic fields are enabled
-    if (enableDynamic) {
+    if (config.isDynamicFieldsEnabled()) {
       if (!('searchFields' in jiraClient)) {
         throw new Error('JiraClientWrapper must have searchFields method');
       }
@@ -66,19 +71,14 @@ export class HybridResourceHandler extends JiraResourceHandler {
       }
     }
 
-    // Validate cache configuration
-    if (cacheTtl <= 0) {
-      throw new Error('Cache TTL must be positive');
-    }
-
-    if (cacheMaxSize <= 0) {
-      throw new Error('Cache size limit must be positive');
-    }
-
     this.jiraClient = jiraClient;
-    this.enableDynamic = enableDynamic;
-    this.cacheTtl = cacheTtl;
-    this.cacheMaxSize = cacheMaxSize;
+    this.config = config;
+    this.enableDynamic = config.isDynamicFieldsEnabled();
+    this.cacheTtl = config.getCacheTtlMs();
+    this.cacheMaxSize = 100; // Default cache size
+
+    // Initialize static suggestion engine for intelligent field suggestions
+    this.staticSuggestionEngine = new StaticSuggestionEngine();
   }
 
   /**
@@ -93,7 +93,7 @@ export class HybridResourceHandler extends JiraResourceHandler {
   async readResource(
     uri: string
   ): Promise<{
-    contents: Array<{ type: 'text'; text: string; mimeType: string }>;
+    contents: Array<{ type: 'text'; text: string; mimeType: string; uri: string }>;
   }> {
     // Validate URI input
     if (!uri) {
@@ -137,6 +137,7 @@ export class HybridResourceHandler extends JiraResourceHandler {
             type: 'text',
             text: JSON.stringify(enhancedDefinition, null, 2),
             mimeType: 'application/json',
+            uri: uri,
           },
         ],
       };
@@ -602,5 +603,230 @@ export class HybridResourceHandler extends JiraResourceHandler {
    */
   private isValidResourceUriFormat(uri: string): boolean {
     return /^jira:\/\/\w+\/\w+$/i.test(uri);
+  }
+
+  /**
+   * Get the StaticSuggestionEngine instance for intelligent field suggestions.
+   * This provides access to pre-computed field suggestion capabilities.
+   *
+   * @returns StaticSuggestionEngine instance
+   */
+  getStaticSuggestionEngine(): StaticSuggestionEngine {
+    return this.staticSuggestionEngine;
+  }
+
+
+  /**
+   * Validate field paths with intelligent suggestions using static suggestion engine.
+   * Provides enhanced validation with pre-computed suggestions and typo corrections.
+   *
+   * @param entityType - The entity type to validate fields for
+   * @param paths - Array of field paths to validate
+   * @returns Validation result with intelligent suggestions for invalid paths
+   */
+  validateFieldPathsWithSuggestions(
+    entityType: string,
+    paths: string[]
+  ): {
+    isValid: boolean;
+    validPaths: string[];
+    invalidPaths: string[];
+    suggestions: Record<string, string[]>;
+  } {
+    // Input validation
+    if (!entityType || typeof entityType !== 'string') {
+      return {
+        isValid: false,
+        validPaths: [],
+        invalidPaths: paths || [],
+        suggestions: {}
+      };
+    }
+
+    if (!Array.isArray(paths)) {
+      return {
+        isValid: false,
+        validPaths: [],
+        invalidPaths: [],
+        suggestions: {}
+      };
+    }
+
+    // Filter out invalid path inputs
+    const validInputPaths = paths.filter(path => 
+      path !== null && path !== undefined && typeof path === 'string' && path.trim() !== ''
+    );
+    const invalidInputPaths = paths.filter(path => 
+      path === null || path === undefined || typeof path !== 'string' || path.trim() === ''
+    );
+
+    try {
+      // Use base class validation for field path validation
+      const baseResult = this.validateFieldPaths(entityType, validInputPaths);
+      
+      // Generate intelligent suggestions for invalid paths using static suggestion engine
+      const suggestions: Record<string, string[]> = {};
+      
+      if (this.isValidEntityType(entityType)) {
+        for (const invalidPath of baseResult.invalidPaths) {
+          const fieldSuggestions = this.staticSuggestionEngine.suggest(
+            entityType as 'issue' | 'project' | 'user' | 'agile',
+            invalidPath,
+            5
+          );
+          
+          if (fieldSuggestions.length > 0) {
+            suggestions[invalidPath] = fieldSuggestions;
+          }
+        }
+      }
+
+      return {
+        isValid: baseResult.isValid && invalidInputPaths.length === 0,
+        validPaths: baseResult.validPaths,
+        invalidPaths: [...baseResult.invalidPaths, ...invalidInputPaths],
+        suggestions
+      };
+    } catch (error) {
+      logger.error('Error in field validation with suggestions', { error, entityType });
+      
+      return {
+        isValid: false,
+        validPaths: [],
+        invalidPaths: [...validInputPaths, ...invalidInputPaths],
+        suggestions: {}
+      };
+    }
+  }
+
+  /**
+   * Generate smart field path suggestions based on partial input using static suggestion engine.
+   * Uses pre-computed similarity matching and usage statistics for intelligent suggestions.
+   *
+   * @param entityType - The entity type to suggest fields for
+   * @param partialPath - Partial or misspelled field path
+   * @param maxSuggestions - Maximum number of suggestions to return
+   * @returns Array of suggested field paths
+   */
+  suggestFieldPaths(
+    entityType: string,
+    partialPath: string,
+    maxSuggestions: number = 5
+  ): string[] {
+    if (!partialPath || typeof partialPath !== 'string' || partialPath.trim() === '') {
+      return [];
+    }
+
+    if (!this.isValidEntityType(entityType)) {
+      logger.warn('Invalid entity type for field suggestions', { entityType });
+      return [];
+    }
+
+    try {
+      // Use static suggestion engine for intelligent suggestions
+      return this.staticSuggestionEngine.suggest(
+        entityType as 'issue' | 'project' | 'user' | 'agile',
+        partialPath,
+        maxSuggestions
+      );
+    } catch (error) {
+      logger.error('Error generating field suggestions', { error, entityType, partialPath });
+      return [];
+    }
+  }
+
+  /**
+   * Validate if the entity type is supported by the static suggestion engine.
+   *
+   * @param entityType - Entity type to validate
+   * @returns True if entity type is valid, false otherwise
+   */
+  private isValidEntityType(entityType: string): entityType is 'issue' | 'project' | 'user' | 'agile' {
+    return ['issue', 'project', 'user', 'agile'].includes(entityType);
+  }
+
+  /**
+   * Get field information with pre-computed usage statistics from static suggestion engine.
+   * Provides comprehensive metadata about field availability and usage patterns.
+   *
+   * @param entityType - The entity type to get field info for
+   * @param fieldPath - The field path to get information about
+   * @returns Field information with usage statistics or null if not found
+   */
+  getFieldInfo(
+    entityType: string,
+    fieldPath: string
+  ): {
+    fieldId: string;
+    type: string;
+    description: string;
+    confidence: 'high' | 'medium' | 'low';
+    suggestions: string[];
+  } | null {
+    if (!fieldPath || typeof fieldPath !== 'string' || fieldPath.trim() === '') {
+      return null;
+    }
+
+    if (!this.isValidEntityType(entityType)) {
+      return null;
+    }
+
+    try {
+      // Validate field path using base validation
+      const baseResult = this.validateFieldPaths(entityType, [fieldPath]);
+      
+      if (baseResult.isValid && baseResult.validPaths.includes(fieldPath)) {
+        // Field is valid, get suggestions for similar fields
+        const suggestions = this.staticSuggestionEngine.suggest(
+          entityType as 'issue' | 'project' | 'user' | 'agile',
+          fieldPath,
+          5
+        );
+
+        return {
+          fieldId: fieldPath,
+          type: 'string', // Default type, could be enhanced with actual type detection
+          description: `Valid field path: ${fieldPath}`,
+          confidence: 'high',
+          suggestions: suggestions.filter(s => s !== fieldPath) // Exclude the field itself
+        };
+      } else {
+        // Field is invalid, get suggestions for correction
+        const suggestions = this.staticSuggestionEngine.suggest(
+          entityType as 'issue' | 'project' | 'user' | 'agile',
+          fieldPath,
+          5
+        );
+
+        return {
+          fieldId: fieldPath,
+          type: 'unknown',
+          description: `Invalid field path: ${fieldPath}`,
+          confidence: 'low',
+          suggestions
+        };
+      }
+    } catch (error) {
+      logger.error('Error getting field info', { error, entityType, fieldPath });
+      return null;
+    }
+  }
+
+
+  /**
+   * Clean up resources and clear caches.
+   * Called during server shutdown.
+   */
+  async cleanup(): Promise<void> {
+    try {
+      // Clear all caches
+      this.customFieldsCache.clear();
+      this.pendingRequests.clear();
+      
+      logger.log('HybridResourceHandler cleanup completed');
+    } catch (error) {
+      logger.error('Error during HybridResourceHandler cleanup', { error });
+      throw error;
+    }
   }
 }
